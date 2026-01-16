@@ -30,7 +30,7 @@ jobs:
           run_install: false
 
       - name: Use Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: 22
           cache: "pnpm"
@@ -64,7 +64,7 @@ jobs:
         run: alex-c-line create-pull-request-templates
 
       - name: Commit template changes
-        uses: alextheman231/github-actions/.github/actions/commit-changes@d94b65a56e0f50cbbd674bc019f732bd606d7063 # v5.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
         id: commit_pull_request_template_changes
         with:
           message: "Update pull request templates"
@@ -73,7 +73,7 @@ jobs:
         run: corepack use pnpm@latest
 
       - name: Commit PNPM update
-        uses: alextheman231/github-actions/.github/actions/commit-changes@d94b65a56e0f50cbbd674bc019f732bd606d7063 # v5.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
         id: commit_pnpm_update
         with:
           message: "Update PNPM"
@@ -84,7 +84,7 @@ jobs:
           pnpm install --no-frozen-lockfile
 
       - name: Commit JavaScript dependencies updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@d94b65a56e0f50cbbd674bc019f732bd606d7063 # v5.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
         id: commit_javascript_dependencies_updates
         with:
           message: "Update JavaScript dependencies"
@@ -93,7 +93,7 @@ jobs:
         run: actions-up -y
 
       - name: Commit GitHub Actions updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@d94b65a56e0f50cbbd674bc019f732bd606d7063 # v5.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -104,7 +104,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ hashFiles('**/*.tf') != '' }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@d94b65a56e0f50cbbd674bc019f732bd606d7063 # v5.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
