@@ -76,11 +76,18 @@ jobs:
           git fetch --unshallow origin main
           git fetch --tags origin
 
+      - name: Mint GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+
       - name: Setup GitHub user
         env:
-          GITHUB_TOKEN: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_GITHUB_TOKEN || secrets.GITHUB_ACTIONS_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          git config --global user.name "AlexUpBot"
+          git config --global user.name "alex-up-bot"
           git config --global user.email "alexupbot@bot.com"
           git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/${GITHUB_REPOSITORY}.git
 

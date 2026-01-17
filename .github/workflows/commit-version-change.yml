@@ -17,7 +17,8 @@ jobs:
     with:
       version-type: major
     secrets:
-      GITHUB_ACTIONS_TOKEN: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_GITHUB_TOKEN || secrets.GITHUB_ACTIONS_TOKEN }}
+      APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
 
   check-minor-version:
     permissions:
@@ -27,7 +28,8 @@ jobs:
     with:
       version-type: minor
     secrets:
-      GITHUB_ACTIONS_TOKEN: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_GITHUB_TOKEN || secrets.GITHUB_ACTIONS_TOKEN }}
+      APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
 
   check-patch-version:
     permissions:
@@ -37,4 +39,5 @@ jobs:
     with:
       version-type: patch
     secrets:
-      GITHUB_ACTIONS_TOKEN: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_GITHUB_TOKEN || secrets.GITHUB_ACTIONS_TOKEN }}
+      APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
