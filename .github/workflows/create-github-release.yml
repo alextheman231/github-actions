@@ -104,6 +104,6 @@ jobs:
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           body_path: docs/releases/${{ needs.check-version.outputs.version_type }}/${{ needs.check-version.outputs.version }}.md
-          token: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_GITHUB_TOKEN || secrets.GITHUB_ACTIONS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           tag_name: ${{ needs.check-version.outputs.version }}
           name: ${{ needs.check-version.outputs.version }}
