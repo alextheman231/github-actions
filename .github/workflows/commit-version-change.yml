@@ -5,7 +5,9 @@ on:
   workflow_dispatch:
   workflow_call:
     secrets:
-      GITHUB_ACTIONS_TOKEN:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
         required: true
 
 jobs:
