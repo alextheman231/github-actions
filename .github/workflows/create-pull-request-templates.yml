@@ -47,6 +47,9 @@ jobs:
           npm install -g alex-c-line@latest
           alex-c-line --version
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Create pull request templates
         run: alex-c-line create-pull-request-template
 
