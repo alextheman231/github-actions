@@ -1,0 +1,76 @@
+name: Create pull request templates
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 21 * * 0
+  workflow_call:
+    secrets:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pull-request-templates:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup GitHub user
+        run: |
+          git config --global user.name "alex-up-bot"
+          git config --global user.email "alexupbot@bot.com"
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install alex-c-line
+        run: |
+          npm install -g alex-c-line@latest
+          alex-c-line --version
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build the package
+        run: pnpm run build
+
+      - name: Create pull request templates
+        run: alex-c-line create-pull-request-template
+
+      - name: Mint GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          author: alex-up-bot <alexupbot@bot.com>
+          committer: alex-up-bot <alexupbot@bot.com>
+          branch: alex-up-bot/create-feature-docs
+          base: main
+          commit-message: Update pull request templates
+          title: "Update pull request templates"
+          body-path: .github/PULL_REQUEST_TEMPLATE/documentation_change.md

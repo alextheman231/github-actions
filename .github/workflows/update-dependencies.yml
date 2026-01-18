@@ -81,15 +81,6 @@ jobs:
           actions-up --version
           alex-c-line --version
 
-      - name: Update pull request templates
-        run: alex-c-line create-pull-request-template
-
-      - name: Commit template changes
-        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
-        id: commit_pull_request_template_changes
-        with:
-          message: "Update pull request templates"
-
       - name: Update PNPM
         run: corepack use pnpm@latest
 
@@ -132,27 +123,6 @@ jobs:
         with:
           message: "Update Terraform Providers"
 
-      - name: Choose pull request template
-        id: pull_request_template
-        env:
-          TEMPLATES_CHANGED: ${{ steps.commit_pull_request_template_changes.outputs.changes_detected }}
-          PNPM_CHANGED: ${{ steps.commit_pnpm_update.outputs.changes_detected }}
-          JS_CHANGED: ${{ steps.commit_javascript_dependencies_updates.outputs.changes_detected }}
-          ACTIONS_CHANGED: ${{ steps.commit_actions_updates.outputs.changes_detected }}
-          TERRAFORM_CHANGED: ${{ steps.commit_terraform_updates.outputs.changes_detected }}
-        run: |
-          if [ "$TEMPLATES_CHANGED" = "true" ] && \
-            [ "$PNPM_CHANGED" = "false" ] && \
-            [ "$JS_CHANGED" = "false" ] && \
-            [ "$ACTIONS_CHANGED" = "false" ] && \
-            [ "$TERRAFORM_CHANGED" = "false" ]; then
-            echo "Template: documentation_change"
-            echo "body_path=.github/PULL_REQUEST_TEMPLATE/documentation_change.md" >> "$GITHUB_OUTPUT"
-          else
-            echo "Template: tooling_change"
-            echo "body_path=.github/PULL_REQUEST_TEMPLATE/tooling_change.md" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
         with:
@@ -162,4 +132,4 @@ jobs:
           branch: alex-up-bot/update-dependencies
           base: main
           title: "Update dependencies"
-          body-path: ${{ steps.pull_request_template.outputs.body_path }}
+          body-path: .github/PULL_REQUEST_TEMPLATE/tooling_change.md
