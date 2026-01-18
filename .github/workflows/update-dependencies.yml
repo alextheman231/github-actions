@@ -82,7 +82,7 @@ jobs:
           alex-c-line --version
 
       - name: Update pull request templates
-        run: alex-c-line create-pull-request-templates
+        run: alex-c-line create-pull-request-template
 
       - name: Commit template changes
         uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
