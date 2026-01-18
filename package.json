@@ -23,13 +23,13 @@
     "lint-package-json": "eslint package.json",
     "lint-prettier": "prettier --check \"./**/*.yml\"",
     "lint-zizmor": "zizmor .",
-    "pre-commit": "alex-c-line pre-commit --no-build --no-tests",
+    "pre-commit": "alex-c-line pre-commit-2",
     "prepare": "husky",
     "update-dependencies": "pnpm update --latest && pnpm update"
   },
   "devDependencies": {
     "@alextheman/eslint-plugin": "^5.4.2",
-    "alex-c-line": "^1.17.3",
+    "alex-c-line": "^1.19.0",
     "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "prettier": "^3.8.0"
