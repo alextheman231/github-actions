@@ -55,7 +55,7 @@ jobs:
         run: pnpm install
 
       - name: Run build
-        if: ${{ !inputs.skip_build }}
+        if: !inputs.skip-build
         run: pnpm run build
 
       - name: Create pull request templates
