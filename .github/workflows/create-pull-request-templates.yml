@@ -66,7 +66,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           author: alex-up-bot <alexupbot@bot.com>
           committer: alex-up-bot <alexupbot@bot.com>
-          branch: alex-up-bot/create-feature-docs
+          branch: alex-up-bot/update-pull-request-templates
           base: main
           commit-message: Update pull request templates
           title: "Update pull request templates"
