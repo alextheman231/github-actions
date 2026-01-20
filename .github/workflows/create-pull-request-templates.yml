@@ -10,6 +10,10 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+    inputs:
+      skip-build:
+        type: Boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,6 +53,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Run build
+        if: ${{ !inputs.skip_build }}
+        run: pnpm run build
 
       - name: Create pull request templates
         run: alex-c-line create-pull-request-template
