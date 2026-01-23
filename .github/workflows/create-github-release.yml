@@ -18,6 +18,7 @@ jobs:
       should_create_tag: ${{ steps.check_version.outputs.should_create_tag }}
       version: ${{ steps.get_version.outputs.version }}
       version_type: ${{ steps.get_version.outputs.version_type }}
+      release_doc_path: ${{ steps.check_version.outputs.release_doc_path }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -30,7 +31,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        run: npm install -g alex-c-line@1.19.3
+        run: npm install -g alex-c-line@latest
 
       - name: Fetch tags from main
         run: git fetch --tags origin
@@ -103,7 +104,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
-          body_path: docs/releases/${{ needs.check-version.outputs.version_type }}/${{ needs.check-version.outputs.version }}.md
+          body_path: ${{ needs.check-version.outputs.release_doc_path }}
           token: ${{ steps.app-token.outputs.token }}
           tag_name: ${{ needs.check-version.outputs.version }}
           name: ${{ needs.check-version.outputs.version }}

@@ -12,9 +12,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "create-release-note-major": "git pull origin main && alex-c-line create-release-note major",
-    "create-release-note-minor": "git pull origin main && alex-c-line create-release-note minor",
-    "create-release-note-patch": "git pull origin main && alex-c-line create-release-note patch",
+    "create-release-note": "bash -c 'git pull origin main && alex-c-line create-release-note-2 $@' --",
     "format": "pnpm run format-package-json && pnpm run format-prettier && pnpm run format-zizmor",
     "format-package-json": "eslint --fix --suppress-all package.json && rm -f eslint-suppressions.json",
     "format-prettier": "prettier --write \"./**/*.yml\"",
