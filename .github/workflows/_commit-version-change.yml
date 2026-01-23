@@ -37,16 +37,16 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install alex-c-line
+        run: |
+          npm install -g alex-c-line@latest
+          alex-c-line --version
+
       - name: Get the current version number
         id: get_current_version
         run: |
           VERSION=v$(jq -r ".version" package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Install alex-c-line
-        run: |
-          npm install -g alex-c-line@latest
-          alex-c-line --version
 
       - name: Get next version
         env:
@@ -57,13 +57,21 @@ jobs:
           NEXT_VERSION=$(alex-c-line increment-version $VERSION $VERSION_TYPE)
           echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
 
+          MAJOR_VERSION=$(alex-c-line get-major-version $NEXT_VERSION)
+          echo "major_version=$MAJOR_VERSION" >> $GITHUB_OUTPUT
+
+          MINOR_VERSION=$(alex-c-line get-minor-version $NEXT_VERSION)
+          echo "minor_version=$MINOR_VERSION" >> $GITHUB_OUTPUT
+
       - name: Find release document
         env:
           NEXT_VERSION: ${{ steps.get_next_version.outputs.next_version }}
+          MAJOR_VERSION: ${{ steps.get_next_version.outputs.major_version }}
+          MINOR_VERSION: ${{ steps.get_next_version.outputs.minor_version }}
           VERSION_TYPE: ${{ inputs.version-type }}
         id: release_document_path
         run: |
-          RELEASE_DOC_PATH="docs/releases/$VERSION_TYPE/$NEXT_VERSION.md"
+          RELEASE_DOC_PATH="docs/releases/$MAJOR_VERSION/$MINOR_VERSION/$NEXT_VERSION.md"
           if cat "$RELEASE_DOC_PATH" >/dev/null 2>&1; then
             echo "Release document found. Continuing..."
             echo "path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
