@@ -18,7 +18,7 @@ jobs:
       should_create_tag: ${{ steps.check_version.outputs.should_create_tag }}
       version: ${{ steps.get_version.outputs.version }}
       version_type: ${{ steps.get_version.outputs.version_type }}
-      release_doc_path: ${{ steps.check_version.outputs.release_doc_path }}
+      release_doc_path: ${{ steps.get_version.outputs.release_doc_path }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
