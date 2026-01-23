@@ -126,7 +126,7 @@ jobs:
       - name: Change the status in the release document
         env:
           RELEASE_DOC_PATH: ${{ env.RELEASE_DOC_PATH }}
-        run: alex-c-line set-release-status "$RELEASE_DOC_PATH"
+        run: alex-c-line set-release-status-2 "$RELEASE_DOC_PATH"
 
       - name: Mint GitHub App token
         id: app-token
