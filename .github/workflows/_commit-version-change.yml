@@ -45,7 +45,7 @@ jobs:
 
       - name: Install alex-c-line
         run: |
-          npm install -g alex-c-line@latest
+          npm install -g alex-c-line@1.19.3
           alex-c-line --version
 
       - name: Get next version
@@ -113,7 +113,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install alex-c-line
-        run: npm install -g alex-c-line@latest
+        run: npm install -g alex-c-line@1.19.3
 
       - name: Change the status in the release document
         env:

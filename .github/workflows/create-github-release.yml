@@ -30,7 +30,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        run: npm install -g alex-c-line@latest
+        run: npm install -g alex-c-line@1.19.3
 
       - name: Fetch tags from main
         run: git fetch --tags origin
