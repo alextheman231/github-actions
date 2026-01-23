@@ -36,20 +36,31 @@ jobs:
       - name: Fetch tags from main
         run: git fetch --tags origin
 
-      - name: Get version and type from package.json
+      - name: Get version, type, and release document path from package.json
         id: get_version
         run: |
           VERSION=v$(jq -r ".version" package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+          MAJOR_VERSION=$(alex-c-line get-major-version $VERSION)
+          echo "major_version=$MAJOR_VERSION" >> $GITHUB_OUTPUT
+
+          MINOR_VERSION=$(alex-c-line get-minor-version $VERSION)
+          echo "minor_version=$MINOR_VERSION" >> $GITHUB_OUTPUT
+
           VERSION_TYPE=$(alex-c-line get-version-type "$VERSION")
           echo "version_type=$VERSION_TYPE" >> $GITHUB_OUTPUT
+
+          RELEASE_DOC_PATH=docs/releases/$MAJOR_VERSION/$MINOR_VERSION/$VERSION.md
+          echo "release_doc_path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
 
       - name: Check if version and release document already exists
         id: check_version
         env:
           VERSION: ${{ steps.get_version.outputs.version }}
-          RELEASE_DOC_PATH: docs/releases/${{ steps.get_version.outputs.version_type }}/${{ steps.get_version.outputs.version }}.md
+          MAJOR_VERSION: ${{ steps.get_version.outputs.major_version }}
+          MINOR_VERSION: ${{ steps.get_version.outputs.minor_version }}
+          RELEASE_DOC_PATH: ${{ steps.get_version.outputs.release_doc_path }}
         run: |
           if git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
             echo "Version $VERSION already exists, skipping tag creation..."
