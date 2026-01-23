@@ -84,7 +84,7 @@ jobs:
         run: corepack use pnpm@latest
 
       - name: Commit PNPM update
-        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@eb296c1a513aa2df5b108b2d39c89ba2cb0bb4ca # v8.0.1
         id: commit_pnpm_update
         with:
           message: "Update PNPM"
@@ -95,7 +95,7 @@ jobs:
           pnpm install --no-frozen-lockfile
 
       - name: Commit JavaScript dependencies updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@eb296c1a513aa2df5b108b2d39c89ba2cb0bb4ca # v8.0.1
         id: commit_javascript_dependencies_updates
         with:
           message: "Update JavaScript dependencies"
@@ -106,7 +106,7 @@ jobs:
         run: actions-up -y
 
       - name: Commit GitHub Actions updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@eb296c1a513aa2df5b108b2d39c89ba2cb0bb4ca # v8.0.1
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -117,13 +117,13 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@f00ea95a57c8d8e9810149d2b5c5dca1af7d8058 # v6.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@eb296c1a513aa2df5b108b2d39c89ba2cb0bb4ca # v8.0.1
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           author: alex-up-bot <alexupbot@bot.com>
