@@ -48,7 +48,7 @@ jobs:
 
       - name: Install alex-c-line
         run: |
-          npm install -g alex-c-line@latest
+          npm install -g alex-c-line@1.19.3
           alex-c-line --version
 
       - name: Install dependencies

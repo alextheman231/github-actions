@@ -75,11 +75,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install actions-up and alex-c-line
+      - name: Install actions-up
         run: |
-          npm install -g actions-up@latest alex-c-line@latest
+          npm install -g actions-up@latest
           actions-up --version
-          alex-c-line --version
 
       - name: Update PNPM
         run: corepack use pnpm@latest
