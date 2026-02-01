@@ -1,4 +1,4 @@
-name: Self CI
+name: Version Change CI
 
 on:
   workflow_call:
@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   version-change-ci:
+    if: ${{ github.head_ref == 'alex-up-bot/change-major-version' || github.head_ref == 'alex-up-bot/change-minor-version' || github.head_ref == 'alex-up-bot/change-patch-version' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
