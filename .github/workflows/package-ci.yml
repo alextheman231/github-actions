@@ -47,5 +47,4 @@ jobs:
         run: pnpm test
 
   version-change-ci:
-    if: ${{ github.head_ref == 'alex-up-bot/change-major-version' || github.head_ref == 'alex-up-bot/change-minor-version' || github.head_ref == 'alex-up-bot/change-patch-version' }}
     uses: ./.github/workflows/version-change-ci.yml
