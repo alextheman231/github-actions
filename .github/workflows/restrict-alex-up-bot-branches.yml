@@ -1,0 +1,45 @@
+name: Restrict alex-up-bot branches
+
+on:
+  pull_request:
+    branches: ["main"]
+  workflow_call:
+    secrets:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  restrict-alex-up-bot-branches:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+
+      - name: Close PR if branch prefix is reserved
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          HEAD_REF: ${{ github.head_ref }}
+          AUTHOR_LOGIN: ${{ github.event.pull_request.user.login }}
+          ACTOR_LOGIN: ${{ github.actor }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$HEAD_REF" == alex-up-bot/* ]] && [[ "$AUTHOR_LOGIN" != "alex-up-bot[bot]" || "$ACTOR_LOGIN" != "alex-up-bot[bot]" ]]; then
+            gh pr close "$PR_NUMBER" \
+              --comment "Branch prefix 'alex-up-bot/' is reserved. Only alex-up-bot[bot] may create these branches." \
+              --delete-branch
+            exit 1
+          fi
