@@ -13,4 +13,37 @@ permissions:
 
 jobs:
   self-ci:
-    uses: ./.github/workflows/_self-ci.yml
+    if: ${{ github.head_ref != 'alex-up-bot/change-major-version' && github.head_ref != 'alex-up-bot/change-minor-version' && github.head_ref != 'alex-up-bot/change-patch-version' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Use Homebrew
+        uses: Homebrew/actions/setup-homebrew@7f6df1cd36597249cbf9810ff3aeff47edf8243b
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Zizmor
+        run: brew install zizmor
+
+      - name: Run linting checks
+        run: pnpm run lint
+
+  version-change-ci:
+    if: ${{ github.head_ref == 'alex-up-bot/change-major-version' || github.head_ref == 'alex-up-bot/change-minor-version' || github.head_ref == 'alex-up-bot/change-patch-version' }}
+    uses: ./.github/workflows/version-change-ci.yml
