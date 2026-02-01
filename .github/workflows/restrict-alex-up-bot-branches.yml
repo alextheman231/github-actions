@@ -32,7 +32,7 @@ jobs:
           app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
           private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
 
-      - name: Close PR if branch prefix is reserved
+      - name: Close pull request if branch is an alex-up-bot branch but was not created by alex-up-bot
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           HEAD_REF: ${{ github.head_ref }}
