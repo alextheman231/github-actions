@@ -1,0 +1,48 @@
+name: Self CI
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  version-change-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22
+
+      - name: Install alex-c-line
+        run: |
+          npm install -g alex-c-line
+          alex-c-line --version
+
+      - name: Get the version number from package.json
+        id: get_current_version
+        run: |
+          VERSION=v$(jq -r ".version" package.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get path to release document
+        env:
+          VERSION: ${{ steps.get_current_version.outputs.version }}
+        id: release_document_path
+        run: |
+          MAJOR_VERSION=$(alex-c-line get-major-version "$VERSION")
+          MINOR_VERSION=$(alex-c-line get-minor-version "$VERSION")
+
+          RELEASE_DOC_PATH="docs/releases/$MAJOR_VERSION/$MINOR_VERSION/$VERSION.md"
+          echo "release_doc_path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
+
+      - name: Verify the release document is valid
+        env:
+          RELEASE_DOC_PATH: ${{ steps.release_document_path.outputs.release_doc_path }}
+        run: alex-c-line check-release-note "$RELEASE_DOC_PATH" --expected-release-status Released

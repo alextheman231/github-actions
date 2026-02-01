@@ -1,20 +1,13 @@
-name: PNPM CI
+name: Self CI
 
 on:
   workflow_call:
-    inputs:
-      run-tests:
-        description: "Include test runs"
-        required: false
-        default: true
-        type: boolean
 
 permissions:
   contents: read
 
 jobs:
-  source-code-ci:
-    if: ${{ github.head_ref != 'alex-up-bot/change-major-version' && github.head_ref != 'alex-up-bot/change-minor-version' && github.head_ref != 'alex-up-bot/change-patch-version' }}
+  self-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -33,18 +26,17 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
+      - name: Use Homebrew
+        uses: Homebrew/actions/setup-homebrew@7f6df1cd36597249cbf9810ff3aeff47edf8243b
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build package
-        run: pnpm run build
+      - name: Install Zizmor
+        run: brew install zizmor
 
       - name: Run linting checks
         run: pnpm run lint
-
-      - name: Run tests
-        if: ${{ inputs.run-tests == true }}
-        run: pnpm test
 
   version-change-ci:
     if: ${{ github.head_ref == 'alex-up-bot/change-major-version' || github.head_ref == 'alex-up-bot/change-minor-version' || github.head_ref == 'alex-up-bot/change-patch-version' }}
