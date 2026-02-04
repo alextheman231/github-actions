@@ -47,3 +47,4 @@ jobs:
         env:
           RELEASE_DOC_PATH: ${{ steps.release_document_path.outputs.release_doc_path }}
         run: alex-c-line check-release-note "$RELEASE_DOC_PATH" --expected-release-status Released
+#
