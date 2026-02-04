@@ -8,7 +8,6 @@ on:
       create-feature-docs:
         description: "Whether to generate the documentation for the features using `pnpm run create-feature-docs` or not"
         required: false
-        default: false
         type: boolean
     secrets:
       APP_ID:
