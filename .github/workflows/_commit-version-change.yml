@@ -1,4 +1,4 @@
-name: Commit a version change (Internal workflow)
+name: Commit a version change (implementation)
 on:
   workflow_call:
     secrets:
