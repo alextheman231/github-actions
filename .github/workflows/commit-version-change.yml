@@ -4,6 +4,12 @@ on:
     branches: ["main"]
   workflow_dispatch:
   workflow_call:
+    inputs:
+      create-feature-docs:
+        description: "Whether to generate the documentation for the features using `pnpm run create-feature-docs` or not"
+        required: false
+        default: false
+        type: boolean
     secrets:
       APP_ID:
         required: true
@@ -18,6 +24,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: major
+      create-feature-docs: ${{ inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -29,6 +36,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: minor
+      create-feature-docs: ${{ inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -40,6 +48,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: patch
+      create-feature-docs: ${{ inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
