@@ -24,7 +24,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: major
-      create-feature-docs: ${{ github.repository == 'alextheman231/github-actions' && false || inputs.create-feature-docs }}
+      create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -36,7 +36,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: minor
-      create-feature-docs: ${{ github.repository == 'alextheman231/github-actions' && false || inputs.create-feature-docs }}
+      create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -48,7 +48,7 @@ jobs:
     uses: ./.github/workflows/_commit-version-change.yml
     with:
       version-type: patch
-      create-feature-docs: ${{ github.repository == 'alextheman231/github-actions' && false || inputs.create-feature-docs }}
+      create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
