@@ -155,11 +155,11 @@ jobs:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
       - name: Create feature docs
-        if: ${{ inputs.create-feature-docs == true }}
+        if: ${{ inputs.create-feature-docs }}
         run: pnpm run create-feature-docs
 
       - name: Commit feature docs
-        if: ${{ inputs.create-feature-docs == true }}
+        if: ${{ inputs.create-feature-docs }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@eb296c1a513aa2df5b108b2d39c89ba2cb0bb4ca # v8.0.1
         with:
           message: "Create feature docs"
