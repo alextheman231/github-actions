@@ -37,14 +37,13 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           HEAD_REF: ${{ github.head_ref }}
           AUTHOR_LOGIN: ${{ github.event.pull_request.user.login }}
-          ACTOR_LOGIN: ${{ github.actor }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
 
-          if [[ "$HEAD_REF" == alex-up-bot/* ]] && [[ "$AUTHOR_LOGIN" != "alex-up-bot[bot]" || "$ACTOR_LOGIN" != "alex-up-bot[bot]" ]]; then
+          if [[ "$HEAD_REF" == alex-up-bot/* ]] && [[ "$AUTHOR_LOGIN" != "alex-up-bot[bot]" ]]; then
             gh pr close "$PR_NUMBER" \
-              --comment "Branch prefix 'alex-up-bot/' is reserved. Only alex-up-bot[bot] may create these branches." \
+              --comment "Branch prefix 'alex-up-bot/' is reserved for me. Only I may create these branches." \
               --delete-branch
             exit 1
           fi
