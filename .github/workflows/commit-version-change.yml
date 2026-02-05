@@ -6,6 +6,11 @@ on:
         description: "Whether to generate the documentation for the features using `pnpm run create-feature-docs` or not"
         default: false
         type: boolean
+      run-build:
+        description: "Whether to run the build step or not"
+        required: false
+        default: false
+        type: boolean
     secrets:
       APP_ID:
         required: true
