@@ -26,6 +26,7 @@ jobs:
     with:
       version-type: major
       create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
+      run-build: ${{ inputs.run-build }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -38,6 +39,7 @@ jobs:
     with:
       version-type: minor
       create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
+      run-build: ${{ inputs.run-build }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
@@ -50,6 +52,7 @@ jobs:
     with:
       version-type: patch
       create-feature-docs: ${{ github.repository != 'alextheman231/github-actions' || inputs.create-feature-docs }}
+      run-build: ${{ inputs.run-build }}
     secrets:
       APP_ID: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
