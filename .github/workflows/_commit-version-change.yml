@@ -12,6 +12,11 @@ on:
         required: false
         default: false
         type: boolean
+      run-build:
+        description: "Whether to run the build step or not"
+        required: false
+        default: false
+        type: boolean
       version-type:
         description: "The version type to increment by"
         type: string
@@ -119,6 +124,10 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
+
+      - name: Build the package
+        if: ${{ inputs.run-build }}
+        run: pnpm run build
 
       - name: Install dependencies
         run: pnpm install
