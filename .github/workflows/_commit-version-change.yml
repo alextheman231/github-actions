@@ -125,12 +125,12 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Build the package
         if: ${{ inputs.run-build }}
         run: pnpm run build
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Change version
         env:
