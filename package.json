@@ -12,7 +12,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0"
+    "build": "exit 0",
     "create-release-note": "bash -c 'git pull origin main && alex-c-line create-release-note-2 $@' --",
     "format": "pnpm run format-package-json && pnpm run format-prettier && pnpm run format-zizmor",
     "format-package-json": "eslint --fix --suppress-all package.json && rm -f eslint-suppressions.json",
