@@ -2,3 +2,9 @@
 set -e
 
 pnpm run pre-commit
+cd artwork
+pdm run format
+pdm run lint
+cd ..
+
+git update-index --again
