@@ -32,17 +32,41 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
-      - name: Use Homebrew
-        uses: Homebrew/actions/setup-homebrew@7f6df1cd36597249cbf9810ff3aeff47edf8243b
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Install system deps for Manim
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            libcairo2-dev \
+            libpango1.0-dev \
+            ffmpeg \
+            libx11-dev \
+            libgl1-mesa-dev
+
+      - name: Setup PDM
+        run: pip install pdm
+
+      - name: Install Python dependencies
+        working-directory: artwork
+        run: pdm install
+
+      - name: Install JavaScript dependencies
         run: pnpm install
 
       - name: Install Zizmor
-        run: brew install zizmor
+        run: pip install zizmor
 
-      - name: Run linting checks
+      - name: Run linting checks on actions
         run: pnpm run lint
+
+      - name: Run linting checks on artwork
+        working-directory: artwork
+        run: pdm run lint
 
   version-change-ci:
     uses: ./.github/workflows/version-change-ci.yml
