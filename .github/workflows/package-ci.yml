@@ -8,14 +8,22 @@ on:
         required: false
         default: true
         type: boolean
+      os:
+        description: "The operating systems to run the workflow on"
+        required: false
+        default: '["ubuntu-latest"]' # Lol this is stupid!
+        type: string
 
 permissions:
   contents: read
 
 jobs:
   source-code-ci:
+    strategy:
+      matrix:
+        os: ${{ fromJson(inputs.os) }} # VERY stupid!
     if: ${{ github.head_ref != 'alex-up-bot/change-major-version' && github.head_ref != 'alex-up-bot/change-minor-version' && github.head_ref != 'alex-up-bot/change-patch-version' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
