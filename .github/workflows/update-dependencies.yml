@@ -142,7 +142,7 @@ jobs:
       - name: Get outdated JavaScript dependencies
         id: outdated-javascript-dependencies
         run: |
-          "OUTDATED_DEPENDENCIES=$(alex-c-line internal outdated-dependencies)"
+          OUTDATED_DEPENDENCIES="$(alex-c-line internal outdated-dependencies)"
 
           echo "outdated_dependencies=$OUTDATED_DEPENDENCIES" >> $GITHUB_OUTPUT
 
