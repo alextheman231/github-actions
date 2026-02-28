@@ -1,0 +1,19 @@
+name: Comment outdated dependencies (internal)
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  comment-outdated:
+    uses: ./.github/workflows/comment-outdated.yml
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+      pull-requests: write
+    with:
+      pull-request-number: ${{ github.event.pull_request.number }}
+    secrets:
+      APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
