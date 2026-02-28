@@ -136,7 +136,7 @@ jobs:
 
       - name: Get outdated JavaScript dependencies
         id: outdated-javascript-dependencies
-        run: pnpm outdated
+        run: pnpm outdated || true
 
       - name: Find Comment
         if: ${{ github.event_name == 'pull_request' }}
