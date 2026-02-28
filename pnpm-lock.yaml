@@ -12,8 +12,8 @@ importers:
   .:
     devDependencies:
       '@alextheman/eslint-plugin':
-        specifier: ^5.9.0
-        version: 5.9.0(28d1362782b64f4aabdbf9d2831beef8)
+        specifier: ^5.9.1
+        version: 5.9.1(28d1362782b64f4aabdbf9d2831beef8)
       alex-c-line:
         specifier: <1.32.0
         version: 1.31.0
@@ -32,8 +32,8 @@ importers:
 
 packages:
 
-  '@alextheman/eslint-plugin@5.9.0':
-    resolution: {integrity: sha512-bE1YkXsxLHlY7OvivAYF62X/8hnTjMZu9ylzHlrnddfcSe4lhUO7UA3Kta4d3E/fgbzrHJm6+ujHmT5TLSC2aQ==}
+  '@alextheman/eslint-plugin@5.9.1':
+    resolution: {integrity: sha512-/PC29lGoiUomo1lxVKlSJiOdEkqWHmswyw843JV/cf4+VWamLrGcmGsDihxuJUECG4p1np5nlGisKMrjYJaf/w==}
     peerDependencies:
       '@eslint/js': '>=9.0.0'
       eslint: '>=9.0.0'
@@ -1220,8 +1220,8 @@ packages:
   end-of-stream@1.4.5:
     resolution: {integrity: sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==}
 
-  enhanced-resolve@5.19.0:
-    resolution: {integrity: sha512-phv3E1Xl4tQOShqSte26C7Fl84EwUdZsyOuSSk9qtAGyyQs2s3jJzComh+Abf4g187lUUAvH+H26omrqia2aGg==}
+  enhanced-resolve@5.20.0:
+    resolution: {integrity: sha512-/ce7+jQ1PQ6rVXwe+jKEg5hW5ciicHwIQUagZkp6IufBoY3YDgdTTY1azVs0qoRgVmvsNB+rbjLJxDAeHHtwsQ==}
     engines: {node: '>=10.13.0'}
 
   entities@4.5.0:
@@ -2144,8 +2144,8 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
-  pump@3.0.3:
-    resolution: {integrity: sha512-todwxLMY7/heScKmntwQG8CXVkWUOdYxIvY2s0VWAAMh/nd8SoYiRaKjlr7+iCs984f2P8zvrfWcDDYVb73NfA==}
+  pump@3.0.4:
+    resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
 
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
@@ -2700,7 +2700,7 @@ packages:
 
 snapshots:
 
-  '@alextheman/eslint-plugin@5.9.0(28d1362782b64f4aabdbf9d2831beef8)':
+  '@alextheman/eslint-plugin@5.9.1(28d1362782b64f4aabdbf9d2831beef8)':
     dependencies:
       '@alextheman/utility': 5.5.0
       '@eslint/compat': 2.0.2(eslint@10.0.2)
@@ -3769,7 +3769,7 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  enhanced-resolve@5.19.0:
+  enhanced-resolve@5.20.0:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.3.0
@@ -4050,7 +4050,7 @@ snapshots:
   eslint-plugin-n@17.23.1(eslint@10.0.2)(typescript@5.9.3):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.0.2)
-      enhanced-resolve: 5.19.0
+      enhanced-resolve: 5.20.0
       eslint: 10.0.2
       eslint-plugin-es-x: 7.8.0(eslint@10.0.2)
       get-tsconfig: 4.13.6
@@ -4833,7 +4833,7 @@ snapshots:
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
       node-abi: 3.87.0
-      pump: 3.0.3
+      pump: 3.0.4
       rc: 1.2.8
       simple-get: 4.0.1
       tar-fs: 2.1.4
@@ -4857,7 +4857,7 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
-  pump@3.0.3:
+  pump@3.0.4:
     dependencies:
       end-of-stream: 1.4.5
       once: 1.4.0
@@ -5193,7 +5193,7 @@ snapshots:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3
-      pump: 3.0.3
+      pump: 3.0.4
       tar-stream: 2.2.0
 
   tar-stream@2.2.0:
