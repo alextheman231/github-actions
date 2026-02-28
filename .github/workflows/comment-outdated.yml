@@ -14,13 +14,17 @@ on:
         type: number
 
 jobs:
-  comment-outdated:
+  check-outdated:
     runs-on: ubuntu-latest
     permissions:
       actions: read
       checks: write
       contents: read
       pull-requests: write
+    outputs:
+      outdated-dependencies: ${{ steps.outdated-javascript-dependencies.outputs.outdated_dependencies }}
+      outdated-dependencies-found: ${{ steps.outdated-javascript-dependencies.outputs.outdated_dependencies_found }}
+      existing_comment: ${{ steps.find-comment.outputs.comment-id }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -63,7 +67,9 @@ jobs:
         id: outdated-javascript-dependencies
         run: |
           OUTDATED_DEPENDENCIES="$(alex-c-line internal outdated-dependencies)"
+          OUTDATED_DEPENDENCIES_FOUND=$("$OUTDATED_DEPENDENCIES" == "NO_OUTDATED_DEPENDENCIES_FOUND" && "true" || "false")
 
+          echo "outdated_dependencies_found=$OUTDATED_DEPENDENCIES_FOUND" >> "$GITHUB_OUTPUT"
           {
             echo "outdated_dependencies<<EOF"
             echo "$OUTDATED_DEPENDENCIES"
@@ -78,15 +84,65 @@ jobs:
           comment-author: "alex-up-bot[bot]"
           body-includes: # Outdated Dependencies
 
+  comment-outdated:
+    needs: check-outdated
+    if: ${{ needs.check-outdated.outputs.outdated-dependencies-found == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Comment outdated dependencies on the pull request
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        if: ${{ needs.check-outdated.outputs.outdated-dependencies-found }}
         id: create-comment
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ inputs.pull-request-number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          comment-id: ${{ steps.app-token.outputs.token }}
           edit-mode: replace
           body: |
             # Outdated Dependencies
 
-            ${{ steps.outdated-javascript-dependencies.outputs.outdated_dependencies }}
+            ${{ needs.check-outdated.outputs.outdated-dependencies }}
+
+  delete-comment:
+    needs: check-outdated
+    if: ${{ needs.check-outdated.outputs.outdated-dependencies-found == 'false' && needs.check-outdated.outputs.existing_comment != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Delete comment of outdated dependencies
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          COMMENT_ID: ${{ needs.check-outdated.outputs.existing_comment }}
+        run: |
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          "/repos/$GITHUB_REPOSITORY/pulls/comments/$COMMENT_ID"
