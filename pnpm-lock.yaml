@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  alex-c-line: <1.32.0
+
 importers:
 
   .:
@@ -12,7 +15,7 @@ importers:
         specifier: ^5.9.0
         version: 5.9.0(28d1362782b64f4aabdbf9d2831beef8)
       alex-c-line:
-        specifier: ^1.31.0
+        specifier: <1.32.0
         version: 1.31.0
       eslint:
         specifier: ^10.0.2
