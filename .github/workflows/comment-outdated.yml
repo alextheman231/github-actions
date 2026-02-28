@@ -67,9 +67,12 @@ jobs:
         id: outdated-javascript-dependencies
         run: |
           OUTDATED_DEPENDENCIES="$(alex-c-line internal outdated-dependencies)"
-          OUTDATED_DEPENDENCIES_FOUND=$("$OUTDATED_DEPENDENCIES" == 'NO_OUTDATED_DEPENDENCIES_FOUND' && 'true' || 'false')
+          if [[ "$OUTDATED_DEPENDENCIES" -eq 'NO_OUTDATED_DEPENDENCIES_FOUND' ]]; then
+            echo "outdated_dependencies_found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "outdated_dependencies_found=true" >> "$GITHUB_OUTPUT"
+          fi
 
-          echo "outdated_dependencies_found=$OUTDATED_DEPENDENCIES_FOUND" >> "$GITHUB_OUTPUT"
           {
             echo "outdated_dependencies<<EOF"
             echo "$OUTDATED_DEPENDENCIES"
