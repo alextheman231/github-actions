@@ -80,7 +80,7 @@ jobs:
         run: corepack use pnpm@latest
 
       - name: Commit PNPM update
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3db51f2a57ee95cda50310b3856cfdc0ae171cf7 # v8.3.3
+        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
         id: commit_pnpm_update
         with:
           message: "Update PNPM"
@@ -91,7 +91,7 @@ jobs:
           pnpm install --no-frozen-lockfile
 
       - name: Commit JavaScript dependencies updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3db51f2a57ee95cda50310b3856cfdc0ae171cf7 # v8.3.3
+        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
         id: commit_javascript_dependencies_updates
         with:
           message: "Update JavaScript dependencies"
@@ -102,7 +102,7 @@ jobs:
         run: actions-up -y
 
       - name: Commit GitHub Actions updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3db51f2a57ee95cda50310b3856cfdc0ae171cf7 # v8.3.3
+        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -113,7 +113,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3db51f2a57ee95cda50310b3856cfdc0ae171cf7 # v8.3.3
+        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
