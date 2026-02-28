@@ -67,7 +67,7 @@ jobs:
         id: outdated-javascript-dependencies
         run: |
           OUTDATED_DEPENDENCIES="$(alex-c-line internal outdated-dependencies)"
-          if [[ "$OUTDATED_DEPENDENCIES" -eq 'NO_OUTDATED_DEPENDENCIES_FOUND' ]]; then
+          if [[ "$OUTDATED_DEPENDENCIES" == 'NO_OUTDATED_DEPENDENCIES_FOUND' ]]; then
             echo "outdated_dependencies_found=false" >> "$GITHUB_OUTPUT"
           else
             echo "outdated_dependencies_found=true" >> "$GITHUB_OUTPUT"
@@ -116,7 +116,7 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ inputs.pull-request-number }}
-          comment-id: ${{ steps.app-token.outputs.token }}
+          comment-id: ${{ needs.check-outdated.outputs.existing_comment }}
           edit-mode: replace
           body: |
             # Outdated Dependencies
@@ -149,4 +149,4 @@ jobs:
           gh api \
           --method DELETE \
           -H "Accept: application/vnd.github+json" \
-          "/repos/$GITHUB_REPOSITORY/pulls/comments/$COMMENT_ID"
+          "/repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID"
