@@ -7,6 +7,7 @@ on:
 jobs:
   comment-outdated:
     uses: ./.github/workflows/comment-outdated.yml
+    if: ${{ github.head_ref == 'alex-up-bot/update-dependencies' }}
     permissions:
       actions: read
       checks: write

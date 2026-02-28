@@ -16,7 +16,6 @@ on:
 jobs:
   comment-outdated:
     runs-on: ubuntu-latest
-    if: ${{ github.head_ref == 'alex-up-bot/update-dependencies' }}
     permissions:
       actions: read
       checks: write
