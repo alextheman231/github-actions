@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  source-code-ci:
+  source-code-ci-steps:
     strategy:
       matrix:
         os: ${{ fromJson(inputs.os) }} # VERY stupid!
@@ -53,6 +53,19 @@ jobs:
       - name: Run tests
         if: ${{ inputs.run-tests == true }}
         run: pnpm test
+
+  source-code-ci:
+    needs: source-code-ci-steps
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      CI_STATUS: ${{ needs.source-code-ci-steps.result }}
+    steps:
+      - name: Report on any matrix failures
+        run: |
+          if [ "$CI_STATUS" != "success" ]; then
+            exit 1
+          fi
 
   version-change-ci:
     uses: ./.github/workflows/version-change-ci.yml
