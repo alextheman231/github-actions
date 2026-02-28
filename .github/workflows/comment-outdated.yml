@@ -1,0 +1,93 @@
+name: Comment outdated dependencies
+
+on:
+  workflow_call:
+    secrets:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
+
+    inputs:
+      pull-request-number:
+        required: true
+        type: number
+
+jobs:
+  comment-outdated:
+    runs-on: ubuntu-latest
+    if: ${{ github.head_ref == 'alex-up-bot/update-dependencies' }}
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout pull request
+        env:
+          PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: gh pr checkout "$PULL_REQUEST_NUMBER"
+
+      - name: Use PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          run_install: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install alex-c-line
+        run: |
+          npm install -g alex-c-line@latest
+          alex-c-line --version
+
+      - name: Get outdated JavaScript dependencies
+        id: outdated-javascript-dependencies
+        run: |
+          OUTDATED_DEPENDENCIES="$(alex-c-line internal outdated-dependencies)"
+
+          {
+            echo "outdated_dependencies<<EOF"
+            echo "$OUTDATED_DEPENDENCIES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+        id: find-comment
+        with:
+          issue-number: ${{ inputs.pull-request-number }}
+          comment-author: "alex-up-bot[bot]"
+          body-includes: # Outdated Dependencies
+
+      - name: Comment outdated dependencies on the pull request
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        id: create-comment
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ inputs.pull-request-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            # Outdated Dependencies
+
+            ${{ steps.outdated-javascript-dependencies.outputs.outdated_dependencies }}
