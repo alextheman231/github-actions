@@ -158,4 +158,4 @@ jobs:
           body: |
             # Outdated Dependencies
 
-            ${{ steps.outdated-javascript-dependencies.outputs.stderr }}
+            ${{ steps.outdated-javascript-dependencies.outputs.stdout }}
