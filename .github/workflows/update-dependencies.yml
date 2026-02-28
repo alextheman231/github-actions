@@ -149,9 +149,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
+          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout pull request
         env:
           PULL_REQUEST_NUMBER: ${{ needs.update-dependencies.outputs.pull-request-number }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh pr checkout "$PULL_REQUEST_NUMBER"
 
       - name: Use PNPM
@@ -183,13 +191,6 @@ jobs:
             echo "$OUTDATED_DEPENDENCIES"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-
-      - name: Get alex-up-bot GitHub token
-        id: app-token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
-        with:
-          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
-          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
 
       - name: Find Comment
         uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
