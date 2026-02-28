@@ -151,7 +151,7 @@ jobs:
         id: create-comment
         with:
           token: ${{ steps.app-token.outputs.token }}
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.pull-request.outputs.pull-request-number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
