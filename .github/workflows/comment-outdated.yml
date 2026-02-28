@@ -144,6 +144,7 @@ jobs:
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           COMMENT_ID: ${{ needs.check-outdated.outputs.existing_comment }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           gh api \
           --method DELETE \
