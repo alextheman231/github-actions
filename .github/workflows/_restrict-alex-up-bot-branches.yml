@@ -1,0 +1,16 @@
+name: Restrict alex-up-bot branches
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  restrict-alex-up-bot-branches:
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    uses: ./.github/workflows/restrict-alex-up-bot-branches.yml
+    secrets:
+      APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
