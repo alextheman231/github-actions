@@ -1,4 +1,4 @@
-name: Update Dependencies
+name: Update Dependencies (Internal)
 on:
   workflow_dispatch:
   schedule:

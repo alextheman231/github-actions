@@ -1,4 +1,4 @@
-name: Create pull request templates
+name: Create pull request templates (Internal)
 
 on:
   workflow_dispatch:

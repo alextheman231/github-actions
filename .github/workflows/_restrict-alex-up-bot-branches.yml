@@ -1,4 +1,4 @@
-name: Restrict alex-up-bot branches
+name: Restrict alex-up-bot branches (Internal)
 
 on:
   pull_request:
