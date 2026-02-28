@@ -63,7 +63,7 @@ jobs:
     steps:
       - name: Report on any matrix failures
         run: |
-          if [ "$CI_STATUS" != "success" ]; then
+          if [ "$CI_STATUS" == "failure" ] || [ "$CI_STATUS" == "cancelled" ]; then
             exit 1
           fi
 
