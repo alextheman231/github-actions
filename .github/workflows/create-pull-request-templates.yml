@@ -1,9 +1,6 @@
 name: Create pull request templates
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: 0 21 * * 0
   workflow_call:
     secrets:
       APP_ID:
@@ -11,9 +8,9 @@ on:
       APP_PRIVATE_KEY:
         required: true
     inputs:
-      skip-build:
+      run-build:
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: write
@@ -55,7 +52,7 @@ jobs:
         run: pnpm install
 
       - name: Run build
-        if: ${{ !inputs.skip-build }}
+        if: ${{ inputs.run-build }}
         run: pnpm run build
 
       - name: Create pull request templates

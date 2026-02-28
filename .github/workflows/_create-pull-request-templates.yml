@@ -1,0 +1,22 @@
+name: Create pull request templates
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 21 * * 0
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pull-request-templates:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: ./.github/workflows/create-pull-request-templates.yml
+    with:
+      run-build: false
+    secrets:
+      APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}

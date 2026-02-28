@@ -1,8 +1,6 @@
 name: Restrict alex-up-bot branches
 
 on:
-  pull_request:
-    branches: ["main"]
   workflow_call:
     secrets:
       APP_ID:
@@ -29,8 +27,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
         with:
-          app-id: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_APP_ID || secrets.APP_ID }}
-          private-key: ${{ github.repository == 'alextheman231/github-actions' && secrets.ALEX_UP_BOT_PRIVATE_KEY || secrets.APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Close pull request if branch is an alex-up-bot branch but was not created by alex-up-bot
         env:
