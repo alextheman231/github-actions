@@ -1,4 +1,4 @@
-name: Self CI
+name: Self CI (Internal)
 
 on:
   push:

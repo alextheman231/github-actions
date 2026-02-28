@@ -1,4 +1,4 @@
-name: Create GitHub Release (internal)
+name: Create GitHub Release (Internal)
 on:
   push:
     branches: ["main"]

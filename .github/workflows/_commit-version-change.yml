@@ -1,4 +1,4 @@
-name: Commit a version change internal
+name: Commit a version change (Internal)
 on:
   push:
     branches: ["main"]
