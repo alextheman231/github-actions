@@ -134,10 +134,15 @@ jobs:
           title: "Update dependencies"
           body-path: .github/PULL_REQUEST_TEMPLATE/tooling_change.md
 
+      - name: Install alex-c-line
+        run: |
+          npm install -g alex-c-line@latest
+          alex-c-line --version
+
       - name: Get outdated JavaScript dependencies
         id: outdated-javascript-dependencies
         run: |
-          OUTDATED_DEPENDENCIES=$(pnpm outdated || true)
+          OUTDATED_DEPENDENCIES=$(alex-c-line internal outdated-dependencies)
 
           echo "outdated_dependencies=$OUTDATED_DEPENDENCIES" >> $GITHUB_OUTPUT
 
