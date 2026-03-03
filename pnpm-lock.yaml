@@ -12,8 +12,8 @@ importers:
         specifier: ^5.9.1
         version: 5.9.1(28d1362782b64f4aabdbf9d2831beef8)
       alex-c-line:
-        specifier: ^1.33.3
-        version: 1.33.3
+        specifier: ^2.0.0
+        version: 2.0.0
       eslint:
         specifier: ^10.0.2
         version: 10.0.2
@@ -55,6 +55,10 @@ packages:
 
   '@alextheman/utility@5.5.0':
     resolution: {integrity: sha512-5YMpCT98L49Yh1C0QKJ60bE2lleWMqCEpCqHvmYWG1glWY0WVG5B3UHXVc9x9XMO0iS96KAHKvqSj+Cxua0/Xw==}
+    engines: {node: '>=22.3.0'}
+
+  '@alextheman/utility@5.6.0':
+    resolution: {integrity: sha512-Wac6jkFioLGP5SVBmukjXdNuckN9Mh+XWS/ZA7h9zXJoTf36cuK8HtD78IRPwW5PhGUbYR1yJraUbCqNNsmuhg==}
     engines: {node: '>=22.3.0'}
 
   '@altano/repository-tools@2.0.1':
@@ -920,8 +924,8 @@ packages:
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
-  alex-c-line@1.33.3:
-    resolution: {integrity: sha512-UJhonKQYPXhW3SwSR+2Qs9jtDQjr9srlOj2gPSXY39rJFIzX9VixlgWmTJbO9A8NMZe5fZrBioMbVu4sMcPtBg==}
+  alex-c-line@2.0.0:
+    resolution: {integrity: sha512-+Noz+iJS+aoUGp1GPJ2gQZ4nyku7ZT8IOB7XngGiPXpQ+qOT6Vsbr2ztHH3wkcI5wbKMBFW3A7Z1pO3SLBKMSw==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -1065,8 +1069,8 @@ packages:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
 
-  caniuse-lite@1.0.30001774:
-    resolution: {integrity: sha512-DDdwPGz99nmIEv216hKSgLD+D4ikHQHjBC/seF98N9CPqRX4M5mSxT9eTV6oyisnJcuzxtZy4n17yKKQYmYQOA==}
+  caniuse-lite@1.0.30001775:
+    resolution: {integrity: sha512-s3Qv7Lht9zbVKE9XoTyRG6wVDCKdtOFIjBGg3+Yhn6JaytuNKPIjBMTMIY1AnOH3seL5mvF+x33oGAyK3hVt3A==}
 
   canvas@3.2.1:
     resolution: {integrity: sha512-ej1sPFR5+0YWtaVp6S1N1FVz69TQCqmrkGeRvQxZeAB1nAIcjNTHVwrZtYtWFFBmQsF40/uDLehsW5KuYC99mg==}
@@ -1289,8 +1293,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-fix-utils@0.4.1:
-    resolution: {integrity: sha512-1xPtnB7RYRHKrFGll3kRv5gOodHm3/jkk76jrKMZ2yk/G8HU9XoN1I9iHgh1ToAqmGG0/FFrybZMqmqUWp4asA==}
+  eslint-fix-utils@0.4.2:
+    resolution: {integrity: sha512-n7ZTcwwkP5scedlhvWMcqxED+O1NzXcj5Rxn/0kJQMP88k02vRcBfQ1qsk/JHb6Aw8bajFoetFCCBiNIcNCsvA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@types/estree': '>=1'
@@ -2111,8 +2115,8 @@ packages:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
 
-  postcss@8.5.6:
-    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
+  postcss@8.5.8:
+    resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
 
   prebuild-install@7.1.3:
@@ -2731,6 +2735,13 @@ snapshots:
       - typescript
 
   '@alextheman/utility@5.5.0':
+    dependencies:
+      dotenv: 17.3.1
+      execa: 9.6.1
+      libsodium-wrappers: 0.8.2
+      zod: 4.3.6
+
+  '@alextheman/utility@5.6.0':
     dependencies:
       dotenv: 17.3.1
       execa: 9.6.1
@@ -3452,9 +3463,9 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  alex-c-line@1.33.3:
+  alex-c-line@2.0.0:
     dependencies:
-      '@alextheman/utility': 5.5.0
+      '@alextheman/utility': 5.6.0
       '@inquirer/prompts': 8.3.0
       boxen: 8.0.1
       canvas: 3.2.1
@@ -3615,7 +3626,7 @@ snapshots:
   browserslist@4.28.1:
     dependencies:
       baseline-browser-mapping: 2.10.0
-      caniuse-lite: 1.0.30001774
+      caniuse-lite: 1.0.30001775
       electron-to-chromium: 1.5.302
       node-releases: 2.0.27
       update-browserslist-db: 1.2.3(browserslist@4.28.1)
@@ -3644,7 +3655,7 @@ snapshots:
 
   camelcase@8.0.0: {}
 
-  caniuse-lite@1.0.30001774: {}
+  caniuse-lite@1.0.30001775: {}
 
   canvas@3.2.1:
     dependencies:
@@ -3923,7 +3934,7 @@ snapshots:
     dependencies:
       eslint: 10.0.2
 
-  eslint-fix-utils@0.4.1(@types/estree@1.0.8)(eslint@10.0.2):
+  eslint-fix-utils@0.4.2(@types/estree@1.0.8)(eslint@10.0.2):
     dependencies:
       eslint: 10.0.2
     optionalDependencies:
@@ -4067,7 +4078,7 @@ snapshots:
       detect-indent: 7.0.2
       detect-newline: 4.0.1
       eslint: 10.0.2
-      eslint-fix-utils: 0.4.1(@types/estree@1.0.8)(eslint@10.0.2)
+      eslint-fix-utils: 0.4.2(@types/estree@1.0.8)(eslint@10.0.2)
       jsonc-eslint-parser: 2.4.1
       package-json-validator: 0.59.1
       semver: 7.7.4
@@ -4816,7 +4827,7 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postcss@8.5.6:
+  postcss@8.5.8:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
@@ -5384,7 +5395,7 @@ snapshots:
       esbuild: 0.27.3
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-      postcss: 8.5.6
+      postcss: 8.5.8
       rollup: 4.59.0
       tinyglobby: 0.2.15
     optionalDependencies:
