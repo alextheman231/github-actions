@@ -37,10 +37,7 @@ jobs:
           VERSION: ${{ steps.get_current_version.outputs.version }}
         id: release_document_path
         run: |
-          MAJOR_VERSION=$(alex-c-line get-major-version "$VERSION")
-          MINOR_VERSION=$(alex-c-line get-minor-version "$VERSION")
-
-          RELEASE_DOC_PATH="docs/releases/$MAJOR_VERSION/$MINOR_VERSION/$VERSION.md"
+          RELEASE_DOC_PATH="$(alex-c-line template release-note path $VERSION)"
           echo "release_doc_path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
 
       - name: Verify the release document is valid

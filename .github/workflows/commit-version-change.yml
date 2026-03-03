@@ -64,24 +64,15 @@ jobs:
           VERSION_TYPE: ${{ env.VERSION_TYPE }}
         id: get_next_version
         run: |
-          NEXT_VERSION=$(alex-c-line increment-version $VERSION $VERSION_TYPE)
+          NEXT_VERSION="$(alex-c-line version increment $VERSION $VERSION_TYPE)"
           echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
-
-          MAJOR_VERSION=$(alex-c-line get-major-version $NEXT_VERSION)
-          echo "major_version=$MAJOR_VERSION" >> $GITHUB_OUTPUT
-
-          MINOR_VERSION=$(alex-c-line get-minor-version $NEXT_VERSION)
-          echo "minor_version=$MINOR_VERSION" >> $GITHUB_OUTPUT
 
       - name: Find release document
         env:
           NEXT_VERSION: ${{ steps.get_next_version.outputs.next_version }}
-          MAJOR_VERSION: ${{ steps.get_next_version.outputs.major_version }}
-          MINOR_VERSION: ${{ steps.get_next_version.outputs.minor_version }}
-          VERSION_TYPE: ${{ inputs.version-type }}
         id: release_document_path
         run: |
-          RELEASE_DOC_PATH="docs/releases/$MAJOR_VERSION/$MINOR_VERSION/$NEXT_VERSION.md"
+          RELEASE_DOC_PATH="$(alex-c-line template release-note path $NEXT_VERSION)"
           if [[ -f "$RELEASE_DOC_PATH" ]]; then
             echo "Release document found. Continuing..."
             echo "path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
@@ -102,7 +93,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -149,7 +139,7 @@ jobs:
       - name: Change the status in the release document
         env:
           RELEASE_DOC_PATH: ${{ env.RELEASE_DOC_PATH }}
-        run: alex-c-line set-release-status-2 "$RELEASE_DOC_PATH"
+        run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Get alex-up-bot GitHub token
         id: app-token
