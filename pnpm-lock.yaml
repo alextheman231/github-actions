@@ -9,11 +9,11 @@ importers:
   .:
     devDependencies:
       '@alextheman/eslint-plugin':
-        specifier: ^5.9.1
-        version: 5.9.1(28d1362782b64f4aabdbf9d2831beef8)
+        specifier: ^5.10.0
+        version: 5.10.0(28d1362782b64f4aabdbf9d2831beef8)
       alex-c-line:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.0.1
+        version: 2.0.1
       eslint:
         specifier: ^10.0.2
         version: 10.0.2
@@ -29,8 +29,8 @@ importers:
 
 packages:
 
-  '@alextheman/eslint-plugin@5.9.1':
-    resolution: {integrity: sha512-/PC29lGoiUomo1lxVKlSJiOdEkqWHmswyw843JV/cf4+VWamLrGcmGsDihxuJUECG4p1np5nlGisKMrjYJaf/w==}
+  '@alextheman/eslint-plugin@5.10.0':
+    resolution: {integrity: sha512-87Dg4ikADEI9HRNWsdzRsvi7RNTPBYMd9PkjQmoOPbt2sYNU4hhhQ60yiscc3C+jZ7Pa7MYEhYxKazLtUtPuCw==}
     peerDependencies:
       '@eslint/js': '>=9.0.0'
       eslint: '>=9.0.0'
@@ -53,12 +53,8 @@ packages:
       vite-tsconfig-paths: '>=5.1.4'
       vitest: '>=4.0.13'
 
-  '@alextheman/utility@5.5.0':
-    resolution: {integrity: sha512-5YMpCT98L49Yh1C0QKJ60bE2lleWMqCEpCqHvmYWG1glWY0WVG5B3UHXVc9x9XMO0iS96KAHKvqSj+Cxua0/Xw==}
-    engines: {node: '>=22.3.0'}
-
-  '@alextheman/utility@5.6.0':
-    resolution: {integrity: sha512-Wac6jkFioLGP5SVBmukjXdNuckN9Mh+XWS/ZA7h9zXJoTf36cuK8HtD78IRPwW5PhGUbYR1yJraUbCqNNsmuhg==}
+  '@alextheman/utility@5.6.1':
+    resolution: {integrity: sha512-reTAMQHAYb401nzPMjys1d1T2zIVaa79GNFjUkd+uk38LgoKPwG9OkuJ/Mchs6IVSTDTcj13AcEP4bHCqLMuvQ==}
     engines: {node: '>=22.3.0'}
 
   '@altano/repository-tools@2.0.1':
@@ -924,8 +920,8 @@ packages:
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
-  alex-c-line@2.0.0:
-    resolution: {integrity: sha512-+Noz+iJS+aoUGp1GPJ2gQZ4nyku7ZT8IOB7XngGiPXpQ+qOT6Vsbr2ztHH3wkcI5wbKMBFW3A7Z1pO3SLBKMSw==}
+  alex-c-line@2.0.1:
+    resolution: {integrity: sha512-gz4M5ZPFVpUHmvtpd2gjGX7jh9KsOcvrY3ncHcHGyVeGdXaSCsS0V8iA46VUCDUCoq61rNAa3jqDKz3lMAF+AA==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -1069,8 +1065,8 @@ packages:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
 
-  caniuse-lite@1.0.30001775:
-    resolution: {integrity: sha512-s3Qv7Lht9zbVKE9XoTyRG6wVDCKdtOFIjBGg3+Yhn6JaytuNKPIjBMTMIY1AnOH3seL5mvF+x33oGAyK3hVt3A==}
+  caniuse-lite@1.0.30001777:
+    resolution: {integrity: sha512-tmN+fJxroPndC74efCdp12j+0rk0RHwV5Jwa1zWaFVyw2ZxAuPeG8ZgWC3Wz7uSjT3qMRQ5XHZ4COgQmsCMJAQ==}
 
   canvas@3.2.1:
     resolution: {integrity: sha512-ej1sPFR5+0YWtaVp6S1N1FVz69TQCqmrkGeRvQxZeAB1nAIcjNTHVwrZtYtWFFBmQsF40/uDLehsW5KuYC99mg==}
@@ -1206,8 +1202,8 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
-  electron-to-chromium@1.5.302:
-    resolution: {integrity: sha512-sM6HAN2LyK82IyPBpznDRqlTQAtuSaO+ShzFiWTvoMJLHyZ+Y39r8VMfHzwbU8MVBzQ4Wdn85+wlZl2TLGIlwg==}
+  electron-to-chromium@1.5.307:
+    resolution: {integrity: sha512-5z3uFKBWjiNR44nFcYdkcXjKMbg5KXNdciu7mhTPo9tB7NbqSNP2sSnGR+fqknZSCwKkBN+oxiiajWs4dT6ORg==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -1556,8 +1552,8 @@ packages:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
 
-  flatted@3.3.3:
-    resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
+  flatted@3.3.4:
+    resolution: {integrity: sha512-3+mMldrTAPdta5kjX2G2J7iX4zxtnwpdA8Tr2ZSjkyPSanvbZAcy6flmtnXbEybHrDcU9641lxrMfFuUxVz9vA==}
 
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
@@ -2007,8 +2003,8 @@ packages:
     resolution: {integrity: sha512-pyFS63ptit/P5WqUkt+UUfe+4oevH+bFeIiPPdfb0pFeYEu/1ELnJu5l+5EcTKYL5M7zaAa7S8ddywgXypqKCw==}
     engines: {node: '>= 0.4'}
 
-  node-releases@2.0.27:
-    resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
+  node-releases@2.0.36:
+    resolution: {integrity: sha512-TdC8FSgHz8Mwtw9g5L4gR/Sh9XhSP/0DEkQxfEFXOpiul5IiHgHan2VhYYb6agDSfp4KuvltmGApc8HMgUrIkA==}
 
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
@@ -2701,9 +2697,9 @@ packages:
 
 snapshots:
 
-  '@alextheman/eslint-plugin@5.9.1(28d1362782b64f4aabdbf9d2831beef8)':
+  '@alextheman/eslint-plugin@5.10.0(28d1362782b64f4aabdbf9d2831beef8)':
     dependencies:
-      '@alextheman/utility': 5.5.0
+      '@alextheman/utility': 5.6.1
       '@eslint/compat': 2.0.2(eslint@10.0.2)
       '@eslint/js': 9.39.2
       '@typescript-eslint/types': 8.56.1
@@ -2734,14 +2730,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@alextheman/utility@5.5.0':
-    dependencies:
-      dotenv: 17.3.1
-      execa: 9.6.1
-      libsodium-wrappers: 0.8.2
-      zod: 4.3.6
-
-  '@alextheman/utility@5.6.0':
+  '@alextheman/utility@5.6.1':
     dependencies:
       dotenv: 17.3.1
       execa: 9.6.1
@@ -3463,9 +3452,9 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  alex-c-line@2.0.0:
+  alex-c-line@2.0.1:
     dependencies:
-      '@alextheman/utility': 5.6.0
+      '@alextheman/utility': 5.6.1
       '@inquirer/prompts': 8.3.0
       boxen: 8.0.1
       canvas: 3.2.1
@@ -3626,9 +3615,9 @@ snapshots:
   browserslist@4.28.1:
     dependencies:
       baseline-browser-mapping: 2.10.0
-      caniuse-lite: 1.0.30001775
-      electron-to-chromium: 1.5.302
-      node-releases: 2.0.27
+      caniuse-lite: 1.0.30001777
+      electron-to-chromium: 1.5.307
+      node-releases: 2.0.36
       update-browserslist-db: 1.2.3(browserslist@4.28.1)
 
   buffer@5.7.1:
@@ -3655,7 +3644,7 @@ snapshots:
 
   camelcase@8.0.0: {}
 
-  caniuse-lite@1.0.30001775: {}
+  caniuse-lite@1.0.30001777: {}
 
   canvas@3.2.1:
     dependencies:
@@ -3766,7 +3755,7 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
-  electron-to-chromium@1.5.302: {}
+  electron-to-chromium@1.5.307: {}
 
   emoji-regex@10.6.0: {}
 
@@ -4291,10 +4280,10 @@ snapshots:
 
   flat-cache@4.0.1:
     dependencies:
-      flatted: 3.3.3
+      flatted: 3.3.4
       keyv: 4.5.4
 
-  flatted@3.3.3: {}
+  flatted@3.3.4: {}
 
   for-each@0.3.5:
     dependencies:
@@ -4716,7 +4705,7 @@ snapshots:
       object.entries: 1.1.9
       semver: 6.3.1
 
-  node-releases@2.0.27: {}
+  node-releases@2.0.36: {}
 
   npm-run-path@6.0.0:
     dependencies:
