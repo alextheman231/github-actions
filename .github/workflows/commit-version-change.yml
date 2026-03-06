@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       - name: Use Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 22
 
@@ -110,7 +110,7 @@ jobs:
           run_install: false
 
       - name: Use Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 22
           cache: "pnpm"
@@ -149,7 +149,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@dc2d1246a158a1a04045a85a8c1bfd1978afeaf2 # v10.1.0
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
@@ -159,7 +159,7 @@ jobs:
 
       - name: Commit feature docs
         if: ${{ inputs.create-feature-docs }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@24f01f4c729329eda813af72a89e29e8f46990ce # v8.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@dc2d1246a158a1a04045a85a8c1bfd1978afeaf2 # v10.1.0
         with:
           message: "Create feature docs"
 
