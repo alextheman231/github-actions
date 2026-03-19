@@ -6,6 +6,10 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+    outputs:
+      did_release:
+        description: "True if the GitHub Release occurred"
+        value: ${{ jobs.check-version.outputs.should_create_tag }}
 
 jobs:
   check-version:
