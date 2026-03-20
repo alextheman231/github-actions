@@ -143,13 +143,13 @@ jobs:
 
       - name: Get alex-up-bot GitHub token
         id: app-token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@dc2d1246a158a1a04045a85a8c1bfd1978afeaf2 # v10.1.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@4678b06c12b239500b3af61580637f9b7f3cd09a # v10.1.1
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
@@ -159,7 +159,7 @@ jobs:
 
       - name: Commit feature docs
         if: ${{ inputs.create-feature-docs }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@dc2d1246a158a1a04045a85a8c1bfd1978afeaf2 # v10.1.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@4678b06c12b239500b3af61580637f9b7f3cd09a # v10.1.1
         with:
           message: "Create feature docs"
 
