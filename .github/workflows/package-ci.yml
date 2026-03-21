@@ -41,6 +41,9 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Cache Playwright browsers
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         if: ${{ inputs.use_playwright == true }}
@@ -52,9 +55,6 @@ jobs:
       - name: Install Playwright Browsers
         if: ${{ inputs.use_playwright == true }}
         run: pnpm exec playwright install --with-deps
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Build package
         run: pnpm run build
