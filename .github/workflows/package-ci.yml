@@ -3,10 +3,10 @@ name: PNPM CI
 on:
   workflow_call:
     inputs:
-      run-tests:
-        description: "Include test runs"
+      use_playwright:
+        description: "Install the necessary system dependencies for Playwright"
         required: false
-        default: true
+        default: false
         type: boolean
       os:
         description: "The operating systems to run the workflow on"
@@ -41,6 +41,18 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        if: ${{ inputs.use_playwright == true }}
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml', 'playwright.config.ts') }}
+          restore-keys: ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        if: ${{ inputs.use_playwright == true }}
+        run: pnpm exec playwright install --with-deps
+
       - name: Install dependencies
         run: pnpm install
 
@@ -51,7 +63,6 @@ jobs:
         run: pnpm run lint
 
       - name: Run tests
-        if: ${{ inputs.run-tests == true }}
         run: pnpm test
 
   source-code-ci:
