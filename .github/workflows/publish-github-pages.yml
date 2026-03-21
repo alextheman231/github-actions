@@ -6,6 +6,11 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+    inputs:
+      path:
+        description: The path to the directory to publish. It must have an index.html file inside of it.
+        required: true
+        type: string
 
 jobs:
   publish-github-pages:
@@ -42,7 +47,7 @@ jobs:
       - name: Upload the feature docs
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
-          path: docs/features/html
+          path: ${{ inputs.path }}
 
       - name: Get alex-up-bot GitHub token
         id: app-token
