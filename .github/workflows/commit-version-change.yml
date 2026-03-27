@@ -149,7 +149,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@4678b06c12b239500b3af61580637f9b7f3cd09a # v10.1.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
@@ -159,7 +159,7 @@ jobs:
 
       - name: Commit feature docs
         if: ${{ inputs.create-feature-docs }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@4678b06c12b239500b3af61580637f9b7f3cd09a # v10.1.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
         with:
           message: "Create feature docs"
 
