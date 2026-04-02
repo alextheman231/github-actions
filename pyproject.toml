@@ -1,0 +1,33 @@
+[project]
+name = "github-actions"
+version = "0.1.0"
+description = "Default template for PDM package"
+readme = "README.md"
+requires-python = "==3.14.*"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = []
+[[project.authors]]
+name = "AlexMan123456"
+email = "alex.man03888@gmail.com"
+
+[dependency-groups]
+dev = [
+  "pyproject-fmt>=2.21",
+  "zizmor>=1.23.1",
+]
+
+[tool.pdm]
+distribution = false
+[tool.pdm.scripts]
+format-pyproject = { shell = "pyproject-fmt pyproject.toml || true" }
+lint-pyproject = "pyproject-fmt --check pyproject.toml"
+lint-zizmor = "zizmor ."
+format = { composite = [ "format-pyproject" ] }
+lint = { composite = [ "lint-zizmor", "lint-pyproject" ] }
+
+[tool.pyproject-fmt]
+generate_python_version_classifiers = false
+table_format = "long"
