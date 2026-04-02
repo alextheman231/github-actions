@@ -14,10 +14,10 @@ export default defineAlexCLineConfig({
         async (stepRunner) => {
             await stepRunner`pdm run format`;
         },
+        async (stepRunner) => {
+          await stepRunner`pdm run lint`;
+        },
         "lint",
-      async (stepRunner) => {
-        await stepRunner`pdm run lint`;
-      },
     ],
   },
 });
