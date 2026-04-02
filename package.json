@@ -14,14 +14,12 @@
   "scripts": {
     "build": "exit 0",
     "create-release-note": "bash -c 'git pull origin main && alex-c-line template release-note create $@' --",
-    "format": "pnpm run format-package-json && pnpm run format-prettier && pnpm run format-zizmor",
+    "format": "pnpm run format-package-json && pnpm run format-prettier",
     "format-package-json": "eslint --fix --suppress-all package.json && rm -f eslint-suppressions.json",
     "format-prettier": "prettier --write \"./**/*.yml\"",
-    "format-zizmor": "zizmor --fix .",
-    "lint": "pnpm run lint-package-json && pnpm run lint-zizmor && pnpm run lint-prettier",
+    "lint": "pnpm run lint-package-json && pnpm run lint-prettier",
     "lint-package-json": "eslint package.json",
     "lint-prettier": "prettier --check \"./**/*.yml\"",
-    "lint-zizmor": "zizmor .",
     "pre-commit": "alex-c-line pre-commit",
     "prepare": "husky",
     "update-dependencies": "pnpm update --latest && pnpm update"

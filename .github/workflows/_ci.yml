@@ -21,30 +21,35 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use PNPM
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
-        with:
-          run_install: false
-
-      - name: Use Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: 22
-          cache: "pnpm"
-
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.14"
 
+      - name: Setup PDM
+        run: pip install pdm
+
+      - name: Install Python dependencies
+        run: pdm install
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 22
+          cache: "pnpm"
+
       - name: Install JavaScript dependencies
         run: pnpm install
 
-      - name: Install Zizmor
-        run: pip install zizmor
-
       - name: Run linting checks
-        run: pnpm run lint
+        run: |
+          pdm run lint
+          pnpm run lint
 
   version-change-ci:
     uses: ./.github/workflows/version-change-ci.yml
