@@ -12,7 +12,6 @@ jobs:
     uses: ./.github/workflows/commit-version-change.yml
     with:
       version-type: major
-      create-feature-docs: false
     secrets:
       APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
@@ -24,7 +23,6 @@ jobs:
     uses: ./.github/workflows/commit-version-change.yml
     with:
       version-type: minor
-      create-feature-docs: false
     secrets:
       APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
@@ -36,7 +34,6 @@ jobs:
     uses: ./.github/workflows/commit-version-change.yml
     with:
       version-type: patch
-      create-feature-docs: false
     secrets:
       APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
