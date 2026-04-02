@@ -13,6 +13,11 @@ on:
         required: false
         default: '["ubuntu-latest"]' # Lol this is stupid!
         type: string
+      run_build:
+        description: "Run the build step"
+        type: boolean
+        required: false
+        default: true
 
 permissions:
   contents: read
@@ -57,6 +62,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Build package
+        if: ${{ inputs.run_build == true }}
         run: pnpm run build
 
       - name: Run linting checks
