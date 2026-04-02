@@ -117,6 +117,11 @@ jobs:
         if: ${{ inputs.run-build }}
         run: pnpm run build
 
+      - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
+        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        with:
+          message: "Generate the build"
+
       - name: Change version
         env:
           VERSION_TYPE: ${{ env.VERSION_TYPE }}
