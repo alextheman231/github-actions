@@ -7,11 +7,6 @@ on:
       APP_PRIVATE_KEY:
         required: true
     inputs:
-      create-feature-docs:
-        description: "Whether to generate the documentation for the features using `pnpm run create-feature-docs` or not"
-        required: false
-        default: false
-        type: boolean
       run-build:
         description: "Whether to run the build step or not"
         required: false
@@ -152,16 +147,6 @@ jobs:
         uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
-
-      - name: Create feature docs
-        if: ${{ inputs.create-feature-docs }}
-        run: pnpm run create-feature-docs
-
-      - name: Commit feature docs
-        if: ${{ inputs.create-feature-docs }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
-        with:
-          message: "Create feature docs"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
