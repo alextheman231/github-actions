@@ -43,7 +43,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@f58062ca14d3c8e79af63fa79b9e31ba455957a6 # v1.0.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@90338b412d56c26056089d592c1f3565243f6a89 # v1.0.1
         with:
           package_name: alex-c-line
           package_manager: pnpm
@@ -120,7 +120,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         with:
           message: "Generate the build"
 
@@ -136,7 +136,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@f58062ca14d3c8e79af63fa79b9e31ba455957a6 # v1.0.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@90338b412d56c26056089d592c1f3565243f6a89 # v1.0.1
         with:
           package_name: alex-c-line
           package_manager: pnpm
@@ -154,7 +154,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 

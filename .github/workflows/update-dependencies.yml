@@ -80,7 +80,7 @@ jobs:
         run: corepack use pnpm@latest
 
       - name: Commit PNPM update
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_pnpm_update
         with:
           message: "Update PNPM"
@@ -91,7 +91,7 @@ jobs:
           pnpm install --no-frozen-lockfile
 
       - name: Commit JavaScript dependencies updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_javascript_dependencies_updates
         with:
           message: "Update JavaScript dependencies"
@@ -102,7 +102,7 @@ jobs:
         run: actions-up -y
 
       - name: Commit GitHub Actions updates
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -113,7 +113,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
@@ -123,7 +123,7 @@ jobs:
         continue-on-error: true
 
       - name: Commit formatting
-        uses: alextheman231/github-actions/.github/actions/commit-changes@e4a092a202ca5bac12242bbf53a046f32a08455a # v10.4.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         with:
           message: "Apply formatting"
 
