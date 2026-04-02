@@ -43,9 +43,10 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        run: |
-          npm install -g alex-c-line@latest
-          alex-c-line --version
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@f58062ca14d3c8e79af63fa79b9e31ba455957a6 # v1.0.0
+        with:
+          package_name: alex-c-line
+          package_manager: pnpm
 
       - name: Get the current version number
         id: get_current_version
@@ -135,7 +136,10 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install alex-c-line
-        run: npm install -g alex-c-line@latest
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@f58062ca14d3c8e79af63fa79b9e31ba455957a6 # v1.0.0
+        with:
+          package_name: alex-c-line
+          package_manager: pnpm
 
       - name: Change the status in the release document
         env:
