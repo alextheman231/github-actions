@@ -13,3 +13,8 @@ jobs:
     secrets:
       APP_ID: ${{ secrets.ALEX_UP_BOT_APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
+    with:
+      update_pnpm: true
+      update_javascript_dependencies: true
+      update_actions: true
+      update_python_dependencies: true
