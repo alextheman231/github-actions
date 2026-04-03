@@ -37,6 +37,7 @@ jobs:
         with:
           package_name: alex-c-line
           dependency_group: devDependencies
+          strict_version_resolution: false
 
       - name: Fetch tags from main
         run: git fetch --tags origin

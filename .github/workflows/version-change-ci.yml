@@ -26,6 +26,7 @@ jobs:
         with:
           package_name: alex-c-line
           dependency_group: devDependencies
+          strict_version_resolution: false
 
       - name: Get the version number from package.json
         id: get_current_version
