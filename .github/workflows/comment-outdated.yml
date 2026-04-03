@@ -59,11 +59,11 @@ jobs:
         run: pnpm install
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@ce459faa8709406380c986566266ca6d26fe8c0d # v1.0.4
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@c339dfa1cb25d6047ce8585020a284d7b99b2103 # v1.1.0
         with:
-          package_name: alex-c-line
-          dependency_group: devDependencies
-          strict_version_resolution: false
+          package-name: alex-c-line
+          dependency-group: devDependencies
+          strict-version-resolution: false
 
       - name: Get outdated JavaScript dependencies
         id: outdated-javascript-dependencies
