@@ -47,6 +47,7 @@ jobs:
         with:
           package_name: alex-c-line
           package_manager: pnpm
+          dependency_group: devDependencies
 
       - name: Get the current version number
         id: get_current_version
@@ -140,6 +141,7 @@ jobs:
         with:
           package_name: alex-c-line
           package_manager: pnpm
+          dependency_group: devDependencies
 
       - name: Change the status in the release document
         env:
