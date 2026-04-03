@@ -27,6 +27,7 @@ jobs:
           package-name: alex-c-line
           dependency-group: devDependencies
           strict-version-resolution: false
+          self-install: ${{ github.repository == 'alextheman231/alex-c-line' }}
 
       - name: Get the version number from package.json
         id: get_current_version
