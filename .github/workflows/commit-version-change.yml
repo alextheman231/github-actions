@@ -46,7 +46,6 @@ jobs:
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@c051aaf913a20047f74abdbdcd1dfe03da404dcf # v1.0.2
         with:
           package_name: alex-c-line
-          package_manager: pnpm
           dependency_group: devDependencies
 
       - name: Get the current version number
@@ -140,7 +139,6 @@ jobs:
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@c051aaf913a20047f74abdbdcd1dfe03da404dcf # v1.0.2
         with:
           package_name: alex-c-line
-          package_manager: pnpm
           dependency_group: devDependencies
 
       - name: Change the status in the release document
