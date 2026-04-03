@@ -72,9 +72,11 @@ jobs:
         run: pnpm install
 
       - name: Install actions-up
-        run: |
-          npm install -g actions-up@latest
-          actions-up --version
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@1984e9a740c6ce4f1200af753121a354ca69e76b # v1.0.3
+        with:
+          package_name: actions-up
+          dependency_group: devDependencies
+          strict_version_resolution: false
 
       - name: Update PNPM
         run: corepack use pnpm@latest

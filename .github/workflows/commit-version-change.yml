@@ -43,7 +43,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@c051aaf913a20047f74abdbdcd1dfe03da404dcf # v1.0.2
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@1984e9a740c6ce4f1200af753121a354ca69e76b # v1.0.3
         with:
           package_name: alex-c-line
           dependency_group: devDependencies
@@ -136,7 +136,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@c051aaf913a20047f74abdbdcd1dfe03da404dcf # v1.0.2
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@1984e9a740c6ce4f1200af753121a354ca69e76b # v1.0.3
         with:
           package_name: alex-c-line
           dependency_group: devDependencies
