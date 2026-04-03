@@ -16,11 +16,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use Homebrew
-        uses: Homebrew/actions/setup-homebrew@7f6df1cd36597249cbf9810ff3aeff47edf8243b
-
-      - name: Install Zizmor
-        run: brew install zizmor
-
-      - name: Run linting checks
-        run: zizmor .
+      - name: Run zizmor 🌈
+        uses: zizmorcore/zizmor-action@71321a20a9ded102f6e9ce5718a2fcec2c4f70d8 # v0.5.2
+        with:
+          advanced-security: false
