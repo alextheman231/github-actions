@@ -27,11 +27,16 @@ on:
         required: false
         default: false
         type: boolean
+      update_python_dependencies:
+        description: "Update Python dependencies with PDM"
+        required: false
+        type: boolean
       update_terraform:
         description: "Update Terraform"
         required: false
         default: false
         type: boolean
+
       apply_formatting:
         description: "Apply formatting as a result of updates"
         required: false
@@ -130,6 +135,24 @@ jobs:
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
+
+      - name: Setup PDM
+        if: ${{ inputs.update_python_dependencies == true }}
+        run: pip install pdm
+
+      - name: Install Python dependencies
+        if: ${{ inputs.update_python_dependencies == true }}
+        run: pdm install
+
+      - name: Update Python dependencies
+        if: ${{ inputs.update_python_dependencies == true }}
+        run: pdm update --update-all
+
+      - name: Commit Python updates
+        if: ${{ inputs.update_python_dependencies == true }}
+        uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
+        with:
+          message: "Update Python dependencies"
 
       - name: Setup Terraform
         if: ${{ inputs.update_terraform == true }}
