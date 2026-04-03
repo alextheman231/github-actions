@@ -6,6 +6,37 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+    inputs:
+      update_pnpm:
+        description: "Update the PNPM package manager itself"
+        required: false
+        default: false
+        type: boolean
+      update_javascript_dependencies:
+        description: "Update the direct JavaScript dependencies"
+        required: false
+        default: false
+        type: boolean
+      update_actions:
+        description: "Update the GitHub Actions"
+        required: false
+        default: false
+        type: boolean
+      update_python_dependencies:
+        description: "Update Python dependencies with PDM"
+        required: false
+        default: false
+        type: boolean
+      update_terraform:
+        description: "Update Terraform"
+        required: false
+        default: false
+        type: boolean
+      apply_formatting:
+        description: "Apply formatting as a result of updates"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   update-dependencies:
@@ -22,36 +53,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Check for Terraform files
-        id: check-terraform
-        shell: bash
-        run: |
-          shopt -s globstar nullglob
-          files=( **/*.tf )
-          if (( ${#files[@]} > 0 )); then
-            echo "has_terraform=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_terraform=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Use PNPM
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
         with:
           run_install: false
 
       - name: Use Node.js
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 22
           cache: "pnpm"
 
-      - name: Setup Terraform
-        if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
-        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
-        with:
-          terraform_version: 1.14.3
-
       - name: Enable Corepack
+        if: ${{ inputs.update_pnpm == true }}
         run: |
           corepack enable
           corepack --version
@@ -69,62 +85,76 @@ jobs:
           git config --global user.email "alexupbot@bot.com"
 
       - name: Install dependencies
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true }}
         run: pnpm install
 
       - name: Install actions-up
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@1984e9a740c6ce4f1200af753121a354ca69e76b # v1.0.3
         with:
           package_name: actions-up
+          package_manager: pnpm
           dependency_group: devDependencies
           strict_version_resolution: false
 
       - name: Update PNPM
+        if: ${{ inputs.update_pnpm == true }}
         run: corepack use pnpm@latest
 
       - name: Commit PNPM update
+        if: ${{ inputs.update_pnpm == true }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
-        id: commit_pnpm_update
         with:
           message: "Update PNPM"
 
       - name: Update JavaScript dependencies
+        if: ${{ inputs.update_javascript_dependencies }}
         run: |
           pnpm run update-dependencies
           pnpm install --no-frozen-lockfile
 
       - name: Commit JavaScript dependencies updates
+        if: ${{ inputs.update_javascript_dependencies }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
-        id: commit_javascript_dependencies_updates
         with:
           message: "Update JavaScript dependencies"
 
       - name: Update GitHub Actions
+        if: ${{ inputs.update_actions == true }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: actions-up -y
 
       - name: Commit GitHub Actions updates
+        if: ${{ inputs.update_actions == true }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
 
+      - name: Setup Terraform
+        if: ${{ inputs.update_terraform == true }}
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
+        with:
+          terraform_version: 1.14.3
+
       - name: Update Terraform Providers
-        if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
+        if: ${{ inputs.update_terraform == true }}
         run: terraform init -upgrade -backend=false
 
       - name: Commit Terraform updates
-        if: ${{ steps.check-terraform.outputs.has_terraform == 'true' }}
+        if: ${{ inputs.update_terraform == true }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
 
       - name: Apply formatting as result of updates
+        if: ${{ inputs.apply_formatting == true }}
         run: pnpm run format
         continue-on-error: true
 
       - name: Commit formatting
+        if: ${{ inputs.apply_formatting == true }}
         uses: alextheman231/github-actions/.github/actions/commit-changes@17b0fa199995087ecc1ac109e4eda26229743802 # v10.5.0
         with:
           message: "Apply formatting"
