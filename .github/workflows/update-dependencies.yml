@@ -84,6 +84,7 @@ jobs:
         run: pnpm install
 
       - name: Install actions-up
+        if: ${{ inputs.update_actions == true }}
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@1984e9a740c6ce4f1200af753121a354ca69e76b # v1.0.3
         with:
           package_name: actions-up
