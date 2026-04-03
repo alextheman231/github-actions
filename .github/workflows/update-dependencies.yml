@@ -32,10 +32,15 @@ on:
         required: false
         default: false
         type: boolean
+      runs-on:
+        description: "The Operating System to use"
+        required: false
+        default: "ubuntu-latest"
+        type: string
 
 jobs:
   update-dependencies:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     permissions:
       contents: write
       pull-requests: write
