@@ -34,10 +34,10 @@ jobs:
         id: get_package_data
         run: |
           NAME=$(jq -r '.name' package.json)
-          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
 
           VERSION=v$(jq -r ".version" package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Check if version already exists
         id: check_version
@@ -47,10 +47,10 @@ jobs:
         run: |
           if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
             echo "Version $VERSION already exists, skipping publish..."
-            echo "should_publish=false" >> $GITHUB_OUTPUT
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
           else
             echo "Publishing $VERSION..."
-            echo "should_publish=true" >> $GITHUB_OUTPUT
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
           fi
 
   publish:

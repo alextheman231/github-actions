@@ -46,10 +46,10 @@ jobs:
         id: get_version
         run: |
           VERSION=v$(jq -r ".version" package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-          RELEASE_DOC_PATH="$(alex-c-line template release-note path $VERSION)"
-          echo "release_doc_path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
+          RELEASE_DOC_PATH=$(alex-c-line template release-note path "$VERSION")
+          echo "release_doc_path=$RELEASE_DOC_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Check if version and release document already exists
         id: check_version
@@ -59,13 +59,13 @@ jobs:
         run: |
           if git ls-remote --tags origin | grep -q "refs/tags/$VERSION$"; then
             echo "Version $VERSION already exists, skipping tag creation..."
-            echo "should_create_tag=false" >> $GITHUB_OUTPUT
+            echo "should_create_tag=false" >> "$GITHUB_OUTPUT"
           elif [ ! -f "$RELEASE_DOC_PATH" ]; then
             echo "No release document found. Skipping..."
-            echo "should_create_tag=false" >> $GITHUB_OUTPUT
+            echo "should_create_tag=false" >> "$GITHUB_OUTPUT"
           else
             echo "Creating tag for $VERSION..."
-            echo "should_create_tag=true" >> $GITHUB_OUTPUT
+            echo "should_create_tag=true" >> "$GITHUB_OUTPUT"
           fi
 
   create-github-release:
@@ -98,7 +98,7 @@ jobs:
         run: |
           git config --global user.name "alex-up-bot"
           git config --global user.email "alexupbot@bot.com"
-          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/${GITHUB_REPOSITORY}.git
+          git remote set-url origin https://x-access-token:"$GITHUB_TOKEN"@github.com/"${GITHUB_REPOSITORY}".git
 
       - name: Create Git tag
         env:

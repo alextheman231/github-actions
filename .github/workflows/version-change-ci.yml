@@ -32,15 +32,15 @@ jobs:
         id: get_current_version
         run: |
           VERSION=v$(jq -r ".version" package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Get path to release document
         env:
           VERSION: ${{ steps.get_current_version.outputs.version }}
         id: release_document_path
         run: |
-          RELEASE_DOC_PATH="$(alex-c-line template release-note path $VERSION)"
-          echo "release_doc_path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
+          RELEASE_DOC_PATH=$(alex-c-line template release-note path "$VERSION")
+          echo "release_doc_path=$RELEASE_DOC_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Verify the release document is valid
         env:

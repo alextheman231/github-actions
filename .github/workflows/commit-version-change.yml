@@ -53,7 +53,7 @@ jobs:
         id: get_current_version
         run: |
           VERSION=v$(jq -r ".version" package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Get next version
         env:
@@ -61,22 +61,22 @@ jobs:
           VERSION_TYPE: ${{ env.VERSION_TYPE }}
         id: get_next_version
         run: |
-          NEXT_VERSION="$(alex-c-line version increment $VERSION $VERSION_TYPE)"
-          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+          NEXT_VERSION=$(alex-c-line version increment "$VERSION" "$VERSION_TYPE")
+          echo "next_version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Find release document
         env:
           NEXT_VERSION: ${{ steps.get_next_version.outputs.next_version }}
         id: release_document_path
         run: |
-          RELEASE_DOC_PATH="$(alex-c-line template release-note path $NEXT_VERSION)"
+          RELEASE_DOC_PATH=$(alex-c-line template release-note path "$NEXT_VERSION")
           if [[ -f "$RELEASE_DOC_PATH" ]]; then
             echo "Release document found. Continuing..."
-            echo "path=$RELEASE_DOC_PATH" >> $GITHUB_OUTPUT
-            echo "should_change_version=true" >> $GITHUB_OUTPUT
+            echo "path=$RELEASE_DOC_PATH" >> "$GITHUB_OUTPUT"
+            echo "should_change_version=true" >> "$GITHUB_OUTPUT"
           else
             echo "No release document found. Skipping..."
-            echo "should_change_version=false" >> $GITHUB_OUTPUT
+            echo "should_change_version=false" >> "$GITHUB_OUTPUT"
           fi
 
   commit-version-change:
@@ -135,13 +135,13 @@ jobs:
       - name: Change version
         env:
           VERSION_TYPE: ${{ env.VERSION_TYPE }}
-        run: npm version $VERSION_TYPE --no-git-tag-version
+        run: npm version "$VERSION_TYPE" --no-git-tag-version
 
       - name: Get the new version number
         id: get_new_version
         run: |
-          VERSION=v$(jq -r ".version" package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=v"$(jq -r ".version" package.json)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Install alex-c-line
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@53b2250b94cc23013b99e05c29ba72a98a4a7280 # v1.2.0
