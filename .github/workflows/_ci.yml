@@ -53,3 +53,6 @@ jobs:
 
   version-change-ci:
     uses: ./.github/workflows/version-change-ci.yml
+
+  security-ci:
+    uses: ./.github/workflows/security-ci.yml
