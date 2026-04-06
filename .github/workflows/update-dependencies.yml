@@ -142,7 +142,9 @@ jobs:
 
       - name: Update Python dependencies
         if: ${{ inputs.update_python_dependencies == true }}
-        run: pdm update --unconstrained
+        run: |
+          pdm update --unconstrained --save-exact
+          pdm run format-pyproject
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
