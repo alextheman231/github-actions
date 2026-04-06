@@ -142,9 +142,11 @@ jobs:
 
       - name: Update Python dependencies
         if: ${{ inputs.update_python_dependencies == true }}
-        run: |
-          pdm update --unconstrained --save-exact
-          pdm run format-pyproject
+        run: pdm update --unconstrained --save-exact
+
+      - name: Format the pyproject.toml file
+        run: pdm run format-pyproject
+        continue-on-error: true
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
