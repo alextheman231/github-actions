@@ -146,6 +146,7 @@ jobs:
 
       - name: Format the pyproject.toml file
         run: pdm run format-pyproject
+        if: ${{ inputs.update_python_dependencies == true }}
         continue-on-error: true
 
       - name: Commit Python updates
