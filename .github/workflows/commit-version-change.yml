@@ -43,7 +43,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@53b2250b94cc23013b99e05c29ba72a98a4a7280 # v1.2.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@52cf8adbb2d435944bbd882e03d0be6cdaeac243 # v1.2.1
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -128,7 +128,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@ec0a721b5d0c0f9fd8b86437636f9bcbc64218ef # v11.0.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@84fe032bc2c67a442beaae6648323087929d34c0 # v11.0.7
         with:
           message: "Generate the build"
 
@@ -144,7 +144,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@53b2250b94cc23013b99e05c29ba72a98a4a7280 # v1.2.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@52cf8adbb2d435944bbd882e03d0be6cdaeac243 # v1.2.1
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -156,12 +156,12 @@ jobs:
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@ec0a721b5d0c0f9fd8b86437636f9bcbc64218ef # v11.0.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@84fe032bc2c67a442beaae6648323087929d34c0 # v11.0.7
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           author: alex-up-bot <alexupbot@bot.com>
