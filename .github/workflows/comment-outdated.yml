@@ -59,7 +59,7 @@ jobs:
         run: pnpm install
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@53b2250b94cc23013b99e05c29ba72a98a4a7280 # v1.2.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@52cf8adbb2d435944bbd882e03d0be6cdaeac243 # v1.2.1
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
