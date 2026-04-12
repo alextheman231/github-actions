@@ -33,7 +33,7 @@ jobs:
           node-version: 22
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@53b2250b94cc23013b99e05c29ba72a98a4a7280 # v1.2.0
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@52cf8adbb2d435944bbd882e03d0be6cdaeac243 # v1.2.1
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -87,7 +87,7 @@ jobs:
 
       - name: Get alex-up-bot GitHub token
         id: app-token
-        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
