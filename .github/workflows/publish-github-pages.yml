@@ -11,6 +11,11 @@ on:
         description: The path to the directory to publish. It must have an index.html file inside of it.
         required: true
         type: string
+      build-configs:
+        description: Build the configuration files that may be needed to generate the documentation.
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   publish-github-pages:
@@ -40,6 +45,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Build the configs
+        if: ${{ inputs.build-configs == true }}
+        run: pnpm run build-configs
 
       - name: Create the feature docs
         run: pnpm run create-feature-docs
