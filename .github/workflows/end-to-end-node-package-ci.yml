@@ -15,7 +15,10 @@ permissions:
 jobs:
   end-to-end-ci-steps:
     if: ${{ github.head_ref != 'alex-up-bot/change-major-version' && github.head_ref != 'alex-up-bot/change-minor-version' && github.head_ref != 'alex-up-bot/change-patch-version' }}
-    runs-on: ${{ fromJson(inputs.os) }}
+    strategy:
+      matrix:
+        os: ${{ fromJson(inputs.os) }}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
