@@ -93,7 +93,7 @@ jobs:
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@52cf8adbb2d435944bbd882e03d0be6cdaeac243 # v1.2.1
         with:
           package-name: actions-up
-          package-manager: pnpm
+          package-manager: npm
           dependency-group: devDependencies
           strict-version-resolution: false
 
