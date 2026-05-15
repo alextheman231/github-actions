@@ -64,6 +64,7 @@ jobs:
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-pages: write
 
       - name: Deploy to GitHub Pages
         id: deployment
