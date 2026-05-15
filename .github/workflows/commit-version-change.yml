@@ -102,7 +102,7 @@ jobs:
           git config --global user.email "alexupbot@bot.com"
 
       - name: Use PNPM
-        uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d # v6.0.5
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
         with:
           run_install: false
 
@@ -117,7 +117,7 @@ jobs:
 
       - name: Get alex-up-bot GitHub token
         id: app-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -128,7 +128,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2e41fee3271c96b410b398994b6df72997e18c02 # v11.2.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@c4545878d40d8cd0b3b08c8f693c27980b5f3e16 # v11.2.2
         with:
           message: "Generate the build"
 
@@ -156,7 +156,7 @@ jobs:
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2e41fee3271c96b410b398994b6df72997e18c02 # v11.2.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@c4545878d40d8cd0b3b08c8f693c27980b5f3e16 # v11.2.2
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
