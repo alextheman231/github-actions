@@ -26,12 +26,12 @@
   },
   "devDependencies": {
     "@alextheman/eslint-plugin": "5.14.0",
-    "@typescript-eslint/types": "8.59.2",
+    "@typescript-eslint/types": "8.59.3",
     "alex-c-line": "2.7.2",
     "eslint": "10.3.0",
     "husky": "9.1.7",
     "prettier": "3.8.3",
-    "typescript-eslint": "8.59.2"
+    "typescript-eslint": "8.59.3"
   },
   "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499"
 }
