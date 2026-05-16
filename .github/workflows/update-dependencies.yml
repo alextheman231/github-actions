@@ -81,6 +81,7 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
           permission-actions: write
+          permission-workflows: write
 
       - name: Setup GitHub user
         run: |
