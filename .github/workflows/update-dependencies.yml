@@ -80,6 +80,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
+          permission-actions: write
 
       - name: Setup GitHub user
         run: |
