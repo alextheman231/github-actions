@@ -130,7 +130,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@c4545878d40d8cd0b3b08c8f693c27980b5f3e16 # v11.2.2
+        uses: alextheman231/github-actions/.github/actions/commit-changes@b392a15552197a9ee42f5927ecf5b61852152c72 # v11.2.5
         with:
           message: "Generate the build"
 
@@ -158,7 +158,7 @@ jobs:
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@c4545878d40d8cd0b3b08c8f693c27980b5f3e16 # v11.2.2
+        uses: alextheman231/github-actions/.github/actions/commit-changes@b392a15552197a9ee42f5927ecf5b61852152c72 # v11.2.5
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
