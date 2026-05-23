@@ -14,10 +14,12 @@
   "scripts": {
     "build": "exit 0",
     "create-release-note": "bash -c 'git pull origin main && alex-c-line template release-note create $@' --",
-    "format": "pnpm run format-package-json && pnpm run format-prettier",
+    "format": "pnpm run format-package-json && pnpm run format-prettier && pnpm run format-markdownlint",
+    "format-markdownlint": "pnpm exec markdownlint-cli2 --fix \"**/*.md\" \"!{node_modules,dist}/**\" | grep -v \"^Finding:\"",
     "format-package-json": "eslint --fix --suppress-all package.json && rm -f eslint-suppressions.json",
     "format-prettier": "prettier --write \"./**/*.yml\"",
-    "lint": "pnpm run lint-package-json && pnpm run lint-prettier",
+    "lint": "pnpm run lint-package-json && pnpm run lint-markdownlint && pnpm run lint-prettier",
+    "lint-markdownlint": "bash -o pipefail -c 'pnpm exec markdownlint-cli2 \"**/*.md\" \"!{node_modules,dist}/**\"| grep -v \"^Finding:\"'",
     "lint-package-json": "eslint package.json",
     "lint-prettier": "prettier --check \"./**/*.yml\"",
     "pre-commit": "alex-c-line pre-commit",
@@ -30,6 +32,7 @@
     "alex-c-line": "2.8.1",
     "eslint": "10.4.0",
     "husky": "9.1.7",
+    "markdownlint-cli2": "0.22.1",
     "prettier": "3.8.3",
     "typescript-eslint": "8.59.4"
   },
