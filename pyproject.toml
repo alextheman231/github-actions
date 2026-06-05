@@ -15,18 +15,18 @@ email = "alex.man03888@gmail.com"
 
 [dependency-groups]
 dev = [
-  "pyproject-fmt==2.21.2",
+  "pyproject-fmt==2.23",
   "zizmor==1.25.2",
 ]
 
 [tool.pdm]
 distribution = false
 [tool.pdm.scripts]
+format = { composite = [ "format-pyproject" ] }
 format-pyproject = { shell = "pyproject-fmt pyproject.toml || true" }
+lint = { composite = [ "lint-zizmor", "lint-pyproject" ] }
 lint-pyproject = "pyproject-fmt --check pyproject.toml"
 lint-zizmor = "zizmor ."
-format = { composite = [ "format-pyproject" ] }
-lint = { composite = [ "lint-zizmor", "lint-pyproject" ] }
 
 [tool.pyproject-fmt]
 generate_python_version_classifiers = false
