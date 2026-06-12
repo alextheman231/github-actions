@@ -5,36 +5,36 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:3e101db9ace0385440e3f67359a55926cf2dd05e8c5a77a488ee49aea984e917"
+content_hash = "sha256:111559933300dd8193f5e01a922ae9422a7a8f2e6f7cd16fb83c3ae2e9f9942b"
 
 [[metadata.targets]]
 requires_python = "==3.14.*"
 
 [[package]]
 name = "pyproject-fmt"
-version = "2.23.0"
+version = "2.24.0"
 requires_python = ">=3.10"
 summary = "Format your pyproject.toml file"
 groups = ["dev"]
 files = [
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:166e614213fa8cd867218261da1147ccc4f3087370fa187b10c3df23153e5b5c"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:202b16f7f7ce8ad3aa54ae17a522de8743e5eefd624f03c99960ab58597d6477"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:ddb22be85ea040ef453bd97de2827ec3d9a5d2ee1b174cdd9a748ef785ab0659"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:99d4e4b86ec8d1f20af53f16245a784dff55f03a7e2e5c57874cf562ec2a53f3"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-manylinux_2_31_riscv64.whl", hash = "sha256:4f34d510fddc49f523ca59065910c479b3e8343a8d3d32201d3b59b0d788c0bc"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:b2e7b92ac9e9d56243b10ffb61a68ea5270494efdac96310bea0996de7c11d97"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:0346ffb4d77804de68512ce82c3212ded49faedfe2eee6c5c27c2a0be76f23b0"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-win_amd64.whl", hash = "sha256:bbc60a00a599b556ed9ad824a6e541d7f0854848a33d710a413bbb8dfd25d807"},
-    {file = "pyproject_fmt-2.23.0-cp310-abi3-win_arm64.whl", hash = "sha256:3ed0e36caccbf3955dbd5a5cc83862b331acb5e07db1ef31e11f647d88dbeccc"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-macosx_10_12_x86_64.whl", hash = "sha256:9bff7f42f699a7d7ae4cfd9f7c0f3638998a2d6313cb05b24de8e7e8c47a185a"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:ebadbbc634ac381ef9fe6c1b9fbbaa1e393e81092249e151065a44e9fa80c322"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:1177acf2c5e5d99d8a1bf5227036c91ab347e39cdd42a11068b3162b825c7215"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:ad0901a7aeff0ad11c382152ce5bdccfd8103c85349526eb194cd976d38b0bca"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:7803f35c636591220f582bd3ffb555acfc9d86ca82ec08ce10623d0d57550de2"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:623354f81291bc884e81069792955193679a0af43d4cc1cf1af59d1eb5fa7386"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-win_amd64.whl", hash = "sha256:32b299d5ee2bb5752da558dd475e44726e956111ec18c7bf16cba8d050d211b0"},
-    {file = "pyproject_fmt-2.23.0-cp314-cp314t-win_arm64.whl", hash = "sha256:7e0813432ac38e55b94f24956e51d91fc340310adbc3b96c8cfa751df31d1404"},
-    {file = "pyproject_fmt-2.23.0.tar.gz", hash = "sha256:893215f9d9ac9deab5e549d051db6d6d8b7102724697f8a9870b17895cf6ca9c"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:e6f8ae0d995da9b4f0e9d811d577276af01899d4558388e71be4937d571081e5"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:c1db2cc4c95baaac98c706ec1f5ebe508dfac33415290d4453296543cd6e4932"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:2ef36499160059c776f50c8e03089206427f7e044249a6725037aa002246c17b"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:dd75e92ebcf61be93b2678382ad7978876cef7e434e4962cabbe666f0643133a"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-manylinux_2_31_riscv64.whl", hash = "sha256:acabad831ec31c7b89ab358d46a6dca692996ff127d5cf53afd5eff2affc78fd"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:69fba42e906cff1396e75a4181445ee9ad66f3d2c6505dc59c7abd914f154674"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:924694f1d0d93493394b58f7cf5f5434fe667c38c226753806a4f37d61462de6"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-win_amd64.whl", hash = "sha256:eba2bfad2b2b8e4e61d4e5d70cb8a971bbe3c3cdf7dcfc57d0bc8f38932e531e"},
+    {file = "pyproject_fmt-2.24.0-cp310-abi3-win_arm64.whl", hash = "sha256:960c7b06333a9ac871a51854f2bbcbee46882e1ce9eb1507aae3a5b5172d10e2"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-macosx_10_12_x86_64.whl", hash = "sha256:9c8368b61192b01815f9cc5c6bde071edebfcdb1f1812717fc06abbfbda89618"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:b93ec30067a7b0fe8d5d01c81f52c53f74619040bd075f1ab056c5a938410992"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:5908d6c87e6cf965ff0fe8474bc1d5730737e3cc9143b7966b2e113f5096bda7"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:b224e75ad3b8149e5d41092dbecad70beb83cbf1a1e5bfcec190ae2a6bcb2237"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:09f936dccaa0dba9b361609b09dfd98ec9bb28856b9c01a582595f04557d4059"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:89dd348e5ae5202b6e59a91a42ce8aaed08e5dbbf8076bb54ad7b0a2302a20ad"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-win_amd64.whl", hash = "sha256:dc496146a03e19d55631f5b8ed731e08ff2b9c7de06030e4ab75c9cb292fe400"},
+    {file = "pyproject_fmt-2.24.0-cp314-cp314t-win_arm64.whl", hash = "sha256:326e1b77ae82fe0591e7054ef803e91f1b731e810902a20063d78f700b69af59"},
+    {file = "pyproject_fmt-2.24.0.tar.gz", hash = "sha256:0505e1d33be51a8307ebb0c3a6c6739271c4ead341c05b612481f5b8c59fa1cd"},
 ]
 
 [[package]]
