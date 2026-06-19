@@ -15,7 +15,7 @@ email = "alex.man03888@gmail.com"
 
 [dependency-groups]
 dev = [
-  "pyproject-fmt==2.24",
+  "pyproject-fmt==2.25",
   "zizmor==1.25.2",
 ]
 
