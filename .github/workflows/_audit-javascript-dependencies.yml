@@ -3,6 +3,8 @@ name: Comment outdated dependencies (Internal)
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "**/pnpm-lock.yaml"
 
 jobs:
   comment-outdated:
