@@ -88,10 +88,6 @@ jobs:
           git config --global user.name "alex-up-bot"
           git config --global user.email "alexupbot@bot.com"
 
-      - name: Install dependencies
-        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true }}
-        run: pnpm install
-
       - name: Install actions-up
         if: ${{ inputs.update_actions == true }}
         uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@8701899e25ea05979ebb0c89da71c4ebd6c3911d # v1.2.3
@@ -110,6 +106,10 @@ jobs:
         uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
         with:
           message: "Update PNPM"
+
+      - name: Install dependencies
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true }}
+        run: pnpm install
 
       - name: Update JavaScript dependencies
         if: ${{ inputs.update_javascript_dependencies }}
