@@ -16,6 +16,11 @@ on:
         type: string
         required: false
         default: Redeploy the project
+      branch_name:
+        description: The branch name (after being prefixed with alex-up-bot)
+        type: string
+        required: false
+        default: change-request
 
 jobs:
   create-change-request:
@@ -77,7 +82,7 @@ jobs:
             ${{ inputs.reason }}
 
             ${{ inputs.description }}
-          branch: alex-up-bot/change-request
+          branch: alex-up-bot/${{ inputs.branch_name }}
           base: main
           title: ${{ inputs.reason }}
           body-path: ${{ steps.change_request.outputs.path }}
