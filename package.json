@@ -28,14 +28,14 @@
     "update-dependencies": "pnpm update --latest && pnpm update"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "5.17.1",
-    "@typescript-eslint/types": "8.61.1",
-    "alex-c-line": "2.10.2",
-    "eslint": "10.5.0",
+    "@alextheman/eslint-plugin": "5.18.0",
+    "@typescript-eslint/types": "8.62.1",
+    "alex-c-line": "2.11.3",
+    "eslint": "10.6.0",
     "husky": "9.1.7",
-    "markdownlint-cli2": "0.22.1",
-    "prettier": "3.8.4",
-    "typescript-eslint": "8.61.1"
+    "markdownlint-cli2": "0.23.0",
+    "prettier": "3.9.4",
+    "typescript-eslint": "8.62.1"
   },
   "packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8"
 }
