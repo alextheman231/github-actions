@@ -75,11 +75,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: "pnpm"
 
-      - name: Use latest NPM version
-        run: |
-          npm install -g npm@11.8.0
-          npm --version
-
       - name: Install dependencies
         run: pnpm install
 
