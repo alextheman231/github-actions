@@ -90,7 +90,7 @@ jobs:
 
       - name: Install actions-up
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@8701899e25ea05979ebb0c89da71c4ebd6c3911d # v1.2.3
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@26b0740613ab8196b5ed71ae9ef9c394f4f9a564 # v1.2.4
         with:
           package-name: actions-up
           package-manager: npm
@@ -103,7 +103,7 @@ jobs:
 
       - name: Commit PNPM update
         if: ${{ inputs.update_pnpm == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@0776a9d83e56a216f52b56cb87ec0ff8f84a9368 # v12.3.0
         with:
           message: "Update PNPM"
 
@@ -119,7 +119,7 @@ jobs:
 
       - name: Commit JavaScript dependencies updates
         if: ${{ inputs.update_javascript_dependencies }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@0776a9d83e56a216f52b56cb87ec0ff8f84a9368 # v12.3.0
         with:
           message: "Update JavaScript dependencies"
 
@@ -131,7 +131,7 @@ jobs:
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@0776a9d83e56a216f52b56cb87ec0ff8f84a9368 # v12.3.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -157,7 +157,7 @@ jobs:
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@0776a9d83e56a216f52b56cb87ec0ff8f84a9368 # v12.3.0
         with:
           message: "Update Python dependencies"
 
@@ -171,7 +171,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ inputs.update_terraform == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@3a7c224f60dbd26c8e2f31738236b6cbc8dd96e7 # v12.0.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@0776a9d83e56a216f52b56cb87ec0ff8f84a9368 # v12.3.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
