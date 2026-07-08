@@ -6,6 +6,12 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+    inputs:
+      node-version:
+        description: The Node version to use
+        type: string
+        required: false
+        default: "22"
     outputs:
       did_release:
         description: "True if the GitHub Release occurred"
