@@ -6,6 +6,9 @@ on:
         required: true
       APP_PRIVATE_KEY:
         required: true
+      TFE_TOKEN:
+        description: The HCP Terraform token to use if updating Terraform
+        required: false
     inputs:
       update_pnpm:
         description: "Update the PNPM package manager itself"
@@ -42,6 +45,14 @@ on:
         type: string
         required: false
         default: "22"
+      tf_workspace:
+        description: The Terraform workspace
+        type: string
+        required: false
+      tf_cloud_organization:
+        description: The name of the Terraform Cloud organisation
+        type: string
+        required: false
 
 jobs:
   update-dependencies:
@@ -172,7 +183,19 @@ jobs:
 
       - name: Update Terraform Providers
         if: ${{ inputs.update_terraform == true }}
-        run: terraform init -upgrade -backend=false
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ inputs.tf_cloud_organization }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFE_TOKEN }}
+          TF_WORKSPACE: ${{ inputs.tf_workspace }}
+        run: terraform init -upgrade
+
+      - name: Re-initialise Terraform
+        if: ${{ inputs.update_terraform == true }}
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ inputs.tf_cloud_organization }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFE_TOKEN }}
+          TF_WORKSPACE: ${{ inputs.tf_workspace }}
+        run: terraform init
 
       - name: Commit Terraform updates
         if: ${{ inputs.update_terraform == true }}
