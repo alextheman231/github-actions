@@ -14,6 +14,7 @@
   "main": "index.js",
   "scripts": {
     "build": "exit 0",
+    "create-release": "bash -c 'git pull origin main && alex-c-line template release-note create $@ --status \"Released\" --update-version' --",
     "create-release-note": "bash -c 'git pull origin main && alex-c-line template release-note create $@' --",
     "format": "pnpm run format-package-json && pnpm run format-prettier && pnpm run format-markdownlint",
     "format-markdownlint": "pnpm exec markdownlint-cli2 --fix \"**/*.md\" \"!{node_modules,dist}/**\" | grep -v \"^Finding:\"",
@@ -30,7 +31,7 @@
   "devDependencies": {
     "@alextheman/eslint-plugin": "5.18.0",
     "@typescript-eslint/types": "8.64.0",
-    "alex-c-line": "2.12.4",
+    "alex-c-line": "2.13.0",
     "eslint": "10.7.0",
     "husky": "9.1.7",
     "markdownlint-cli2": "0.23.0",
