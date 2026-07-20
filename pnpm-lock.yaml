@@ -15,8 +15,8 @@ importers:
         specifier: 8.64.0
         version: 8.64.0
       alex-c-line:
-        specifier: 2.12.4
-        version: 2.12.4
+        specifier: 2.13.0
+        version: 2.13.0
       eslint:
         specifier: 10.7.0
         version: 10.7.0
@@ -63,8 +63,8 @@ packages:
     peerDependencies:
       zod: '>=4.0.0'
 
-  '@alextheman/utility@5.25.0':
-    resolution: {integrity: sha512-nC2PsPoINheADOmq/ZruH3cUt3GjuZrnnepi5OsR/Ddp6cWCWkzgx71lB0q8xIGn+lLcTOCY0TX7iOLTLwtsSg==}
+  '@alextheman/utility@5.26.0':
+    resolution: {integrity: sha512-MwFb85l923JdzQfVg2oYzpP6nXlGikyh3LMhHgT926wzLEYYtJELLyBibcBs57P1Sluv59sQPTjRZ0veqXydww==}
     engines: {node: '>=22.3.0'}
     peerDependencies:
       zod: '>=4.0.0'
@@ -728,8 +728,8 @@ packages:
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
-  alex-c-line@2.12.4:
-    resolution: {integrity: sha512-jTPaadJ6bTvitN27x5mIK/1rC7pYwk1y6GtPaLJ6G6fMHN+9ei/xY8BWlVhZKMjxr+539OOF/+MMdOxS/mrYdw==}
+  alex-c-line@2.13.0:
+    resolution: {integrity: sha512-iFMuOG5m3SLgc9ufYuEgcvxTcYMq4E2KxNOaLqSIp6WinShnC1dHgl04wZBSB4Oon0LIt5StFYwTpYGUQ33BdA==}
     engines: {node: '>=22.3.0'}
     hasBin: true
 
@@ -1253,8 +1253,8 @@ packages:
       picomatch:
         optional: true
 
-  figlet@1.11.0:
-    resolution: {integrity: sha512-EEx3OS/l2bFqcUNN2NM9FPJp8vAMrgbCxsbl2hbcJNNxOEwVe3mEzrhan7TbJQViZa8mMqhihlbCaqD+LyYKTQ==}
+  figlet@1.11.2:
+    resolution: {integrity: sha512-VXzWZSFTauu1f4CJbj/EnlpDVaTjO33cp/xgH0CLtPS/aP59i3ElwyR2bquCEsAv2Apv9E29PX5Zy39ipeUqSw==}
     engines: {node: '>= 17.0.0'}
     hasBin: true
 
@@ -1932,8 +1932,8 @@ packages:
     resolution: {integrity: sha512-41wJyvKep3yT2tyPqX/4blcfybknGB4D+oETKLs7Q76UiPqRpUJK3hr1nxelyYO0PHKVzJwlu0aCeEAsGI6rpw==}
     engines: {node: '>=20'}
 
-  toml@4.1.2:
-    resolution: {integrity: sha512-m0vXfHODcw3gk+KONAOlVQ5yNHc3yS3B1ybM3HS1vqDoS0RWTDDVBVVTYi8hH0k+2OM1vmo9fb1WX9EVqjqfHA==}
+  toml@5.0.0:
+    resolution: {integrity: sha512-bsqEd+g7fzlrw7LEynQ6W6aOK/lTOlepz5x1sJyIV9fTZVJS2Q76nuju6FK+gZhW5bUpvB7mCEqdR0u4WziMFw==}
     engines: {node: '>=20'}
 
   ts-api-utils@2.5.0:
@@ -2073,7 +2073,7 @@ snapshots:
       execa: 9.6.1
       zod: 4.4.3
 
-  '@alextheman/utility@5.25.0(zod@4.4.3)':
+  '@alextheman/utility@5.26.0(zod@4.4.3)':
     dependencies:
       dotenv: 17.4.2
       execa: 9.6.1
@@ -2757,9 +2757,9 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  alex-c-line@2.12.4:
+  alex-c-line@2.13.0:
     dependencies:
-      '@alextheman/utility': 5.25.0(zod@4.4.3)
+      '@alextheman/utility': 5.26.0(zod@4.4.3)
       '@inquirer/prompts': 8.5.2
       axios: 1.18.1(supports-color@10.2.2)
       boxen: 8.0.1
@@ -2769,11 +2769,11 @@ snapshots:
       dotenv-stringify: 3.0.1
       env-paths: 4.0.0
       execa: 9.6.1
-      figlet: 1.11.0
+      figlet: 1.11.2
       gray-matter: 4.0.3
       semver: 7.8.5
       supports-color: 10.2.2
-      toml: 4.1.2
+      toml: 5.0.0
       zod: 4.4.3
     transitivePeerDependencies:
       - '@types/node'
@@ -3353,7 +3353,7 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
-  figlet@1.11.0:
+  figlet@1.11.2:
     dependencies:
       commander: 14.0.3
 
@@ -4069,7 +4069,7 @@ snapshots:
       '@sindresorhus/base62': 1.0.0
       reserved-identifiers: 1.2.0
 
-  toml@4.1.2: {}
+  toml@5.0.0: {}
 
   ts-api-utils@2.5.0(typescript@5.9.3):
     dependencies:
