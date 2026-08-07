@@ -48,7 +48,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@26b0740613ab8196b5ed71ae9ef9c394f4f9a564 # v1.2.4
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -107,7 +107,7 @@ jobs:
           git config --global user.email "alexupbot@bot.com"
 
       - name: Use PNPM
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           run_install: false
 
@@ -135,7 +135,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         with:
           message: "Generate the build"
 
@@ -151,7 +151,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@26b0740613ab8196b5ed71ae9ef9c394f4f9a564 # v1.2.4
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -163,7 +163,7 @@ jobs:
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 

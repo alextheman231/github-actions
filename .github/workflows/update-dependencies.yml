@@ -71,7 +71,7 @@ jobs:
 
       - name: Use PNPM
         if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
           run_install: false
 
@@ -106,7 +106,7 @@ jobs:
 
       - name: Install actions-up
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@26b0740613ab8196b5ed71ae9ef9c394f4f9a564 # v1.2.4
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
         with:
           package-name: actions-up
           package-manager: npm
@@ -119,7 +119,7 @@ jobs:
 
       - name: Commit PNPM update
         if: ${{ inputs.update_pnpm == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         with:
           message: "Update PNPM"
 
@@ -135,7 +135,7 @@ jobs:
 
       - name: Commit JavaScript dependencies updates
         if: ${{ inputs.update_javascript_dependencies }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         with:
           message: "Update JavaScript dependencies"
 
@@ -147,7 +147,7 @@ jobs:
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -173,7 +173,7 @@ jobs:
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         with:
           message: "Update Python dependencies"
 
@@ -199,7 +199,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ inputs.update_terraform == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
