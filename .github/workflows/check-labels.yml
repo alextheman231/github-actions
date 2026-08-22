@@ -1,0 +1,46 @@
+name: Check labels
+
+on:
+  workflow_call:
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
+    inputs:
+      APP_ID:
+        type: string
+        required: true
+      pull-request-number:
+        description: The pull request number
+        type: number
+        required: true
+
+jobs:
+  check-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ inputs.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-pull-requests: read
+
+      - name: Check for the presence of labels on the pull request
+        env:
+          PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          labels="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels --jq '.labels | length')"
+
+          if [[ "$labels" -eq 0 ]]; then
+              echo "::error::Pull request must have at least one label"
+              exit 1
+          fi
