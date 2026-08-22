@@ -20,11 +20,6 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
       - name: Get alex-up-bot GitHub token
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -37,6 +32,7 @@ jobs:
         env:
           PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           labels="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels --jq '.labels | length')"
 
