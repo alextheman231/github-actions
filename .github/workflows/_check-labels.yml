@@ -2,7 +2,7 @@ name: Check labels (Internal)
 
 on:
   pull_request:
-    types: [labeled, unlabeled]
+    types: [labeled, unlabeled, synchronize]
 
 jobs:
   check-labels:
