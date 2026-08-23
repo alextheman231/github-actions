@@ -34,9 +34,18 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          labels="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels --jq '.labels | length')"
+          PULL_REQUEST_LABELS="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels)"
 
-          if [[ "$labels" -eq 0 ]]; then
-              echo "::error::Pull request must have at least one label"
+          RISK_LABELS="$(jq '[.labels[].name | select(. == "low risk" or . == "medium risk" or . == "high risk")] | length' <<< "$PULL_REQUEST_LABELS")"
+
+          CATEGORY_LABELS="$(jq '[.labels[].name | select(. != "low risk" and . != "medium risk" and . != "high risk" and . != "low priority" and . != "medium priority" and . != "high priority" and . != "critical priority")] | length <<< "$PULL_REQUEST_LABELS")"
+
+          if [[ "$RISK_LABELS" -eq 0 ]]; then
+              echo "::error::Pull request must have at least one risk label."
+              exit 1
+          fi
+
+          if [[ "$CATEGORY_LABELS" -eq 0 ]]; then
+              echo "::error::Pull request must have at least one category label."
               exit 1
           fi
