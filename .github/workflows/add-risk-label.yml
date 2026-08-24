@@ -1,0 +1,83 @@
+name: Add risk label
+
+on:
+  workflow_call:
+    inputs:
+      APP_ID:
+        type: string
+        required: true
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
+
+jobs:
+  add-risk-label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ inputs.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-pull-requests: write
+
+      - name: Get risk label name
+        id: risk_label
+        env:
+          PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          RISK_LEVEL="$(
+            sed -nE 's/^[[:space:]]*## Risk level: (Low|Medium|High)[[:space:]]*$/\1/p' <<< "$PULL_REQUEST_BODY"
+          )"
+
+          case "$RISK_LEVEL" in
+            Low)
+              echo "label=low risk" >> "$GITHUB_OUTPUT"
+              ;;
+            Medium)
+              echo "label=medium risk" >> "$GITHUB_OUTPUT"
+              ;;
+            High)
+              echo "label=high risk" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::Pull request does not contain a valid risk level."
+              exit 1
+              ;;
+          esac
+
+      - name: Add label to pull request
+        env:
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+          RISK_LABEL: ${{ steps.risk_label.outputs.label }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          PULL_REQUEST_LABELS="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels)"
+
+          mapfile -t EXISTING_RISK_LABELS < <(
+            jq -r '
+              .labels[].name |
+              select(
+                . == "low risk" or
+                . == "medium risk" or
+                . == "high risk"
+              )
+            ' <<< "$PULL_REQUEST_LABELS"
+          )
+
+          if [[ ${#EXISTING_RISK_LABELS[@]} -gt 0 ]]; then
+            if [[ ${#EXISTING_RISK_LABELS[@]} -eq 1 && ${#EXISTING_RISK_LABELS[0]} == $RISK_LABEL ]]; then
+              echo "Risk label already added."
+              exit 0
+            fi
+
+            for LABEL in "${EXISTING_RISK_LABELS[@]}"; do
+              gh pr edit "$PULL_REQUEST_NUMBER" --remove-label "$LABEL"
+            done
+          fi
+
+          gh pr edit "$PULL_REQUEST_NUMBER" --add-label "$RISK_LABEL"
