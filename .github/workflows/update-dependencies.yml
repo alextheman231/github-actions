@@ -214,4 +214,4 @@ jobs:
           branch: alex-up-bot/update-dependencies
           base: main
           title: "Update dependencies"
-          body-path: .github/PULL_REQUEST_TEMPLATE/tooling_change.md
+          body-path: .github/PULL_REQUEST_TEMPLATE/low_risk.md
