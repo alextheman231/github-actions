@@ -40,8 +40,8 @@ jobs:
 
           CATEGORY_LABELS="$(jq '[.labels[].name | select(. != "low risk" and . != "medium risk" and . != "high risk" and . != "low priority" and . != "medium priority" and . != "high priority" and . != "critical priority")] | length' <<< "$PULL_REQUEST_LABELS")"
 
-          if [[ "$RISK_LABELS" -eq 0 ]]; then
-              echo "::error::Pull request must have at least one risk label."
+          if [[ "$RISK_LABELS" -ne 1 ]]; then
+              echo "::error::Pull request must have exactly one risk label."
               exit 1
           fi
 
