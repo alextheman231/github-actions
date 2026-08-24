@@ -219,4 +219,6 @@ jobs:
       - name: Label the pull request as a tooling change
         env:
           PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh pr edit $PULL_REQUEST_URL --add-label "tooling"
