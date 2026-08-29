@@ -119,7 +119,7 @@ jobs:
 
       - name: Commit PNPM update
         if: ${{ inputs.update_pnpm == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
         with:
           message: "Update PNPM"
 
@@ -135,7 +135,7 @@ jobs:
 
       - name: Commit JavaScript dependencies updates
         if: ${{ inputs.update_javascript_dependencies }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
         with:
           message: "Update JavaScript dependencies"
 
@@ -147,7 +147,7 @@ jobs:
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -173,7 +173,7 @@ jobs:
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
         with:
           message: "Update Python dependencies"
 
@@ -199,7 +199,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ inputs.update_terraform == true }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@760f1347c1597e458ce3e966112d7278ed15c059 # v12.5.1
+        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
