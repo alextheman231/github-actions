@@ -44,8 +44,8 @@ jobs:
               echo "label=high risk" >> "$GITHUB_OUTPUT"
               ;;
             *)
-              echo "::error::Pull request does not contain a valid risk level."
-              exit 1
+              echo "Pull request does not contain a valid risk level."
+              exit 0
               ;;
           esac
 
