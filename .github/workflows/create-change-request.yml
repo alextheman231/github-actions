@@ -86,6 +86,7 @@ jobs:
           permission-pull-requests: write
 
       - name: Create pull request
+        id: pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -99,3 +100,10 @@ jobs:
           base: main
           title: ${{ inputs.reason }}
           body-path: ${{ steps.change_request.outputs.path }}
+
+      - name: Label the pull request as medium risk
+        env:
+          PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh pr edit $PULL_REQUEST_URL --add-label "medium risk"
