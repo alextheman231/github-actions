@@ -113,3 +113,10 @@ jobs:
           title: "Change version number to ${{ steps.get_next_version.outputs.version }}"
           commit-message: "Change version number to ${{ steps.get_next_version.outputs.version }}"
           body-path: ${{ steps.get_release_note_path.outputs.path }}
+
+      - name: Label the pull request as a low risk documentation and tooling change
+        env:
+          PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh pr edit $PULL_REQUEST_URL --add-label "low risk,tooling,documentation"
