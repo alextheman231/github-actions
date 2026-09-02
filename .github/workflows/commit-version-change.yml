@@ -167,7 +167,29 @@ jobs:
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
+      - name: Determine risk level
+        id: risk-level
+        env:
+          VERSION_TYPE: ${{ env.VERSION_TYPE }}
+        run: |
+          case "$VERSION_TYPE" in
+            major)
+              echo "risk=low risk" >> "$GITHUB_OUTPUT"
+              ;;
+            minor)
+              echo "risk=medium risk" >> "$GITHUB_OUTPUT"
+              ;;
+            High)
+              echo "risk=high risk" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Invalid version type."
+              exit 1
+              ;;
+          esac
+
       - name: Create Pull Request
+        id: pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -178,3 +200,9 @@ jobs:
           title: "Change version number to ${{ steps.get_new_version.outputs.version }}"
           maintainer-can-modify: false
           body-path: ${{ env.RELEASE_DOC_PATH }}
+
+      - name: Add risk label, tooling, and documentation label to the pull request
+        env:
+          PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
+          RISK_LABEL: ${{ steps.risk-level.outputs.risk }}
+        run: gh pr edit "$PULL_REQUEST_URL" --add-label "$RISK_LABEL,tooling,documentation"
