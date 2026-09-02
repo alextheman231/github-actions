@@ -205,4 +205,5 @@ jobs:
         env:
           PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
           RISK_LABEL: ${{ steps.risk-level.outputs.risk }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh pr edit "$PULL_REQUEST_URL" --add-label "$RISK_LABEL,tooling,documentation"
