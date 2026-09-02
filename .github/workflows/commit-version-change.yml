@@ -174,13 +174,13 @@ jobs:
         run: |
           case "$VERSION_TYPE" in
             major)
-              echo "risk=low risk" >> "$GITHUB_OUTPUT"
+              echo "risk=high risk" >> "$GITHUB_OUTPUT"
               ;;
             minor)
               echo "risk=medium risk" >> "$GITHUB_OUTPUT"
               ;;
-            High)
-              echo "risk=high risk" >> "$GITHUB_OUTPUT"
+            patch)
+              echo "risk=low risk" >> "$GITHUB_OUTPUT"
               ;;
             *)
               echo "Invalid version type."
