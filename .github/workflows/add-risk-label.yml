@@ -11,10 +11,12 @@ on:
         required: true
 
 jobs:
-  add-risk-label:
+  check-risk-level:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      pull-requests: read
+    outputs:
+      label: ${{ steps.risk_label.outputs.label }}
     steps:
       - name: Get alex-up-bot GitHub token
         id: app-token
@@ -22,7 +24,7 @@ jobs:
         with:
           client-id: ${{ inputs.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-pull-requests: write
+          permission-pull-requests: read
 
       - name: Get risk label name
         id: risk_label
@@ -49,10 +51,25 @@ jobs:
               ;;
           esac
 
+  add-risk-label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    needs: [check-risk-level]
+    if: ${{ needs.check-risk-level.outputs.label == 'low risk' || needs.check-risk-level.outputs.label == 'medium risk' || needs.check-risk-level.outputs.label == 'high risk' }}
+    steps:
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ inputs.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-pull-requests: read
+
       - name: Add label to pull request
         env:
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-          RISK_LABEL: ${{ steps.risk_label.outputs.label }}
+          RISK_LABEL: ${{ needs.check-risk-level.outputs.label }}
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
         run: |
