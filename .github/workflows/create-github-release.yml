@@ -39,7 +39,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@3a39c144328738575b6fa7be0ded4f4e97ec0372 # v1.3.0
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -115,7 +115,7 @@ jobs:
           git push origin "$TAG"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           body_path: ${{ needs.check-version.outputs.release_doc_path }}
           token: ${{ steps.app-token.outputs.token }}

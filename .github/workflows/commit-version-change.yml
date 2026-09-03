@@ -48,7 +48,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@3a39c144328738575b6fa7be0ded4f4e97ec0372 # v1.3.0
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -135,7 +135,7 @@ jobs:
 
       - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
         if: ${{ inputs.run-build }}
-        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@343e1798604e0cb36cd38375eb5671b0ac33e626 # v12.7.3
         with:
           message: "Generate the build"
 
@@ -151,7 +151,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@97b495b33b557c3a3220e4267454c6037a2f3437 # v1.2.5
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@3a39c144328738575b6fa7be0ded4f4e97ec0372 # v1.3.0
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
@@ -163,7 +163,7 @@ jobs:
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
       - name: Commit version change
-        uses: alextheman231/github-actions/.github/actions/commit-changes@bba094b0c09dda59228db6437a5231ba0538d09a # v12.7.0
+        uses: alextheman231/github-actions/.github/actions/commit-changes@343e1798604e0cb36cd38375eb5671b0ac33e626 # v12.7.3
         with:
           message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
 
