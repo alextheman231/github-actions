@@ -16,7 +16,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      label: ${{ steps.risk_label.outputs.label }}
+      label: ${{ steps.risk-label.outputs.label }}
     steps:
       - name: Get alex-up-bot GitHub token
         id: app-token
@@ -26,30 +26,21 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-pull-requests: read
 
-      - name: Get risk label name
-        id: risk_label
+      - name: Get risk level from pull request
+        id: risk-level
         env:
           PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}
         run: |
           RISK_LEVEL="$(
             sed -nE 's/^[[:space:]]*## Risk level: (Low|Medium|High)[[:space:]]*$/\1/p' <<< "$PULL_REQUEST_BODY"
           )"
+          echo "risk-level=$RISK_LEVEL" >> "$GITHUB_OUTPUT"
 
-          case "$RISK_LEVEL" in
-            Low)
-              echo "label=low risk" >> "$GITHUB_OUTPUT"
-              ;;
-            Medium)
-              echo "label=medium risk" >> "$GITHUB_OUTPUT"
-              ;;
-            High)
-              echo "label=high risk" >> "$GITHUB_OUTPUT"
-              ;;
-            *)
-              echo "Pull request does not contain a valid risk level."
-              exit 0
-              ;;
-          esac
+      - name: Get risk label name
+        id: risk-label
+        uses: alextheman231/typescript-actions/actions/get-risk-label-name@c04a5bba9a35d2a2d494bf47e0c72da56a7705b3 # v1.3.2
+        with:
+          risk-level: ${{ steps.risk-level.outputs.risk-level }}
 
   add-risk-label:
     runs-on: ubuntu-latest
@@ -67,34 +58,9 @@ jobs:
           permission-pull-requests: write
 
       - name: Add label to pull request
-        env:
-          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-          RISK_LABEL: ${{ needs.check-risk-level.outputs.label }}
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          GH_REPO: ${{ github.repository }}
-        run: |
-          PULL_REQUEST_LABELS="$(gh pr view "$PULL_REQUEST_NUMBER" --json labels)"
-
-          mapfile -t EXISTING_RISK_LABELS < <(
-            jq -r '
-              .labels[].name |
-              select(
-                . == "low risk" or
-                . == "medium risk" or
-                . == "high risk"
-              )
-            ' <<< "$PULL_REQUEST_LABELS"
-          )
-
-          if [[ ${#EXISTING_RISK_LABELS[@]} -gt 0 ]]; then
-            if [[ ${#EXISTING_RISK_LABELS[@]} -eq 1 && ${#EXISTING_RISK_LABELS[0]} == $RISK_LABEL ]]; then
-              echo "Risk label already added."
-              exit 0
-            fi
-
-            for LABEL in "${EXISTING_RISK_LABELS[@]}"; do
-              gh pr edit "$PULL_REQUEST_NUMBER" --remove-label "$LABEL"
-            done
-          fi
-
-          gh pr edit "$PULL_REQUEST_NUMBER" --add-label "$RISK_LABEL"
+        uses: alextheman231/typescript-actions/actions/add-risk-label@c04a5bba9a35d2a2d494bf47e0c72da56a7705b3 # v1.3.2
+        with:
+          pull-request-number: ${{ github.event.pull_request.number }}
+          label-to-add: ${{ needs.check-risk-level.outputs.label }}
+          github-token: ${{ steps.app-token.outputs.token }}
+          github-repository: ${{ github.repository }}
