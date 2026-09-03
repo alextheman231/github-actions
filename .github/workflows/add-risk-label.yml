@@ -38,7 +38,7 @@ jobs:
 
       - name: Get risk label name
         id: risk-label
-        uses: alextheman231/typescript-actions/actions/get-risk-label-name@c04a5bba9a35d2a2d494bf47e0c72da56a7705b3 # v1.3.2
+        uses: alextheman231/typescript-actions/actions/get-risk-label-name@f142a767503c546e9dcae30276cf2069dc0b3000 # v1.3.3
         with:
           risk-level: ${{ steps.risk-level.outputs.risk-level }}
 
@@ -58,7 +58,7 @@ jobs:
           permission-pull-requests: write
 
       - name: Add label to pull request
-        uses: alextheman231/typescript-actions/actions/add-risk-label@c04a5bba9a35d2a2d494bf47e0c72da56a7705b3 # v1.3.2
+        uses: alextheman231/typescript-actions/actions/add-risk-label@f142a767503c546e9dcae30276cf2069dc0b3000 # v1.3.3
         with:
           pull-request-number: ${{ github.event.pull_request.number }}
           label-to-add: ${{ needs.check-risk-level.outputs.label }}
