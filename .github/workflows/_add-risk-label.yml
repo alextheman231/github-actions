@@ -6,7 +6,7 @@ on:
 
 jobs:
   add-risk-label:
-    uses: ./.github/workflows/add-risk-label.yml
+    uses: $/.github/workflows/add-risk-label.yml
     permissions:
       pull-requests: write
     with:

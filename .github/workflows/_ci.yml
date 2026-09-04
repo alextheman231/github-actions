@@ -52,4 +52,4 @@ jobs:
           pnpm run lint
 
   version-change-ci:
-    uses: ./.github/workflows/version-change-ci.yml
+    uses: $/.github/workflows/version-change-ci.yml

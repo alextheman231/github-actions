@@ -8,7 +8,7 @@ jobs:
   check-labels:
     permissions:
       pull-requests: read
-    uses: ./.github/workflows/check-labels.yml
+    uses: $/.github/workflows/check-labels.yml
     with:
       pull-request-number: ${{ github.event.pull_request.number }}
       APP_ID: ${{ vars.ALEX_UP_BOT_APP_ID }}
