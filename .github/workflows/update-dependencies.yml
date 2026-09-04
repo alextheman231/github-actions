@@ -106,7 +106,7 @@ jobs:
 
       - name: Install actions-up
         if: ${{ inputs.update_actions == true }}
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@ee340ea6c2790aa3acb55d66af1fc3f82c38ceea # v1.3.4
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@69687ab13698ddb69bef21499e1353b7d8bc9e2f # v1.3.5
         with:
           package-name: actions-up
           package-manager: npm
