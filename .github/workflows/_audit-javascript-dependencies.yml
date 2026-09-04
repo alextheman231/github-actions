@@ -8,7 +8,7 @@ on:
 
 jobs:
   comment-outdated:
-    uses: ./.github/workflows/audit-javascript-dependencies.yml
+    uses: $/.github/workflows/audit-javascript-dependencies.yml
     permissions:
       contents: read
       pull-requests: write
