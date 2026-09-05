@@ -34,6 +34,11 @@ on:
         type: string
         required: false
         default: "22"
+      labels:
+        description: The labels to add to the pull request, provided as a comma-separated list
+        type: string
+        required: false
+        default: "medium risk"
 
 jobs:
   create-change-request:
@@ -101,9 +106,10 @@ jobs:
           title: ${{ inputs.reason }}
           body-path: ${{ steps.change_request.outputs.path }}
 
-      - name: Label the pull request as medium risk
+      - name: Label the pull request
         env:
           PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh pr edit $PULL_REQUEST_URL --add-label "medium risk"
+          LABELS: ${{ inputs.labels }}
+        run: gh pr edit $PULL_REQUEST_URL --add-label "$LABELS"
