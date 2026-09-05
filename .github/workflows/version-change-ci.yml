@@ -28,7 +28,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install alex-c-line
-        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@69687ab13698ddb69bef21499e1353b7d8bc9e2f # v1.3.5
+        uses: alextheman231/typescript-actions/actions/safe-npm-dependency-global-install@d068a38becb783c3a1a3a63593055abad8811593 # v1.3.6
         with:
           package-name: alex-c-line
           dependency-group: devDependencies
