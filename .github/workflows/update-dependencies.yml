@@ -53,6 +53,11 @@ on:
         description: The name of the Terraform Cloud organisation
         type: string
         required: false
+      body-path:
+        description: The path to the pull request body
+        type: string
+        required: false
+        default: .github/PULL_REQUEST_TEMPLATE/low_risk.md
 
 jobs:
   update-dependencies:
@@ -214,7 +219,7 @@ jobs:
           branch: alex-up-bot/update-dependencies
           base: main
           title: "Update dependencies"
-          body-path: .github/PULL_REQUEST_TEMPLATE/low_risk.md
+          body-path: ${{ inputs.body-path }}
 
       - name: Label the pull request as a tooling change
         env:
