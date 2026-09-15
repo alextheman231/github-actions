@@ -1,23 +1,3 @@
-import { defineAlexCLineConfig } from "alex-c-line/configs";
+import alexCLineConfig from "./dist-configs/index.js";
 
-export default defineAlexCLineConfig({
-  template: {
-    pullRequest: {
-      category: "general",
-      projectType: "package",
-    },
-  },
-  preCommit: {
-    packageManager: "pnpm",
-    steps: [
-        "format", 
-        async (stepRunner) => {
-            await stepRunner`pdm run format`;
-        },
-        async (stepRunner) => {
-          await stepRunner`pdm run lint`;
-        },
-        "lint",
-    ],
-  },
-});
+export default alexCLineConfig;

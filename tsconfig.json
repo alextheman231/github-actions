@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "useDefineForClassFields": true,
+    "lib": ["ES2024", "DOM"],
+    "types": ["eslint", "node"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "paths": {
+      "configs/*": ["./configs/*"],
+      "src/*": ["./src/*"],
+      "package.json": ["./package.json"]
+    },
+    "esModuleInterop": true,
+
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "outDir": "dist",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": true,
+    "useUnknownInCatchVariables": true
+  },
+  "include": ["src", "configs", "tests"]
+}

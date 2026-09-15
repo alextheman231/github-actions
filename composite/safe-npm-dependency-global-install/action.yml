@@ -1,0 +1,30 @@
+name: Safe NPM dependency global install
+description: Safely install an NPM dependency globally in an action
+runs:
+  using: node24
+  main: dist/index.js
+
+inputs:
+  package-name:
+    description: "The name of the package you would like to install."
+    type: string
+    required: true
+  strict-version-resolution:
+    description: "Fail if the version input is not provided and the dependency cannot be found in package.json."
+    type: boolean
+    required: false
+    default: true
+  version-range:
+    description: "The version range of the package to use. Defaults to the version range found in package.json if not otherwise found."
+    type: string
+    required: false
+  dependency-group:
+    description: 'The dependency group to get the dependency from if version not specified (can be `"dependencies" | "devDependencies"`).'
+    type: string
+    required: false
+    default: "dependencies"
+  package-manager:
+    description: 'The package manager to install with. (can be `"npm" | "pnpm"`)'
+    type: string
+    required: false
+    default: "npm"
