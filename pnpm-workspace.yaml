@@ -1,4 +1,4 @@
-savePrefix: ''
+savePrefix: ""
 allowBuilds:
   canvas: true
   esbuild: true
@@ -6,3 +6,5 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - "@alextheman/*"
   - alex-c-line
+overrides:
+  typescript: 6.0.3

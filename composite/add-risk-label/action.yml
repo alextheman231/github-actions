@@ -1,0 +1,38 @@
+name: Add risk label
+description: Add risk label to the pull request
+runs:
+  using: node24
+  main: dist/index.js
+
+inputs:
+  label-to-add:
+    description: "The label to add. Must match one of the values of `low-risk-label-name`, `medium-risk-label-name`, or `high-risk-label-name`, where they default to `low risk`, `medium risk`, and `high risk` respectively."
+    type: string
+    required: true
+  low-risk-label-name:
+    description: "The name of the low risk label."
+    type: string
+    required: false
+    default: "low risk"
+  medium-risk-label-name:
+    description: "The name of the medium risk label."
+    type: string
+    required: false
+    default: "medium risk"
+  high-risk-label-name:
+    description: "The name of the high risk label."
+    type: string
+    required: false
+    default: "high risk"
+  pull-request-number:
+    description: "The pull request number"
+    type: number
+    required: true
+  github-token:
+    description: "The GitHub token to allow the workflow to add a label"
+    type: string
+    required: true
+  github-repository:
+    description: "The name of the GitHub repository"
+    type: string
+    required: true

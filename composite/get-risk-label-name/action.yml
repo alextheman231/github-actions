@@ -1,0 +1,26 @@
+name: Get risk label name
+description: Check the given input risk level and output a risk label name based on it
+runs:
+  using: node24
+  main: dist/index.js
+
+inputs:
+  risk-level:
+    description: "The risk level. Must be one of `low | medium | high`, case-insensitive."
+    type: string
+    required: true
+  low-risk-label-name:
+    description: "The name of the low risk label."
+    type: string
+    required: false
+    default: "low risk"
+  medium-risk-label-name:
+    description: "The name of the medium risk label."
+    type: string
+    required: false
+    default: "medium risk"
+  high-risk-label-name:
+    description: "The name of the high risk label."
+    type: string
+    required: false
+    default: "high risk"
