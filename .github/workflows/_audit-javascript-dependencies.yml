@@ -1,4 +1,4 @@
-name: Comment outdated dependencies (Internal)
+name: Audit JavaScript Dependencies (Internal)
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - "**/pnpm-lock.yaml"
 
 jobs:
-  comment-outdated:
+  audit-javascript-dependencies:
     uses: $/.github/workflows/audit-javascript-dependencies.yml
     permissions:
       contents: read
