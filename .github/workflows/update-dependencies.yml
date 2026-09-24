@@ -148,7 +148,7 @@ jobs:
         if: ${{ inputs.update_actions == true }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: actions-up -y --min-age 0
+        run: actions-up -y --min-age-exclude "^alextheman231/github-actions"
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
