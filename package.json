@@ -38,16 +38,16 @@
   },
   "devDependencies": {
     "@alextheman/eslint-plugin": "5.18.3",
-    "@types/node": "26.6.1",
-    "@typescript-eslint/types": "8.70.0",
+    "@types/node": "26.6.2",
+    "@typescript-eslint/types": "8.70.1",
     "alex-c-line": "2.13.2",
-    "eslint": "10.10.0",
+    "eslint": "10.11.0",
     "husky": "9.1.7",
-    "markdownlint-cli2": "0.23.2",
-    "prettier": "3.9.8",
+    "markdownlint-cli2": "0.23.3",
+    "prettier": "3.9.9",
     "tsdown": "0.23.0",
     "typescript": "7.0.2",
-    "typescript-eslint": "8.70.0"
+    "typescript-eslint": "8.70.1"
   },
   "packageManager": "pnpm@12.6.0+sha512.3ef68f951cb111ac204b4a5a16f0b2ddf0da56a96e0413e81d855d9f0b55ef926714709028e1cd00c405c2c5fb7b9e8ec4dc46777c805d0373c2f2ff00fd20ec",
   "dependencies": {
