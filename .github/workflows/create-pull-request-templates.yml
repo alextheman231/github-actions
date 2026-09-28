@@ -3,11 +3,12 @@ name: Create pull request templates
 on:
   workflow_call:
     secrets:
-      APP_ID:
-        required: true
       APP_PRIVATE_KEY:
         required: true
     inputs:
+      CLIENT_ID:
+        type: string
+        required: true
       run-build:
         type: boolean
         default: true
@@ -69,7 +70,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          client-id: ${{ secrets.APP_ID }}
+          client-id: ${{ inputs.CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write

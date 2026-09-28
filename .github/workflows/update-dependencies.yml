@@ -2,14 +2,15 @@ name: Update Dependencies
 on:
   workflow_call:
     secrets:
-      APP_ID:
-        required: true
       APP_PRIVATE_KEY:
         required: true
       TFE_TOKEN:
         description: The HCP Terraform token to use if updating Terraform
         required: false
     inputs:
+      CLIENT_ID:
+        type: string
+        required: true
       update_pnpm:
         description: "Update the PNPM package manager itself"
         required: false
@@ -97,7 +98,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          client-id: ${{ secrets.APP_ID }}
+          client-id: ${{ inputs.CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write

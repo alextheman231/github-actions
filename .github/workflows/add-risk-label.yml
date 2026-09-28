@@ -3,7 +3,7 @@ name: Add risk label
 on:
   workflow_call:
     inputs:
-      APP_ID:
+      CLIENT_ID:
         type: string
         required: true
     secrets:
@@ -22,7 +22,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          client-id: ${{ inputs.APP_ID }}
+          client-id: ${{ inputs.CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-pull-requests: read
 
@@ -53,7 +53,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          client-id: ${{ inputs.APP_ID }}
+          client-id: ${{ inputs.CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-pull-requests: write
 

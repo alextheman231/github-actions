@@ -10,6 +10,6 @@ jobs:
     permissions:
       pull-requests: write
     with:
-      APP_ID: ${{ vars.ALEX_UP_BOT_APP_ID }}
+      CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
