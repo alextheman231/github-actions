@@ -87,11 +87,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Fetch tags from origin
-        run: |
-          git fetch --unshallow origin main
-          git fetch --tags origin
-
       - name: Get alex-up-bot GitHub token
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -100,25 +95,9 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
 
-      - name: Setup GitHub user
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git config --global user.name "alex-up-bot"
-          git config --global user.email "alexupbot@bot.com"
-          git remote set-url origin https://x-access-token:"$GITHUB_TOKEN"@github.com/"${GITHUB_REPOSITORY}".git
-
-      - name: Create Git tag
-        env:
-          TAG: ${{ needs.check-version.outputs.version }}
-        run: |
-          git tag "$TAG"
-          git push origin "$TAG"
-
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
-        with:
-          body_path: ${{ needs.check-version.outputs.release_doc_path }}
-          token: ${{ steps.app-token.outputs.token }}
-          tag_name: ${{ needs.check-version.outputs.version }}
-          name: ${{ needs.check-version.outputs.version }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          TAG: ${{ needs.check-version.outputs.version }}
+          RELEASE_NOTE_PATH: ${{ needs.check-version.outputs.release_doc_path }}
+        run: gh release create "$TAG" --target "$GITHUB_SHA" --notes-file "$RELEASE_NOTE_PATH"
