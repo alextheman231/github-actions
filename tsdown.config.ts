@@ -20,6 +20,10 @@ const config: Array<UserConfig> = [
     entry: ["src/composite/add-risk-label/index.ts"],
     outDir: "composite/add-risk-label/dist",
   },
+  {
+    entry: ["src/composite/get-package-metadata/index.ts"],
+    outDir: "composite/get-package-metadata/dist",
+  },
 ].map(({ entry, outDir }) => {
   return {
     entry,
