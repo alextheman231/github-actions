@@ -22557,7 +22557,7 @@ async function getPackageMetadata({ packageJsonPath }) {
 	const { name, version } = az.with(minimalPackageJsonSchema).parse(JSON.parse(await readFile(packageJsonPath, "utf-8")));
 	console.info(normaliseIndents`
         Package name: ${name}
-        Package version: ${version}
+        Package version: ${version.toString()}
     `);
 	setOutput("package-name", name);
 	setOutput("package-version", version.toString());

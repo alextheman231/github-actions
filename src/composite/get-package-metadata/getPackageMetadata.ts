@@ -20,7 +20,7 @@ async function getPackageMetadata({ packageJsonPath }: GetPackageMetadataInputs)
 
   console.info(normaliseIndents`
         Package name: ${name}
-        Package version: ${version}
+        Package version: ${version.toString()}
     `);
 
   setOutput("package-name", name);
