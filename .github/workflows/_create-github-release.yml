@@ -4,11 +4,33 @@ on:
     branches: ["main"]
 
 jobs:
+  check-version-tag:
+    permissions:
+      contents: read
+    uses: $/.github/workflows/report-version-tag-existence.yml
+    with:
+      CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
+
+  check-release-note:
+    permissions:
+      contents: read
+    uses: $/.github/workflows/report-release-note-existence.yml
+    with:
+      CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
+
   create-github-release:
     permissions:
       contents: write
+    needs: [check-version-tag, check-release-note]
+    if: ${{ needs.check-release-note.outputs.release-note-found == 'true' && needs.check-version-tag.outputs.tag-exists == 'true' }}
     uses: $/.github/workflows/create-github-release.yml
     with:
       CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+      tag: ${{ needs.check-version-tag.outputs.tag }}
+      release-note-path: ${{ needs.check-release-note.outputs.release-note-path }}
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}

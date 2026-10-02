@@ -1,0 +1,55 @@
+name: Report NPM version existence
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: The Node version to use
+        type: string
+        required: false
+        default: "22"
+
+    outputs:
+      version-exists:
+        description: "True if a publish occurred"
+        value: ${{ jobs.check-version.outputs.version-exists }}
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version-exists: ${{ steps.check-version.outputs.version_exists }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch from main
+        run: git fetch --unshallow origin main
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Get package data from package.json
+        id: get-package-data
+        uses: $/composite/get-package-metadata
+
+      - name: Check if version exists
+        id: check-version
+        env:
+          NAME: ${{ steps.get-package-data.outputs.package-name }}
+          VERSION: ${{ steps.get-package-data.outputs.package-version }}
+        run: |
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already exists."
+            echo "version_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $VERSION does not already exist."
+            echo "version_exists=false" >> "$GITHUB_OUTPUT"
+          fi
