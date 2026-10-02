@@ -59,13 +59,13 @@ jobs:
           RELEASE_NOTE_PATH=$(alex-c-line template release-note path "$VERSION")
           echo "release_note_path=$RELEASE_NOTE_PATH" >> "$GITHUB_OUTPUT"
 
-      - name: Check if version and release document already exists
+      - name: Check if release document already exists
         id: check-version
         env:
           VERSION: ${{ steps.get-package-data.outputs.package-version }}
           RELEASE_NOTE_PATH: ${{ steps.get-release-path.outputs.release_note_path }}
         run: |
-          if [ ! -f "$RELEASE_DOC_PATH" ]; then
+          if [ ! -f "$RELEASE_NOTE_PATH" ]; then
             echo "No release document found for $VERSION."
             echo "release_note_found=false" >> "$GITHUB_OUTPUT"
           else
