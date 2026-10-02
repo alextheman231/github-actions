@@ -26,7 +26,7 @@ jobs:
     permissions:
       contents: write
     needs: [check-version-tag, check-release-note]
-    if: ${{ needs.check-release-note.outputs.release-note-found == 'true' && needs.check-version-tag.outputs.tag-exists == 'true' }}
+    if: ${{ needs.check-release-note.outputs.release-note-found == 'true' && needs.check-version-tag.outputs.tag-exists == 'false' }}
     uses: $/.github/workflows/create-github-release.yml
     with:
       CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
