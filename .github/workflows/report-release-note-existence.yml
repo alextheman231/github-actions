@@ -47,9 +47,6 @@ jobs:
           dependency-group: devDependencies
           strict-version-resolution: false
 
-      - name: Fetch tags from main
-        run: git fetch --tags origin
-
       - name: Get package data from package.json
         id: get-package-data
         uses: $/composite/get-package-metadata
