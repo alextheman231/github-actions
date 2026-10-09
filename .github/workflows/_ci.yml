@@ -50,6 +50,3 @@ jobs:
         run: |
           pdm run lint
           pnpm run lint
-
-  version-change-ci:
-    uses: $/.github/workflows/version-change-ci.yml
