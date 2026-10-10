@@ -6,6 +6,10 @@ inputs:
     description: "The commit message"
     required: true
     type: string
+  path:
+    description: "The path to commit"
+    required: false
+    default: "-A"
 
 outputs:
   changes_detected:
@@ -19,9 +23,10 @@ runs:
       id: commit_changes
       env:
         MESSAGE: ${{ inputs.message }}
+        PATH: ${{ inputs.path }}
       run: |
         if [ -n "$(git status --porcelain)" ]; then
-          git add -A
+          git add "$PATH"
           git commit -m "$MESSAGE"
           echo "changes_detected=true" >> "$GITHUB_OUTPUT"
         else
