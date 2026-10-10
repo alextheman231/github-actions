@@ -1,4 +1,4 @@
-import type { CreateEnumType } from "@alextheman/utility";
+import type { ObjectValue } from "@alextheman/utility";
 
 import { DataError } from "@alextheman/utility/v6";
 
@@ -15,7 +15,7 @@ export const ResolvedFromMessage = {
   FALLBACK:
     "fallback: not found in package.json, no version-range provided, strict-version-resolution=false",
 } as const;
-export type ResolvedFromMessage = CreateEnumType<typeof ResolvedFromMessage>;
+export type ResolvedFromMessage = ObjectValue<typeof ResolvedFromMessage>;
 
 function getInstallVersion({
   dependencies,

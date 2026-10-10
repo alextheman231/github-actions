@@ -1,4 +1,4 @@
-import type { CreateEnumType } from "@alextheman/utility";
+import type { ObjectValue } from "@alextheman/utility";
 
 import { setOutput } from "@actions/core";
 
@@ -7,7 +7,7 @@ export const RiskLevel = {
   MEDIUM: "medium",
   HIGH: "high",
 } as const;
-export type RiskLevel = CreateEnumType<typeof RiskLevel>;
+export type RiskLevel = ObjectValue<typeof RiskLevel>;
 
 export interface CheckRiskLevelInputs {
   lowRiskLabelName: string;
