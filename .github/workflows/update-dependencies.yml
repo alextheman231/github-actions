@@ -105,10 +105,21 @@ jobs:
           permission-actions: write
           permission-workflows: write
 
+      - name: Get alex-up-bot user ID
+        id: alex-up-bot-id
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          ALEX_UP_BOT_USER_ID="$(gh api 'users/alex-up-bot[bot]' --jq '.id')"
+
+          echo "id=$ALEX_UP_BOT_USER_ID" >> "$GITHUB_OUTPUT"
+
       - name: Setup GitHub user
+        env:
+          ALEX_UP_BOT_USER_ID: ${{ steps.alex-up-bot-id.outputs.id }}
         run: |
           git config --global user.name "alex-up-bot[bot]"
-          git config --global user.email "alexupbot@bot.com"
+          git config --global user.email "$ALEX_UP_BOT_USER_ID+alex-up-bot[bot]@users.noreply.github.com"
 
       - name: Install actions-up
         if: ${{ inputs.update_actions == true }}
@@ -215,8 +226,6 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
-          author: alex-up-bot[bot] <alexupbot@bot.com>
-          committer: alex-up-bot[bot] <alexupbot@bot.com>
           branch: alex-up-bot/update-dependencies
           base: main
           title: "Update dependencies"

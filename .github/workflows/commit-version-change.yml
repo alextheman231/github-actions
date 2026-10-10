@@ -102,11 +102,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup GitHub user
-        run: |
-          git config --global user.name "alex-up-bot[bot]"
-          git config --global user.email "alexupbot@bot.com"
-
       - name: Use PNPM
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
@@ -129,16 +124,6 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
-
-      - name: Build the package
-        if: ${{ inputs.run-build }}
-        run: pnpm run build
-
-      - name: Commit the build # This is actually stupid but typescript-actions says we must do this...
-        if: ${{ inputs.run-build }}
-        uses: $/.github/actions/commit-changes
-        with:
-          message: "Generate the build"
 
       - name: Change version
         env:
@@ -163,11 +148,6 @@ jobs:
           RELEASE_DOC_PATH: ${{ env.RELEASE_DOC_PATH }}
         run: alex-c-line template release-note set-status "$RELEASE_DOC_PATH"
 
-      - name: Commit version change
-        uses: $/.github/actions/commit-changes
-        with:
-          message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
-
       - name: Determine risk level
         id: risk-level
         env:
@@ -189,16 +169,26 @@ jobs:
               ;;
           esac
 
+      - name: Get alex-up-bot user ID
+        id: alex-up-bot-id
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          ALEX_UP_BOT_USER_ID="$(gh api 'users/alex-up-bot[bot]' --jq '.id')"
+
+          echo "id=$ALEX_UP_BOT_USER_ID" >> "$GITHUB_OUTPUT"
+
       - name: Create Pull Request
         id: pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
-          author: alex-up-bot[bot] <alexupbot@bot.com>
-          committer: alex-up-bot[bot] <alexupbot@bot.com>
           branch: alex-up-bot/change-${{ env.VERSION_TYPE }}-version
           base: main
+          author: alex-up-bot[bot] <${{ steps.alex-up-bot-id.outputs.id }}+alex-up-bot[bot]@users.noreply.github.com>
+          committer: alex-up-bot[bot] <${{ steps.alex-up-bot-id.outputs.id }}+alex-up-bot[bot]@users.noreply.github.com>
           title: "Change version number to ${{ steps.get_new_version.outputs.version }}"
+          commit-message: "Change version number to ${{ steps.get_new_version.outputs.version }}"
           maintainer-can-modify: false
           body-path: ${{ env.RELEASE_DOC_PATH }}
 
