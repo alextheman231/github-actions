@@ -90,13 +90,22 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
+      - name: Get alex-up-bot user ID
+        id: alex-up-bot-id
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          ALEX_UP_BOT_USER_ID="$(gh api 'users/alex-up-bot[bot]' --jq '.id')"
+
+          echo "id=$ALEX_UP_BOT_USER_ID" >> "$GITHUB_OUTPUT"
+
       - name: Create pull request
         id: pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
-          author: alex-up-bot[bot] <alexupbot@bot.com>
-          committer: alex-up-bot[bot] <alexupbot@bot.com>
+          author: alex-up-bot[bot] <${{ steps.alex-up-bot-id.outputs.id }}+alex-up-bot[bot]@users.noreply.github.com>
+          committer: alex-up-bot[bot] <${{ steps.alex-up-bot-id.outputs.id }}+alex-up-bot[bot]@users.noreply.github.com>
           commit-message: |
             ${{ inputs.reason }}
 
