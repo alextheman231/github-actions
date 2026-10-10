@@ -23,10 +23,10 @@ runs:
       id: commit_changes
       env:
         MESSAGE: ${{ inputs.message }}
-        PATH: ${{ inputs.path }}
+        COMMIT_PATH: ${{ inputs.path }}
       run: |
         if [ -n "$(git status --porcelain)" ]; then
-          git add "$PATH"
+          git add "$COMMIT_PATH"
           git commit -m "$MESSAGE"
           echo "changes_detected=true" >> "$GITHUB_OUTPUT"
         else
