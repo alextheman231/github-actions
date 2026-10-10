@@ -107,7 +107,7 @@ jobs:
 
       - name: Setup GitHub user
         run: |
-          git config --global user.name "alex-up-bot"
+          git config --global user.name "alex-up-bot[bot]"
           git config --global user.email "alexupbot@bot.com"
 
       - name: Install actions-up
@@ -215,8 +215,8 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
-          author: alex-up-bot <alexupbot@bot.com>
-          committer: alex-up-bot <alexupbot@bot.com>
+          author: alex-up-bot[bot] <alexupbot@bot.com>
+          committer: alex-up-bot[bot] <alexupbot@bot.com>
           branch: alex-up-bot/update-dependencies
           base: main
           title: "Update dependencies"
