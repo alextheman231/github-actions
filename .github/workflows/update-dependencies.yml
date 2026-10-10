@@ -76,7 +76,7 @@ jobs:
           persist-credentials: false
 
       - name: Use PNPM
-        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true }}
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
           run_install: false
@@ -121,15 +121,6 @@ jobs:
           git config --global user.name "alex-up-bot[bot]"
           git config --global user.email "$ALEX_UP_BOT_USER_ID+alex-up-bot[bot]@users.noreply.github.com"
 
-      - name: Install actions-up
-        if: ${{ inputs.update_actions == true }}
-        uses: $/composite/safe-npm-dependency-global-install
-        with:
-          package-name: actions-up
-          package-manager: npm
-          dependency-group: devDependencies
-          strict-version-resolution: false
-
       - name: Update PNPM
         if: ${{ inputs.update_pnpm == true }}
         run: corepack use pnpm@latest
@@ -160,7 +151,7 @@ jobs:
         if: ${{ inputs.update_actions == true }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: actions-up -y --min-age-exclude "^alextheman231/github-actions"
+        run: pnpm update --latest --include-github-actions
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
@@ -168,6 +159,11 @@ jobs:
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
+          path: .github
+
+      - name: Discard extraneous updates caused by actions updates
+        if: ${{ inputs.update_actions == true }}
+        run: git reset --hard
 
       - name: Setup PDM
         if: ${{ inputs.update_python_dependencies == true }}
