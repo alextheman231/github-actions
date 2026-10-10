@@ -83,7 +83,7 @@ jobs:
 
       - name: Use Node.js
         if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ inputs.node-version }}
           cache: ${{ (inputs.update_pnpm == true || inputs.update_javascript_dependencies == true) && 'pnpm' || null }}
