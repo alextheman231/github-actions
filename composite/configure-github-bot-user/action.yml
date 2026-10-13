@@ -9,3 +9,7 @@ inputs:
     description: The app slug
     type: string
     required: true
+  github-token:
+    description: The GitHub token to use to look up the bot ID
+    type: string
+    required: true
