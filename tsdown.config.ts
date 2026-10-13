@@ -24,6 +24,10 @@ const config: Array<UserConfig> = [
     entry: ["src/composite/get-package-metadata/index.ts"],
     outDir: "composite/get-package-metadata/dist",
   },
+  {
+    entry: ["src/composite/configure-github-bot-user/index.ts"],
+    outDir: "composite/configure-github-bot-user/dist",
+  },
 ].map(({ entry, outDir }) => {
   return {
     entry,

@@ -1,0 +1,11 @@
+name: Configure GitHub bot user
+description: Authenticate with the GitHub bot user.
+runs:
+  using: node24
+  main: dist/index.js
+
+inputs:
+  app-slug:
+    description: The app slug
+    type: string
+    required: true
