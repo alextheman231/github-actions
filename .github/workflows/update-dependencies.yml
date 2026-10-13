@@ -105,21 +105,10 @@ jobs:
           permission-actions: write
           permission-workflows: write
 
-      - name: Get alex-up-bot user ID
-        id: alex-up-bot-id
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          ALEX_UP_BOT_USER_ID="$(gh api 'users/alex-up-bot[bot]' --jq '.id')"
-
-          echo "id=$ALEX_UP_BOT_USER_ID" >> "$GITHUB_OUTPUT"
-
       - name: Setup GitHub user
-        env:
-          ALEX_UP_BOT_USER_ID: ${{ steps.alex-up-bot-id.outputs.id }}
-        run: |
-          git config --global user.name "alex-up-bot[bot]"
-          git config --global user.email "$ALEX_UP_BOT_USER_ID+alex-up-bot[bot]@users.noreply.github.com"
+        uses: $/composite/configure-github-bot-user
+        with:
+          app-slug: ${{ steps.app-token.outputs.app-slug }}
 
       - name: Update PNPM
         if: ${{ inputs.update_pnpm == true }}
