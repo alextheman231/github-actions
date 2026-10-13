@@ -7,7 +7,7 @@ export interface ConfigureGitHubBotUserInputs {
 }
 
 async function configureGitHubBotUser({ appSlug }: ConfigureGitHubBotUserInputs) {
-  const { stdout: json } = await execa`gh api users/${appSlug}[bot] --jq .id`;
+  const { stdout: json } = await execa`gh api users/${appSlug}[bot]`;
   const payload = JSON.parse(json);
   const botId = az.with(z.int()).parse(payload.id);
 
