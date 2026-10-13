@@ -5,5 +5,6 @@ import configureGitHubBotUser from "src/composite/configure-github-bot-user/conf
 (async () => {
   await configureGitHubBotUser({
     appSlug: getInput("app-slug"),
+    gitHubToken: getInput("github-token"),
   });
 })();
