@@ -28412,11 +28412,11 @@ const { sendMessage, getOneMessage, getEachMessage, getCancelSignal } = getIpcEx
 //#endregion
 //#region src/composite/configure-github-bot-user/configureGitHubBotUser.ts
 async function configureGitHubBotUser({ appSlug }) {
-	const { stdout: json } = await execa`gh api "users/${appSlug}[bot]" --jq '.id'`;
+	const { stdout: json } = await execa`gh api users/${appSlug}[bot] --jq '.id'`;
 	const payload = JSON.parse(json);
 	const botId = az.with(int()).parse(payload.id);
-	await execa({ stdio: "inherit" })`git config --global user.name "${appSlug}[bot]"`;
-	await execa({ stdio: "inherit" })`git config --global user.email "${botId}+${appSlug}[bot]@users.noreply.github.com"`;
+	await execa({ stdio: "inherit" })`git config --global user.name ${appSlug}[bot]`;
+	await execa({ stdio: "inherit" })`git config --global user.email ${botId}+${appSlug}[bot]@users.noreply.github.com`;
 }
 //#endregion
 //#region src/composite/configure-github-bot-user/index.ts
