@@ -28411,23 +28411,17 @@ createExeca(mapScriptAsync, {}, deepScriptOptions, setScriptSync);
 const { sendMessage, getOneMessage, getEachMessage, getCancelSignal } = getIpcExport();
 //#endregion
 //#region src/composite/configure-github-bot-user/configureGitHubBotUser.ts
-async function configureGitHubBotUser({ appSlug, gitHubToken }) {
+async function configureGitHubBotUser({ appSlug }) {
 	const { stdout: json } = await execa`gh api "users/${appSlug}[bot]" --jq '.id'`;
 	const payload = JSON.parse(json);
 	const botId = az.with(int()).parse(payload.id);
-	await execa({
-		stdio: "inherit",
-		env: { GH_TOKEN: gitHubToken }
-	})`git config --global user.name "${appSlug}[bot]"`;
+	await execa({ stdio: "inherit" })`git config --global user.name "${appSlug}[bot]"`;
 	await execa({ stdio: "inherit" })`git config --global user.email "${botId}+${appSlug}[bot]@users.noreply.github.com"`;
 }
 //#endregion
 //#region src/composite/configure-github-bot-user/index.ts
 (async () => {
-	await configureGitHubBotUser({
-		appSlug: getInput("app-slug"),
-		gitHubToken: getInput("github-token")
-	});
+	await configureGitHubBotUser({ appSlug: getInput("app-slug") });
 })();
 //#endregion
 export {};

@@ -171,9 +171,10 @@ jobs:
 
       - name: Setup GitHub user
         uses: $/composite/configure-github-bot-user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         with:
           app-slug: ${{ steps.app-token.outputs.app-slug }}
-          github-token: ${{ steps.app-token.outputs.token }}
 
       - name: Commit the version change
         uses: $/.github/actions/commit-changes
