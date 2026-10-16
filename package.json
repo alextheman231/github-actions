@@ -39,21 +39,21 @@
   "devDependencies": {
     "@alextheman/eslint-plugin": "5.18.5",
     "@types/node": "26.6.5",
-    "@typescript-eslint/types": "8.71.1",
+    "@typescript-eslint/types": "8.71.2",
     "alex-c-line": "2.16.4",
     "eslint": "10.12.0",
     "husky": "9.1.7",
     "markdownlint-cli2": "0.23.3",
-    "prettier": "3.9.9",
-    "tsdown": "0.23.0",
+    "prettier": "3.9.10",
+    "tsdown": "0.23.1",
     "typescript": "7.0.2",
-    "typescript-eslint": "8.71.1"
+    "typescript-eslint": "8.71.2"
   },
   "packageManager": "pnpm@12.14.0+sha512.c18ba6d87993d3d164cb5e8948f32b2c06ee854487e06cd8d86781342fb3e5bb4634367034711e86802baa9c37bea906ce1929ad08d70884c97d801df13389a6",
   "dependencies": {
     "@actions/core": "3.0.1",
-    "@alextheman/utility": "5.29.0",
-    "execa": "10.1.0",
-    "zod": "4.6.5"
+    "@alextheman/utility": "5.30.0",
+    "execa": "10.1.1",
+    "zod": "4.6.7"
   }
 }
