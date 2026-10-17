@@ -11,6 +11,7 @@ async function configureGitHubBotUser({ appSlug }: ConfigureGitHubBotUserInputs)
   const payload = JSON.parse(json);
   const botId = az.with(z.int()).parse(payload.id);
 
+  await execa({ stdio: "inherit" })`gh auth setup-git`;
   await execa({
     stdio: "inherit",
   })`git config --global user.name ${appSlug}[bot]`;
