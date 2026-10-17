@@ -59,6 +59,13 @@ on:
         type: string
         required: false
         default: .github/PULL_REQUEST_TEMPLATE/low_risk.md
+    outputs:
+      pull-request-number:
+        description: The pull request number
+        value: ${{ jobs.update-dependencies.outputs.pull-request-number }}
+      pull-request-branch:
+        description: The pull request branch
+        value: ${{ jobs.update-dependencies.outputs.pull-request-branch }}
 
 jobs:
   update-dependencies:
@@ -68,7 +75,9 @@ jobs:
       pull-requests: write
     env:
       HUSKY: 0
-
+    outputs:
+      pull-request-number: ${{ steps.pull-request.outputs.pull-request-number }}
+      pull-request-branch: ${{ steps.pull-request.outputs.pull-request-branch }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
