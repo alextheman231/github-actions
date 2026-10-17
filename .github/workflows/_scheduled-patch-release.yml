@@ -11,6 +11,7 @@ jobs:
       contents: write
     if: ${{ github.repository == 'alextheman231/github-actions' }}
     uses: $/.github/workflows/scheduled-patch-release.yml
-    secrets:
+    with:
       CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+    secrets:
       APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
