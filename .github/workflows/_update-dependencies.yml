@@ -78,6 +78,5 @@ jobs:
 
       - name: Push the changes to the branch
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           BRANCH_NAME: ${{ needs.update-dependencies.outputs.pull-request-branch }}
         run: git push origin "$BRANCH_NAME"

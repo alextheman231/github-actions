@@ -28415,6 +28415,7 @@ async function configureGitHubBotUser({ appSlug }) {
 	const { stdout: json } = await execa`gh api users/${appSlug}[bot]`;
 	const payload = JSON.parse(json);
 	const botId = az.with(int()).parse(payload.id);
+	await execa({ stdio: "inherit" })`gh auth setup-git`;
 	await execa({ stdio: "inherit" })`git config --global user.name ${appSlug}[bot]`;
 	await execa({ stdio: "inherit" })`git config --global user.email ${botId}+${appSlug}[bot]@users.noreply.github.com`;
 }
