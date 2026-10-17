@@ -76,7 +76,7 @@ jobs:
         with:
           message: "Build the composite actions"
 
-      - name: Push the changes to the branch
+      - name: Now to face the workflow of the damned, I've gotta push the changes to the branch
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           BRANCH_NAME: ${{ needs.update-dependencies.outputs.pull-request-branch }}
