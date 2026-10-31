@@ -85,7 +85,7 @@ jobs:
           persist-credentials: false
 
       - name: Use PNPM
-        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true || inputs.update_actions == true }}
+        if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true  }}
         uses: pnpm/action-setup@v6.1.0
         with:
           run_install: false
@@ -147,11 +147,24 @@ jobs:
         with:
           message: "Update JavaScript dependencies"
 
+      - name: Install actions-up
+        if: ${{ inputs.update_actions == true }}
+        uses: $/composite/safe-npm-dependency-global-install
+        with:
+          package-name: actions-up
+          strict-version-resolution: false
+
+      - name: Install gh-actions-lock
+        if: ${{ inputs.update_actions == true }}
+        run: gh extension install github/gh-actions-lock
+
       - name: Update GitHub Actions
         if: ${{ inputs.update_actions == true }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: pnpm update --latest --include-github-actions
+        run: |
+          actions-up -y --style preserve --min-age-exclude "^alextheman231/github-actions"
+          gh actions-lock --relock
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
