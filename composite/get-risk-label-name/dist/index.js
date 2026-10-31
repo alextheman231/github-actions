@@ -4875,7 +4875,7 @@ function number(params) {
 function date(params) {
 	return /* @__PURE__ */ _coercedDate(ZodDate, params);
 }
-// node_modules/.pnpm/@alextheman+utility@5.30.2_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
+// node_modules/.pnpm/@alextheman+utility@5.31.0_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
 const FILE_PATH_REGEX_PATTERN = String.raw`(?<directory>.+)[\/\\](?<base>[^\/\\]+)`;
 RegExp(`^${FILE_PATH_REGEX_PATTERN}$`);
 new RegExp(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`);
@@ -5301,15 +5301,32 @@ var VersionNumber = class VersionNumber {
 		return input.startsWith("v") ? input : `v${input}`;
 	}
 	/**
+	* Compares two given `VersionNumber` instances depending on order.
+	*
+	* @param first - The first version number to compare.
+	* @param second - The second version number to compare.
+	*
+	* @returns 0 if the version numbers are equal, 1 if the first version number is bigger than the second, and -1 if the first version number is smaller than the second.
+	*/
+	static compare(first, second) {
+		if (first.major > second.major) return 1;
+		else if (first.major < second.major) return -1;
+		if (first.minor > second.minor) return 1;
+		else if (first.minor < second.minor) return -1;
+		if (first.patch > second.patch) return 1;
+		else if (first.patch < second.patch) return -1;
+		return 0;
+	}
+	/**
 	* Checks if the provided version numbers have the exact same major, minor, and patch numbers.
 	*
-	* @param firstVersion - The first version number to compare.
-	* @param secondVersion - The second version number to compare.
+	* @param first - The first version number to compare.
+	* @param second - The second version number to compare.
 	*
 	* @returns `true` if the provided version numbers have exactly the same major, minor, and patch numbers, and returns `false` otherwise.
 	*/
-	static isEqual(firstVersion, secondVersion) {
-		return firstVersion.major === secondVersion.major && firstVersion.minor === secondVersion.minor && firstVersion.patch === secondVersion.patch;
+	static isEqual(first, second) {
+		return VersionNumber.compare(first, second) === 0;
 	}
 	/**
 	* Get a formatted string representation of the current version number
@@ -5366,6 +5383,26 @@ var VersionNumber = class VersionNumber {
 			}, "NEGATIVE_VERSION", "Cannot apply this increment amount as it would lead to a negative version number.");
 			else throw error;
 		}
+	}
+	/**
+	* Checks if the current `VersionNumber` instance is bigger than the input `VersionNumber`.
+	*
+	* @param comparator - The `VersionNumber` to compare against.
+	*
+	* @returns `true` if the instance is bigger than the input, and `false` otherwise
+	*/
+	isGreaterThan(comparator) {
+		return VersionNumber.compare(this, comparator) === 1;
+	}
+	/**
+	* Checks if the current `VersionNumber` instance is smaller than the input `VersionNumber`.
+	*
+	* @param comparator - The `VersionNumber` to compare against.
+	*
+	* @returns `true` if the instance is smaller than the input, and `false` otherwise
+	*/
+	isLessThan(comparator) {
+		return VersionNumber.compare(this, comparator) === -1;
 	}
 	/**
 	* Ensures that the VersionNumber behaves correctly when attempted to be coerced to a string.
