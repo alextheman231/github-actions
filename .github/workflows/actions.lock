@@ -22,7 +22,7 @@ workflows:
         - 'pnpm/action-setup@v6.1.0'
     '.github/workflows/actions-ci.yml':
         - 'actions/checkout@v7.0.1'
-        - 'zizmorcore/zizmor-action@v0.7.1'
+        - 'zizmorcore/zizmor-action@v0.8.0'
     '.github/workflows/add-risk-label.yml':
         - 'actions/create-github-app-token@v3.3.0'
     '.github/workflows/audit-javascript-dependencies.yml':
@@ -102,7 +102,7 @@ workflows:
         - 'pnpm/action-setup@v6.1.0'
     '.github/workflows/secret-scan-ci.yml':
         - 'actions/checkout@v7.0.1'
-        - 'gitguardian/ggshield@v1.56.0'
+        - 'gitguardian/ggshield@v1.56.1'
     '.github/workflows/update-dependencies.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
@@ -166,14 +166,14 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
-    'gitguardian/ggshield@v1.56.0':
-        ref: 'v1.56.0'
-        commit: 'sha1-9124e4c246c16c7e58398ad4aa23dae5a90a9aae'
+    'gitguardian/ggshield@v1.56.1':
+        ref: 'v1.56.1'
+        commit: 'sha1-4cccd600fd3890a7aba07fd0a45e483f3099fe70'
         owner_id: 27360172
         repo_id: 257326204
-    'github/codeql-action@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2':
-        ref: 'v4.38.2'
-        commit: 'sha1-2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2'
+    'github/codeql-action@24c54180a607b1449ed407dd24f251e4e9147c8d':
+        ref: 'v4.38.3'
+        commit: 'sha1-24c54180a607b1449ed407dd24f251e4e9147c8d'
         owner_id: 9919
         repo_id: 259445878
     'hashicorp/setup-terraform@v4.0.1':
@@ -201,10 +201,10 @@ dependencies:
         commit: 'sha1-ea17c68df8912ef543352723c149a84f56e3d413'
         owner_id: 21320719
         repo_id: 262289747
-    'zizmorcore/zizmor-action@v0.7.1':
-        ref: 'v0.7.1'
-        commit: 'sha1-85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e'
+    'zizmorcore/zizmor-action@v0.8.0':
+        ref: 'v0.8.0'
+        commit: 'sha1-53290badfa369cb0bf7ad16342cb62c2fa47ac7b'
         owner_id: 210636713
         repo_id: 985558803
         uses:
-            - 'github/codeql-action@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2'
+            - 'github/codeql-action@24c54180a607b1449ed407dd24f251e4e9147c8d'
