@@ -37,23 +37,23 @@
     "update-dependencies": "pnpm update --latest && pnpm update"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "5.18.5",
-    "@types/node": "26.6.5",
-    "@typescript-eslint/types": "8.72.0",
-    "alex-c-line": "2.16.5",
+    "@alextheman/eslint-plugin": "5.18.6",
+    "@types/node": "26.6.6",
+    "@typescript-eslint/types": "8.72.1",
+    "alex-c-line": "2.16.7",
     "eslint": "10.13.0",
     "husky": "9.1.7",
     "markdownlint-cli2": "0.24.0",
     "prettier": "3.9.10",
-    "tsdown": "0.23.1",
+    "tsdown": "0.23.4",
     "typescript": "7.0.2",
-    "typescript-eslint": "8.72.0"
+    "typescript-eslint": "8.72.1"
   },
   "packageManager": "pnpm@12.16.1+sha512.091d1dee7927575661b25dab3c2ae31cafc1c54d6b71ed6a6600cf0c1cb10434a447eae14015f1b23e2e6bedeed79df94a932e2164d2832280dce3fb32f656d1",
   "dependencies": {
     "@actions/core": "3.0.1",
-    "@alextheman/utility": "5.30.2",
-    "execa": "10.2.0",
+    "@alextheman/utility": "5.31.0",
+    "execa": "10.2.1",
     "zod": "4.6.7"
   }
 }
