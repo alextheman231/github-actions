@@ -152,7 +152,7 @@ jobs:
         uses: $/composite/safe-npm-dependency-global-install
         with:
           package-name: actions-up
-          strict-version-resolution: false
+          version-range: <2
 
       - name: Install gh-actions-lock
         if: ${{ inputs.update_actions == true }}
