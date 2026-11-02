@@ -21494,7 +21494,7 @@ function number(params) {
 function date(params) {
 	return /* @__PURE__ */ _coercedDate(ZodDate, params);
 }
-// node_modules/.pnpm/@alextheman+utility@5.31.0_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
+// node_modules/.pnpm/@alextheman+utility@5.32.0_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
 const FILE_PATH_REGEX_PATTERN = String.raw`(?<directory>.+)[\/\\](?<base>[^\/\\]+)`;
 RegExp(`^${FILE_PATH_REGEX_PATTERN}$`);
 new RegExp(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`);
@@ -22253,6 +22253,360 @@ function isPlainObject(value) {
 	const prototype = Object.getPrototypeOf(value);
 	return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
 }
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/file-url.js
+const safeNormalizeFileUrl = (file, name) => {
+	const fileString = normalizeFileUrl(normalizeDenoExecPath(file));
+	if (typeof fileString !== "string") throw new TypeError(`${name} must be a string or a file URL: ${fileString}.`);
+	return fileString;
+};
+const normalizeDenoExecPath = (file) => isDenoExecPath(file) ? file.toString() : file;
+const isDenoExecPath = (file) => typeof file !== "string" && file && Object.getPrototypeOf(file) === String.prototype;
+const normalizeFileUrl = (file) => file instanceof URL ? fileURLToPath(file) : file;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/methods/parameters.js
+const normalizeParameters = (rawFile, rawArguments = [], rawOptions, ...rawExtraArguments) => {
+	if (rawExtraArguments.length > 0) throw new TypeError("Execa accepts at most three arguments: file, arguments, options.");
+	if (rawOptions !== void 0 && isPlainObject(rawArguments)) throw new TypeError("Execa accepts at most one options object. Please merge the second and third arguments.");
+	const filePath = safeNormalizeFileUrl(rawFile, "First argument");
+	const [commandArguments, options = {}] = isPlainObject(rawArguments) ? [[], rawArguments] : [rawArguments, rawOptions];
+	if (!Array.isArray(commandArguments)) throw new TypeError(`Second argument must be either an array of arguments or an options object: ${commandArguments}`);
+	if (commandArguments.some((commandArgument) => typeof commandArgument === "object" && commandArgument !== null)) throw new TypeError(`Second argument must be an array of strings: ${commandArguments}`);
+	const normalizedArguments = commandArguments.map(String);
+	const nullByteArgument = normalizedArguments.find((normalizedArgument) => normalizedArgument.includes("\0"));
+	if (nullByteArgument !== void 0) throw new TypeError(`Arguments cannot contain null bytes ("\\0"): ${nullByteArgument}`);
+	if (!isPlainObject(options)) throw new TypeError(`Last argument must be an options object: ${options}`);
+	return [
+		filePath,
+		normalizedArguments,
+		{
+			__proto__: null,
+			...options
+		}
+	];
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/escape.js
+const joinCommand = (filePath, rawArguments, shell) => {
+	const fileAndArguments = [filePath, ...rawArguments];
+	const command = fileAndArguments.join(" ");
+	return {
+		command,
+		escapedCommand: shell ? escapeControlCharacters(command) : fileAndArguments.map((fileAndArgument) => quoteString(escapeControlCharacters(fileAndArgument))).join(" ")
+	};
+};
+const escapeLines = (lines) => stripVTControlCharacters(lines).split("\n").map((line) => escapeControlCharacters(line)).join("\n");
+const escapeControlCharacters = (line) => line.replaceAll(SPECIAL_CHAR_REGEXP, (character) => escapeControlCharacter(character));
+const escapeControlCharacter = (character) => {
+	const commonEscape = COMMON_ESCAPES[character];
+	if (commonEscape !== void 0) return commonEscape;
+	const codepoint = character.codePointAt(0);
+	const codepointHex = codepoint.toString(16);
+	return codepoint <= 65535 ? `\\u${codepointHex.padStart(4, "0")}` : `\\U${codepointHex}`;
+};
+const getSpecialCharRegExp = () => {
+	try {
+		return new RegExp("\\p{Separator}|\\p{Other}", "gu");
+	} catch {
+		return /[\s\u0000-\u001F\u007F-\u009F\u00AD]/g;
+	}
+};
+const SPECIAL_CHAR_REGEXP = getSpecialCharRegExp();
+const COMMON_ESCAPES = {
+	" ": " ",
+	"\b": "\\b",
+	"\f": "\\f",
+	"\n": "\\n",
+	"\r": "\\r",
+	"	": "\\t"
+};
+const ASTRAL_START = 65535;
+const quoteString = (escapedArgument) => {
+	if (NO_ESCAPE_REGEXP.test(escapedArgument)) return escapedArgument;
+	return platform === "win32" ? `"${escapedArgument.replaceAll("\"", "\"\"")}"` : `'${escapedArgument.replaceAll("'", "'\\''")}'`;
+};
+const NO_ESCAPE_REGEXP = /^[\w\-./]+$/;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/uint-array.js
+const { toString: objectToString$1 } = Object.prototype;
+const isArrayBuffer = (value) => objectToString$1.call(value) === "[object ArrayBuffer]";
+const isUint8Array = (value) => objectToString$1.call(value) === "[object Uint8Array]";
+const bufferToUint8Array = (buffer) => new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+const textEncoder$1 = new TextEncoder();
+const stringToUint8Array = (string) => textEncoder$1.encode(string);
+const textDecoder = new TextDecoder();
+const uint8ArrayToString = (uint8Array) => textDecoder.decode(uint8Array);
+const joinToString = (uint8ArraysOrStrings, encoding) => {
+	return uint8ArraysToStrings(uint8ArraysOrStrings, encoding).join("");
+};
+const uint8ArraysToStrings = (uint8ArraysOrStrings, encoding) => {
+	if (encoding === "utf8" && uint8ArraysOrStrings.every((uint8ArrayOrString) => typeof uint8ArrayOrString === "string")) return uint8ArraysOrStrings;
+	const decoder = new StringDecoder(encoding);
+	const strings = uint8ArraysOrStrings.map((uint8ArrayOrString) => typeof uint8ArrayOrString === "string" ? stringToUint8Array(uint8ArrayOrString) : uint8ArrayOrString).map((uint8Array) => decoder.write(uint8Array));
+	const finalString = decoder.end();
+	return finalString === "" ? strings : [...strings, finalString];
+};
+const joinToUint8Array = (uint8ArraysOrStrings) => uint8ArraysOrStrings.length === 1 && isUint8Array(uint8ArraysOrStrings[0]) ? uint8ArraysOrStrings[0] : concatUint8Arrays(stringsToUint8Arrays(uint8ArraysOrStrings));
+const stringsToUint8Arrays = (uint8ArraysOrStrings) => uint8ArraysOrStrings.map((uint8ArrayOrString) => typeof uint8ArrayOrString === "string" ? stringToUint8Array(uint8ArrayOrString) : uint8ArrayOrString);
+const concatUint8Arrays = (uint8Arrays) => {
+	const result = new Uint8Array(getJoinLength(uint8Arrays));
+	let index = 0;
+	for (const uint8Array of uint8Arrays) {
+		result.set(uint8Array, index);
+		index += uint8Array.length;
+	}
+	return result;
+};
+const getJoinLength = (uint8Arrays) => {
+	let joinLength = 0;
+	for (const uint8Array of uint8Arrays) joinLength += uint8Array.length;
+	return joinLength;
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/return/final-error.js
+const getFinalError = (originalError, message, isSync) => {
+	return new (isSync ? ExecaSyncError : ExecaError)(message, originalError instanceof DiscardedError ? {} : { cause: originalError });
+};
+var DiscardedError = class extends Error {};
+const setErrorName = (ErrorClass, value) => {
+	Object.defineProperties(ErrorClass.prototype, {
+		name: {
+			value,
+			writable: true,
+			enumerable: false,
+			configurable: true
+		},
+		[execaErrorSymbol]: {
+			value: true,
+			writable: false,
+			enumerable: false,
+			configurable: false
+		}
+	});
+};
+const isExecaError = (error) => isErrorInstance(error) && execaErrorSymbol in error;
+const execaErrorSymbol = Symbol("isExecaError");
+const isErrorInstance = (value) => value instanceof Error || Object.prototype.toString.call(value) === "[object Error]";
+var ExecaError = class extends Error {};
+setErrorName(ExecaError, ExecaError.name);
+var ExecaSyncError = class extends Error {};
+setErrorName(ExecaSyncError, ExecaSyncError.name);
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/type-name.js
+const getTypeName = (value) => value === null ? "null" : typeof value;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/methods/template.js
+const isTemplateString = (templates) => Array.isArray(templates) && Array.isArray(templates.raw);
+const parseTemplates = (templates, expressions) => {
+	let tokens = [];
+	let isSeparated = false;
+	for (const [index, template] of templates.entries()) ({tokens, isSeparated} = parseTemplate({
+		templates,
+		expressions,
+		tokens,
+		isSeparated,
+		index,
+		template
+	}));
+	if (tokens.length === 0) throw new TypeError("Template script must not be empty");
+	const [file, ...commandArguments] = tokens;
+	return [
+		file,
+		commandArguments,
+		{}
+	];
+};
+const parseTemplate = ({ templates, expressions, tokens, isSeparated, index, template }) => {
+	if (template === void 0) throw new TypeError(`Invalid backslash sequence: ${templates.raw[index]}`);
+	const { nextTokens, leadingWhitespaces, trailingWhitespaces } = splitByWhitespaces(template, templates.raw[index]);
+	const newTokens = concatTokens(tokens, nextTokens, isSeparated || leadingWhitespaces);
+	const isTemplateSeparated = trailingWhitespaces || nextTokens.length === 0 && isSeparated;
+	if (index === expressions.length) return {
+		tokens: newTokens,
+		isSeparated: isTemplateSeparated
+	};
+	const expression = expressions[index];
+	const expressionTokens = Array.isArray(expression) ? expression.map((expression) => parseExpression(expression)) : [parseExpression(expression)];
+	return {
+		tokens: concatTokens(newTokens, expressionTokens, isTemplateSeparated),
+		isSeparated: expressionTokens.length === 0 && isTemplateSeparated
+	};
+};
+const splitByWhitespaces = (template, rawTemplate) => {
+	if (template.length === 0) return {
+		nextTokens: [],
+		leadingWhitespaces: false,
+		trailingWhitespaces: false
+	};
+	const nextTokens = [];
+	let templateStart = 0;
+	let isLeadingWhitespaces = false;
+	for (let templateIndex = 0, rawIndex = 0; templateIndex < template.length; templateIndex += 1, rawIndex += 1) {
+		const rawCharacter = rawTemplate[rawIndex];
+		if (DELIMITERS.has(rawCharacter)) {
+			if (templateIndex === 0) isLeadingWhitespaces = true;
+			if (templateStart !== templateIndex) nextTokens.push(template.slice(templateStart, templateIndex));
+			templateStart = templateIndex + 1;
+		} else if (rawCharacter === "\\") {
+			const nextRawCharacter = rawTemplate[rawIndex + 1];
+			if (nextRawCharacter === "\n") {
+				templateIndex -= 1;
+				rawIndex += 1;
+			} else if (nextRawCharacter === "u" && rawTemplate[rawIndex + 2] === "{") {
+				const closingBraceIndex = rawTemplate.indexOf("}", rawIndex + 3);
+				if (isAstralEscape(rawTemplate.slice(rawIndex + 3, closingBraceIndex))) templateIndex += 1;
+				rawIndex = closingBraceIndex;
+			} else rawIndex += ESCAPE_LENGTH[nextRawCharacter] ?? 1;
+		}
+	}
+	const isTrailingWhitespaces = templateStart === template.length;
+	if (!isTrailingWhitespaces) nextTokens.push(template.slice(templateStart));
+	return {
+		nextTokens,
+		leadingWhitespaces: isLeadingWhitespaces,
+		trailingWhitespaces: isTrailingWhitespaces
+	};
+};
+const isAstralEscape = (codePointHex) => Number.parseInt(codePointHex, 16) > ASTRAL_START;
+const DELIMITERS = /* @__PURE__ */ new Set([
+	" ",
+	"	",
+	"\r",
+	"\n"
+]);
+const ESCAPE_LENGTH = {
+	x: 3,
+	u: 5
+};
+const concatTokens = (tokens, nextTokens, isSeparated) => isSeparated || tokens.length === 0 || nextTokens.length === 0 ? [...tokens, ...nextTokens] : [
+	...tokens.slice(0, -1),
+	`${tokens.at(-1)}${nextTokens[0]}`,
+	...nextTokens.slice(1)
+];
+const parseExpression = (expression) => {
+	const typeOfExpression = getTypeName(expression);
+	if (typeOfExpression === "string") return expression;
+	if (typeOfExpression === "number") return String(expression);
+	if ((isPlainObject(expression) || isExecaError(expression)) && (Object.hasOwn(expression, "stdout") || Object.hasOwn(expression, "isMaxBuffer"))) return getSubprocessResult(expression);
+	if (expression instanceof ChildProcess || Object.prototype.toString.call(expression) === "[object Promise]") throw new TypeError("Unexpected subprocess in template expression. Please use ${await subprocess} instead of ${subprocess}.");
+	throw new TypeError(`Unexpected "${typeOfExpression}" in template expression`);
+};
+const getSubprocessResult = (result) => {
+	const stdout = Object.hasOwn(result, "stdout") ? result.stdout : void 0;
+	if (typeof stdout === "string") return stdout;
+	if (isUint8Array(stdout)) return uint8ArrayToString(stdout);
+	if (stdout === void 0) throw new TypeError("Missing result.stdout in template expression. This is probably due to the previous subprocess' \"stdout\" option.");
+	throw new TypeError(`Unexpected "${getTypeName(stdout)}" stdout in template expression`);
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/standard-stream.js
+const isStandardStream = (stream) => STANDARD_STREAMS.includes(stream);
+const STANDARD_STREAMS = [
+	process$1.stdin,
+	process$1.stdout,
+	process$1.stderr
+];
+const STANDARD_STREAMS_ALIASES = [
+	"stdin",
+	"stdout",
+	"stderr"
+];
+const getStreamName = (fdNumber) => STANDARD_STREAMS_ALIASES[fdNumber] ?? `stdio[${fdNumber}]`;
+const allStreamSymbol = Symbol("execa.allStream");
+const setAllStream = (stream) => Object.assign(stream, { [allStreamSymbol]: true });
+const isAllStream = (stream) => stream?.[allStreamSymbol] === true;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/options.js
+const copyOptions = (options = {}) => {
+	if (options === null) throw new TypeError("The options must be an object, not `null`.");
+	return {
+		__proto__: null,
+		...options
+	};
+};
+const checkBooleanOption = (value, optionName) => {
+	if (value !== void 0 && typeof value !== "boolean") throw new TypeError(`The \`${optionName}\` option must use a boolean.`);
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/specific.js
+const normalizeFdSpecificOptions = (options) => {
+	const optionsCopy = {
+		__proto__: null,
+		...options
+	};
+	for (const optionName of FD_SPECIFIC_OPTIONS) optionsCopy[optionName] = normalizeFdSpecificOption(options, optionName);
+	return optionsCopy;
+};
+const normalizeFdSpecificOption = (options, optionName) => {
+	const stdioLength = getStdioLength(options);
+	const optionBaseArray = Array.from({ length: stdioLength + 1 });
+	const optionArray = normalizeFdSpecificValue(options[optionName], optionBaseArray, optionName, stdioLength);
+	return addDefaultValue$1(optionArray, optionName);
+};
+const getStdioLength = ({ stdio }) => Array.isArray(stdio) ? Math.max(stdio.length, STANDARD_STREAMS_ALIASES.length) : STANDARD_STREAMS_ALIASES.length;
+const normalizeFdSpecificValue = (optionValue, optionArray, optionName, stdioLength) => {
+	if (isPlainObject(optionValue)) return normalizeOptionObject(optionValue, optionArray, optionName, stdioLength);
+	validateFdSpecificValue(optionValue, optionName);
+	return optionArray.fill(optionValue);
+};
+const normalizeOptionObject = (optionValue, optionArray, optionName, stdioLength) => {
+	for (const fdName of Object.keys(optionValue).sort(compareFdName)) {
+		validateFdSpecificValue(optionValue[fdName], optionName, `${optionName}.${fdName}`);
+		for (const fdNumber of parseFdName(fdName, optionName, stdioLength)) optionArray[fdNumber] = optionValue[fdName];
+	}
+	return optionArray;
+};
+const compareFdName = (fdNameA, fdNameB) => getFdNameOrder(fdNameA) < getFdNameOrder(fdNameB) ? 1 : -1;
+const getFdNameOrder = (fdName) => {
+	if (fdName === "stdout" || fdName === "stderr") return 0;
+	return fdName === "all" ? 2 : 1;
+};
+const parseFdName = (fdName, optionName, stdioLength) => {
+	if (fdName === "ipc") return [stdioLength];
+	const fdNumber = parseFd(fdName);
+	if (fdNumber === void 0 || fdNumber === 0) throw new TypeError(`"${optionName}.${fdName}" is invalid.
+It must be "${optionName}.stdout", "${optionName}.stderr", "${optionName}.all", "${optionName}.ipc", or "${optionName}.fd3", "${optionName}.fd4" (and so on).`);
+	if (fdNumber !== "all" && fdNumber >= stdioLength) throw new TypeError(`"${optionName}.${fdName}" is invalid: that file descriptor does not exist.
+Please set the "stdio" option to ensure that file descriptor exists.`);
+	return fdNumber === "all" ? [1, 2] : [fdNumber];
+};
+const parseFd = (fdName) => {
+	if (fdName === "all") return fdName;
+	if (STANDARD_STREAMS_ALIASES.includes(fdName)) return STANDARD_STREAMS_ALIASES.indexOf(fdName);
+	const regexpResult = FD_REGEXP.exec(fdName);
+	if (regexpResult !== null) return Number(regexpResult.groups.fdNumber);
+};
+const FD_REGEXP = /^fd(?<fdNumber>\d+)$/;
+const addDefaultValue$1 = (optionArray, optionName) => optionArray.map((optionValue) => optionValue === void 0 ? DEFAULT_OPTIONS[optionName] : optionValue);
+const BOOLEAN_FD_SPECIFIC_OPTIONS = /* @__PURE__ */ new Set([
+	"lines",
+	"buffer",
+	"stripFinalNewline"
+]);
+const validateFdSpecificValue = (optionValue, optionName, fullOptionName = optionName) => {
+	if (BOOLEAN_FD_SPECIFIC_OPTIONS.has(optionName)) checkBooleanOption(optionValue, fullOptionName);
+	else if (optionName === "maxBuffer" && optionValue !== void 0 && (typeof optionValue !== "number" || Number.isNaN(optionValue))) throw new TypeError(`The \`${fullOptionName}\` option must use a number.`);
+};
+const DEFAULT_OPTIONS = {
+	lines: false,
+	buffer: true,
+	maxBuffer: 1e8,
+	verbose: debuglog("execa").enabled ? "full" : "none",
+	stripFinalNewline: true
+};
+const FD_SPECIFIC_OPTIONS = [
+	"lines",
+	"buffer",
+	"maxBuffer",
+	"verbose",
+	"stripFinalNewline"
+];
+const getFdSpecificValue = (optionArray, fdNumber) => fdNumber === "ipc" ? optionArray.at(-1) : optionArray[fdNumber];
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/values.js
+const isVerbose = ({ verbose }, fdNumber) => getFdVerbose(verbose, fdNumber) !== "none";
+const isFullVerbose = ({ verbose }, fdNumber) => !["none", "short"].includes(getFdVerbose(verbose, fdNumber));
+const getVerboseFunction = ({ verbose }, fdNumber) => {
+	const fdVerbose = getFdVerbose(verbose, fdNumber);
+	return isVerboseFunction(fdVerbose) ? fdVerbose : void 0;
+};
+const getFdVerbose = (verbose, fdNumber) => fdNumber === void 0 ? getFdGenericVerbose(verbose) : getFdSpecificValue(verbose, fdNumber);
+const getFdGenericVerbose = (verbose) => verbose.find((fdVerbose) => isVerboseFunction(fdVerbose)) ?? VERBOSE_VALUES.findLast((fdVerbose) => verbose.includes(fdVerbose));
+const isVerboseFunction = (fdVerbose) => typeof fdVerbose === "function";
+const VERBOSE_VALUES = [
+	"none",
+	"short",
+	"full"
+];
 // node_modules/.pnpm/is-unicode-supported@2.1.0/node_modules/is-unicode-supported/index.js
 function isUnicodeSupported() {
 	const { env } = process$1;
@@ -22622,6 +22976,144 @@ format("58;5;12", 59);
 format("58;5;13", 59);
 format("58;5;14", 59);
 format("58;5;15", 59);
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/default.js
+const hasColors = process$1.env.FORCE_COLOR !== void 0 || process$1.stderr.isTTY === true;
+const identity$1 = (string) => string;
+const getColor = (color) => hasColors ? color : identity$1;
+const gray = getColor(gray$1);
+const bold = getColor(bold$1);
+const redBright = getColor(redBright$1);
+const yellowBright = getColor(yellowBright$1);
+const defaultVerboseFunction = ({ type, message, timestamp, piped, commandId, result: { failed = false } = {}, options: { reject = true } }) => {
+	const timestampString = serializeTimestamp(timestamp);
+	const icon = ICONS[type]({
+		failed,
+		reject,
+		piped
+	});
+	const color = COLORS[type]({ reject });
+	return `${gray(`[${timestampString}]`)} ${gray(`[${commandId}]`)} ${color(icon)} ${color(message)}`;
+};
+const serializeTimestamp = (timestamp) => `${padField(timestamp.getHours(), 2)}:${padField(timestamp.getMinutes(), 2)}:${padField(timestamp.getSeconds(), 2)}.${padField(timestamp.getMilliseconds(), 3)}`;
+const padField = (field, padding) => String(field).padStart(padding, "0");
+const getFinalIcon = ({ failed, reject }) => {
+	if (!failed) return figures.tick;
+	return reject ? figures.cross : figures.warning;
+};
+const ICONS = {
+	command: ({ piped }) => piped ? "|" : "$",
+	output: () => " ",
+	ipc: () => "*",
+	error: getFinalIcon,
+	duration: getFinalIcon
+};
+const COLORS = {
+	command: () => bold,
+	output: () => identity$1,
+	ipc: () => identity$1,
+	error: ({ reject }) => reject ? redBright : yellowBright,
+	duration: () => gray
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/custom.js
+const applyVerboseOnLines = (printedLines, verboseInfo, fdNumber) => {
+	const verboseFunction = getVerboseFunction(verboseInfo, fdNumber);
+	return printedLines.map(({ verboseLine, verboseObject }) => applyVerboseFunction(verboseLine, verboseObject, verboseFunction)).filter((printedLine) => printedLine !== void 0).map((printedLine) => appendNewline(printedLine)).join("");
+};
+const applyVerboseFunction = (verboseLine, verboseObject, verboseFunction) => {
+	if (verboseFunction === void 0) return verboseLine;
+	const printedLine = verboseFunction(verboseLine, verboseObject);
+	if (typeof printedLine === "string") return printedLine;
+};
+const appendNewline = (printedLine) => printedLine.endsWith("\n") ? printedLine : `${printedLine}\n`;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/log.js
+const verboseLog = ({ type, verboseMessage, fdNumber, verboseInfo, result }) => {
+	const verboseObject = getVerboseObject({
+		type,
+		result,
+		verboseInfo
+	});
+	const printedLines = getPrintedLines(verboseMessage, verboseObject);
+	const finalLines = applyVerboseOnLines(printedLines, verboseInfo, fdNumber);
+	if (finalLines !== "") console.warn(finalLines.slice(0, -1));
+};
+const getVerboseObject = ({ type, result, verboseInfo }) => {
+	const { escapedCommand, commandId, rawOptions } = verboseInfo;
+	const { piped = false, ...options } = rawOptions;
+	return {
+		type,
+		escapedCommand,
+		commandId: `${commandId}`,
+		timestamp: /* @__PURE__ */ new Date(),
+		piped,
+		result,
+		options
+	};
+};
+const getPrintedLines = (verboseMessage, verboseObject) => verboseMessage.split("\n").map((message) => getPrintedLine({
+	...verboseObject,
+	message
+}));
+const getPrintedLine = (verboseObject) => {
+	return {
+		verboseLine: defaultVerboseFunction(verboseObject),
+		verboseObject
+	};
+};
+const serializeVerboseMessage = (message) => {
+	const messageString = typeof message === "string" ? message : inspect(message);
+	return escapeLines(messageString);
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/start.js
+const logCommand = (escapedCommand, verboseInfo) => {
+	if (!isVerbose(verboseInfo)) return;
+	verboseLog({
+		type: "command",
+		verboseMessage: escapedCommand,
+		verboseInfo
+	});
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/info.js
+const getVerboseInfo = (verbose, escapedCommand, rawOptions) => {
+	validateVerbose(verbose);
+	return {
+		verbose,
+		escapedCommand,
+		commandId: getCommandId(verbose),
+		rawOptions
+	};
+};
+const getCommandId = (verbose) => isVerbose({ verbose }) ? COMMAND_ID++ : void 0;
+let COMMAND_ID = 0n;
+const validateVerbose = (verbose) => {
+	for (const fdVerbose of verbose) {
+		if (fdVerbose === false) throw new TypeError("The \"verbose: false\" option was renamed to \"verbose: 'none'\".");
+		if (fdVerbose === true) throw new TypeError("The \"verbose: true\" option was renamed to \"verbose: 'short'\".");
+		if (!VERBOSE_VALUES.includes(fdVerbose) && !isVerboseFunction(fdVerbose)) {
+			const allowedValues = VERBOSE_VALUES.map((allowedValue) => `'${allowedValue}'`).join(", ");
+			throw new TypeError(`The "verbose" option must not be ${fdVerbose}. Allowed values are: ${allowedValues} or a function.`);
+		}
+	}
+};
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/return/duration.js
+const getStartTime = () => hrtime.bigint();
+const getDurationMs = (startTime) => Number(hrtime.bigint() - startTime) / 1e6;
+// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/command.js
+const handleCommand = (filePath, rawArguments, rawOptions) => {
+	const startTime = getStartTime();
+	const { command, escapedCommand } = joinCommand(filePath, rawArguments, rawOptions.shell && !rawOptions.node);
+	const verbose = normalizeFdSpecificOption(rawOptions, "verbose");
+	const verboseInfo = getVerboseInfo(verbose, escapedCommand, {
+		__proto__: null,
+		...rawOptions
+	});
+	logCommand(escapedCommand, verboseInfo);
+	return {
+		command,
+		escapedCommand,
+		startTime,
+		verboseInfo
+	};
+};
 // node_modules/.pnpm/path-key@4.0.0/node_modules/path-key/index.js
 function pathKey(options = {}) {
 	const { env = process.env, platform = process.platform } = options;
@@ -23012,2151 +23504,6 @@ const findSignalByNumber = (number, signals) => {
 	return signals.find((signalA) => signalA.number === number);
 };
 getSignalsByNumber();
-// node_modules/.pnpm/which-command@0.1.0/node_modules/which-command/index.js
-const isWindows$1 = process$1.platform === "win32";
-const separatorPattern = isWindows$1 ? /[\/\\]/v : /\//v;
-const defaultPathExt = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
-function resolveOptions(command, options) {
-	if (typeof command !== "string" || command.length === 0) throw new TypeError("Expected a non-empty string.");
-	const { cwd = process$1.cwd(), path: searchPath = process$1.env.PATH ?? (isWindows$1 ? process$1.env.Path : void 0) ?? "", pathExt = process$1.env.PATHEXT || defaultPathExt } = options;
-	return {
-		cwd,
-		searchPath,
-		pathExt
-	};
-}
-function windowsExtensions(command, pathExt) {
-	const extensions = pathExt.split(path.delimiter).filter(Boolean);
-	const commandExtension = path.extname(command).toLowerCase();
-	if (commandExtension !== "" && extensions.some((extension) => extension.toLowerCase() === commandExtension)) return ["", ...extensions];
-	return extensions;
-}
-function* candidatePaths(command, { cwd, searchPath, pathExt }) {
-	const extensions = isWindows$1 ? windowsExtensions(command, pathExt) : [""];
-	if (separatorPattern.test(command)) {
-		const base = path.resolve(cwd, command);
-		for (const extension of extensions) yield base + extension;
-		return;
-	}
-	const directories = [...isWindows$1 ? [cwd] : [], ...searchPath.split(path.delimiter)];
-	for (const directory of directories) {
-		const unquoted = isWindows$1 && directory.length > 1 && directory.startsWith("\"") && directory.endsWith("\"") ? directory.slice(1, -1) : directory;
-		if (unquoted === "") continue;
-		const base = path.resolve(cwd, unquoted, command);
-		for (const extension of extensions) yield base + extension;
-	}
-}
-function isExecutableSync(filePath) {
-	let stats;
-	try {
-		stats = fs.statSync(filePath);
-	} catch (error) {
-		return isWindows$1 && error.code === "EACCES";
-	}
-	if (!stats.isFile()) return false;
-	if (isWindows$1) return true;
-	try {
-		fs.accessSync(filePath, fs.constants.X_OK);
-		return true;
-	} catch {
-		return false;
-	}
-}
-function whichCommandSync(command, options = {}) {
-	const resolved = resolveOptions(command, options);
-	for (const candidate of candidatePaths(command, resolved)) if (isExecutableSync(candidate)) return candidate;
-}
-// node_modules/.pnpm/strip-final-newline@4.0.0/node_modules/strip-final-newline/index.js
-function stripFinalNewline(input) {
-	if (typeof input === "string") return stripFinalNewlineString(input);
-	if (!(ArrayBuffer.isView(input) && input.BYTES_PER_ELEMENT === 1)) throw new Error("Input must be a string or a Uint8Array");
-	return stripFinalNewlineBinary(input);
-}
-const stripFinalNewlineString = (input) => input.at(-1) === LF ? input.slice(0, input.at(-2) === CR ? -2 : -1) : input;
-const stripFinalNewlineBinary = (input) => input.at(-1) === LF_BINARY ? input.subarray(0, input.at(-2) === CR_BINARY ? -2 : -1) : input;
-const LF = "\n";
-const LF_BINARY = LF.codePointAt(0);
-const CR = "\r";
-const CR_BINARY = CR.codePointAt(0);
-// node_modules/.pnpm/is-stream@4.0.1/node_modules/is-stream/index.js
-function isStream(stream, { checkOpen = true } = {}) {
-	return stream !== null && typeof stream === "object" && (stream.writable || stream.readable || !checkOpen || stream.writable === void 0 && stream.readable === void 0) && typeof stream.pipe === "function";
-}
-function isWritableStream$1(stream, { checkOpen = true } = {}) {
-	return isStream(stream, { checkOpen }) && (stream.writable || !checkOpen) && typeof stream.write === "function" && typeof stream.end === "function" && typeof stream.writable === "boolean" && typeof stream.writableObjectMode === "boolean" && typeof stream.destroy === "function" && typeof stream.destroyed === "boolean";
-}
-function isReadableStream$1(stream, { checkOpen = true } = {}) {
-	return isStream(stream, { checkOpen }) && (stream.readable || !checkOpen) && typeof stream.read === "function" && typeof stream.readable === "boolean" && typeof stream.readableObjectMode === "boolean" && typeof stream.destroy === "function" && typeof stream.destroyed === "boolean";
-}
-function isDuplexStream(stream, options) {
-	return isWritableStream$1(stream, options) && isReadableStream$1(stream, options);
-}
-// node_modules/.pnpm/@sec-ant+readable-stream@0.4.1/node_modules/@sec-ant/readable-stream/dist/ponyfill/asyncIterator.js
-const a = Object.getPrototypeOf(Object.getPrototypeOf(
-	/* istanbul ignore next */
-	async function* () {}
-).prototype);
-var c = class {
-	#t;
-	#n;
-	#r = !1;
-	#e = void 0;
-	constructor(e, t) {
-		this.#t = e, this.#n = t;
-	}
-	next() {
-		const e = () => this.#s();
-		return this.#e = this.#e ? this.#e.then(e, e) : e(), this.#e;
-	}
-	return(e) {
-		const t = () => this.#i(e);
-		return this.#e ? this.#e.then(t, t) : t();
-	}
-	async #s() {
-		if (this.#r) return {
-			done: !0,
-			value: void 0
-		};
-		let e;
-		try {
-			e = await this.#t.read();
-		} catch (t) {
-			throw this.#e = void 0, this.#r = !0, this.#t.releaseLock(), t;
-		}
-		return e.done && (this.#e = void 0, this.#r = !0, this.#t.releaseLock()), e;
-	}
-	async #i(e) {
-		if (this.#r) return {
-			done: !0,
-			value: e
-		};
-		if (this.#r = !0, !this.#n) {
-			const t = this.#t.cancel(e);
-			return this.#t.releaseLock(), await t, {
-				done: !0,
-				value: e
-			};
-		}
-		return this.#t.releaseLock(), {
-			done: !0,
-			value: e
-		};
-	}
-};
-const n = Symbol();
-function i() {
-	return this[n].next();
-}
-Object.defineProperty(i, "name", { value: "next" });
-function o(r) {
-	return this[n].return(r);
-}
-Object.defineProperty(o, "name", { value: "return" });
-const u = Object.create(a, {
-	next: {
-		enumerable: !0,
-		configurable: !0,
-		writable: !0,
-		value: i
-	},
-	return: {
-		enumerable: !0,
-		configurable: !0,
-		writable: !0,
-		value: o
-	}
-});
-function h({ preventCancel: r = !1 } = {}) {
-	const t = new c(this.getReader(), r), s = Object.create(u);
-	return s[n] = t, s;
-}
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/stream.js
-const getAsyncIterable = (stream) => {
-	if (isReadableStream$1(stream, { checkOpen: false }) && nodeImports.on !== void 0) return getStreamIterable(stream);
-	if (typeof stream?.[Symbol.asyncIterator] === "function") return stream;
-	if (toString.call(stream) === "[object ReadableStream]") return h.call(stream);
-	throw new TypeError("The first argument must be a Readable, a ReadableStream, or an async iterable.");
-};
-const { toString } = Object.prototype;
-const getStreamIterable = async function* (stream) {
-	const controller = new AbortController();
-	const state = {};
-	handleStreamEnd(stream, controller, state);
-	try {
-		for await (const [chunk] of nodeImports.on(stream, "data", { signal: controller.signal })) yield chunk;
-	} catch (error) {
-		if (state.error !== void 0) throw state.error;
-		else if (!controller.signal.aborted) throw error;
-	} finally {
-		stream.destroy();
-	}
-};
-const handleStreamEnd = async (stream, controller, state) => {
-	try {
-		await nodeImports.finished(stream, {
-			cleanup: true,
-			readable: true,
-			writable: false,
-			error: false
-		});
-	} catch (error) {
-		state.error = error;
-	} finally {
-		controller.abort();
-	}
-};
-const nodeImports = {};
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/contents.js
-const getStreamContents$1 = async (stream, { init, convertChunk, getSize, truncateChunk, addChunk, getFinalChunk, finalize }, { maxBuffer = Number.POSITIVE_INFINITY } = {}) => {
-	const asyncIterable = getAsyncIterable(stream);
-	const state = init();
-	state.length = 0;
-	try {
-		for await (const chunk of asyncIterable) {
-			const convertedChunk = convertChunk[getChunkType(chunk)](chunk, state);
-			appendChunk({
-				convertedChunk,
-				state,
-				getSize,
-				truncateChunk,
-				addChunk,
-				maxBuffer
-			});
-		}
-		appendFinalChunk({
-			state,
-			convertChunk,
-			getSize,
-			truncateChunk,
-			addChunk,
-			getFinalChunk,
-			maxBuffer
-		});
-		return finalize(state);
-	} catch (error) {
-		const normalizedError = typeof error === "object" && error !== null ? error : new Error(error);
-		normalizedError.bufferedData = finalize(state);
-		throw normalizedError;
-	}
-};
-const appendFinalChunk = ({ state, getSize, truncateChunk, addChunk, getFinalChunk, maxBuffer }) => {
-	const convertedChunk = getFinalChunk(state);
-	if (convertedChunk !== void 0) appendChunk({
-		convertedChunk,
-		state,
-		getSize,
-		truncateChunk,
-		addChunk,
-		maxBuffer
-	});
-};
-const appendChunk = ({ convertedChunk, state, getSize, truncateChunk, addChunk, maxBuffer }) => {
-	const chunkSize = getSize(convertedChunk);
-	const newLength = state.length + chunkSize;
-	if (newLength <= maxBuffer) {
-		addNewChunk(convertedChunk, state, addChunk, newLength);
-		return;
-	}
-	const truncatedChunk = truncateChunk(convertedChunk, maxBuffer - state.length);
-	if (truncatedChunk !== void 0) addNewChunk(truncatedChunk, state, addChunk, maxBuffer);
-	throw new MaxBufferError();
-};
-const addNewChunk = (convertedChunk, state, addChunk, newLength) => {
-	state.contents = addChunk(convertedChunk, state, newLength);
-	state.length = newLength;
-};
-const getChunkType = (chunk) => {
-	const typeOfChunk = typeof chunk;
-	if (typeOfChunk === "string") return "string";
-	if (typeOfChunk !== "object" || chunk === null) return "others";
-	if (globalThis.Buffer?.isBuffer(chunk)) return "buffer";
-	const prototypeName = objectToString$1.call(chunk);
-	if (prototypeName === "[object ArrayBuffer]") return "arrayBuffer";
-	if (prototypeName === "[object DataView]") return "dataView";
-	if (Number.isInteger(chunk.byteLength) && Number.isInteger(chunk.byteOffset) && objectToString$1.call(chunk.buffer) === "[object ArrayBuffer]") return "typedArray";
-	return "others";
-};
-const { toString: objectToString$1 } = Object.prototype;
-var MaxBufferError = class extends Error {
-	name = "MaxBufferError";
-	constructor() {
-		super("maxBuffer exceeded");
-	}
-};
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/utils.js
-const identity$1 = (value) => value;
-const noop$1 = () => void 0;
-const getContentsProperty = ({ contents }) => contents;
-const throwObjectStream = (chunk) => {
-	throw new Error(`Streams in object mode are not supported: ${String(chunk)}`);
-};
-const getLengthProperty = (convertedChunk) => convertedChunk.length;
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/array.js
-async function getStreamAsArray(stream, options) {
-	return getStreamContents$1(stream, arrayMethods, options);
-}
-const initArray = () => ({ contents: [] });
-const increment = () => 1;
-const addArrayChunk = (convertedChunk, { contents }) => {
-	contents.push(convertedChunk);
-	return contents;
-};
-const arrayMethods = {
-	init: initArray,
-	convertChunk: {
-		string: identity$1,
-		buffer: identity$1,
-		arrayBuffer: identity$1,
-		dataView: identity$1,
-		typedArray: identity$1,
-		others: identity$1
-	},
-	getSize: increment,
-	truncateChunk: noop$1,
-	addChunk: addArrayChunk,
-	getFinalChunk: noop$1,
-	finalize: getContentsProperty
-};
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/array-buffer.js
-async function getStreamAsArrayBuffer(stream, options) {
-	return getStreamContents$1(stream, arrayBufferMethods, options);
-}
-const initArrayBuffer = () => ({ contents: /* @__PURE__ */ new ArrayBuffer(0) });
-const useTextEncoder = (chunk) => textEncoder$1.encode(chunk);
-const textEncoder$1 = new TextEncoder();
-const useUint8Array = (chunk) => new Uint8Array(chunk);
-const useUint8ArrayWithOffset = (chunk) => new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength);
-const truncateArrayBufferChunk = (convertedChunk, chunkSize) => convertedChunk.slice(0, chunkSize);
-const addArrayBufferChunk = (convertedChunk, { contents, length: previousLength }, length) => {
-	const newContents = hasArrayBufferResize() ? resizeArrayBuffer(contents, length) : resizeArrayBufferSlow(contents, length);
-	new Uint8Array(newContents).set(convertedChunk, previousLength);
-	return newContents;
-};
-const resizeArrayBufferSlow = (contents, length) => {
-	if (length <= contents.byteLength) return contents;
-	const arrayBuffer = new ArrayBuffer(getNewContentsLength(length));
-	new Uint8Array(arrayBuffer).set(new Uint8Array(contents), 0);
-	return arrayBuffer;
-};
-const resizeArrayBuffer = (contents, length) => {
-	if (length <= contents.maxByteLength) {
-		contents.resize(length);
-		return contents;
-	}
-	const arrayBuffer = new ArrayBuffer(length, { maxByteLength: getNewContentsLength(length) });
-	new Uint8Array(arrayBuffer).set(new Uint8Array(contents), 0);
-	return arrayBuffer;
-};
-const getNewContentsLength = (length) => SCALE_FACTOR ** Math.ceil(Math.log(length) / Math.log(SCALE_FACTOR));
-const SCALE_FACTOR = 2;
-const finalizeArrayBuffer = ({ contents, length }) => hasArrayBufferResize() ? contents : contents.slice(0, length);
-const hasArrayBufferResize = () => "resize" in ArrayBuffer.prototype;
-const arrayBufferMethods = {
-	init: initArrayBuffer,
-	convertChunk: {
-		string: useTextEncoder,
-		buffer: useUint8Array,
-		arrayBuffer: useUint8Array,
-		dataView: useUint8ArrayWithOffset,
-		typedArray: useUint8ArrayWithOffset,
-		others: throwObjectStream
-	},
-	getSize: getLengthProperty,
-	truncateChunk: truncateArrayBufferChunk,
-	addChunk: addArrayBufferChunk,
-	getFinalChunk: noop$1,
-	finalize: finalizeArrayBuffer
-};
-// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/string.js
-async function getStreamAsString(stream, options) {
-	return getStreamContents$1(stream, stringMethods, options);
-}
-const initString = () => ({
-	contents: "",
-	textDecoder: new TextDecoder()
-});
-const useTextDecoder = (chunk, { textDecoder }) => textDecoder.decode(chunk, { stream: true });
-const addStringChunk = (convertedChunk, { contents }) => contents + convertedChunk;
-const truncateStringChunk = (convertedChunk, chunkSize) => convertedChunk.slice(0, chunkSize);
-const getFinalStringChunk = ({ textDecoder }) => {
-	const finalChunk = textDecoder.decode();
-	return finalChunk === "" ? void 0 : finalChunk;
-};
-const stringMethods = {
-	init: initString,
-	convertChunk: {
-		string: identity$1,
-		buffer: useTextDecoder,
-		arrayBuffer: useTextDecoder,
-		dataView: useTextDecoder,
-		typedArray: useTextDecoder,
-		others: throwObjectStream
-	},
-	getSize: getLengthProperty,
-	truncateChunk: truncateStringChunk,
-	addChunk: addStringChunk,
-	getFinalChunk: getFinalStringChunk,
-	finalize: getContentsProperty
-};
-// node_modules/.pnpm/parse-ms@4.0.0/node_modules/parse-ms/index.js
-const toZeroIfInfinity = (value) => Number.isFinite(value) ? value : 0;
-function parseNumber(milliseconds) {
-	return {
-		days: Math.trunc(milliseconds / 864e5),
-		hours: Math.trunc(milliseconds / 36e5 % 24),
-		minutes: Math.trunc(milliseconds / 6e4 % 60),
-		seconds: Math.trunc(milliseconds / 1e3 % 60),
-		milliseconds: Math.trunc(milliseconds % 1e3),
-		microseconds: Math.trunc(toZeroIfInfinity(milliseconds * 1e3) % 1e3),
-		nanoseconds: Math.trunc(toZeroIfInfinity(milliseconds * 1e6) % 1e3)
-	};
-}
-function parseBigint(milliseconds) {
-	return {
-		days: milliseconds / 86400000n,
-		hours: milliseconds / 3600000n % 24n,
-		minutes: milliseconds / 60000n % 60n,
-		seconds: milliseconds / 1000n % 60n,
-		milliseconds: milliseconds % 1000n,
-		microseconds: 0n,
-		nanoseconds: 0n
-	};
-}
-function parseMilliseconds(milliseconds) {
-	switch (typeof milliseconds) {
-		case "number":
-			if (Number.isFinite(milliseconds)) return parseNumber(milliseconds);
-			break;
-		case "bigint": return parseBigint(milliseconds);
-	}
-	throw new TypeError("Expected a finite number or bigint");
-}
-// node_modules/.pnpm/pretty-ms@9.3.1/node_modules/pretty-ms/index.js
-const isZero = (value) => value === 0 || value === 0n;
-const pluralize = (word, count) => count === 1 || count === 1n ? word : `${word}s`;
-const SECOND_ROUNDING_EPSILON = 1e-7;
-const ONE_DAY_IN_MILLISECONDS = 24n * 60n * 60n * 1000n;
-function prettyMilliseconds(milliseconds, options) {
-	const isBigInt = typeof milliseconds === "bigint";
-	if (!isBigInt && !Number.isFinite(milliseconds)) throw new TypeError("Expected a finite number or bigint");
-	options = { ...options };
-	const sign = milliseconds < 0 ? "-" : "";
-	milliseconds = milliseconds < 0 ? -milliseconds : milliseconds;
-	if (options.colonNotation) {
-		options.compact = false;
-		options.formatSubMilliseconds = false;
-		options.separateMilliseconds = false;
-		options.verbose = false;
-	}
-	if (options.compact) {
-		options.unitCount = 1;
-		options.secondsDecimalDigits = 0;
-		options.millisecondsDecimalDigits = 0;
-	}
-	let result = [];
-	const floorDecimals = (value, decimalDigits) => {
-		const flooredInterimValue = Math.floor(value * 10 ** decimalDigits + SECOND_ROUNDING_EPSILON);
-		return (Math.round(flooredInterimValue) / 10 ** decimalDigits).toFixed(decimalDigits);
-	};
-	const add = (value, long, short, valueString) => {
-		if ((result.length === 0 || !options.colonNotation) && isZero(value) && !(options.colonNotation && short === "m")) return;
-		valueString ??= String(value);
-		if (options.colonNotation) {
-			const wholeDigits = valueString.includes(".") ? valueString.split(".")[0].length : valueString.length;
-			const minLength = result.length > 0 ? 2 : 1;
-			valueString = "0".repeat(Math.max(0, minLength - wholeDigits)) + valueString;
-		} else valueString += options.verbose ? " " + pluralize(long, value) : short;
-		result.push(valueString);
-	};
-	const parsed = parseMilliseconds(milliseconds);
-	const days = BigInt(parsed.days);
-	if (options.hideYearAndDays) add(BigInt(days) * 24n + BigInt(parsed.hours), "hour", "h");
-	else {
-		if (options.hideYear) add(days, "day", "d");
-		else {
-			add(days / 365n, "year", "y");
-			add(days % 365n, "day", "d");
-		}
-		add(Number(parsed.hours), "hour", "h");
-	}
-	add(Number(parsed.minutes), "minute", "m");
-	if (!options.hideSeconds) {
-		if (options.separateMilliseconds || options.formatSubMilliseconds || !options.colonNotation && milliseconds < 1e3 && !options.subSecondsAsDecimals) {
-			const seconds = Number(parsed.seconds);
-			const milliseconds = Number(parsed.milliseconds);
-			const microseconds = Number(parsed.microseconds);
-			const nanoseconds = Number(parsed.nanoseconds);
-			add(seconds, "second", "s");
-			if (options.formatSubMilliseconds) {
-				add(milliseconds, "millisecond", "ms");
-				add(microseconds, "microsecond", "µs");
-				add(nanoseconds, "nanosecond", "ns");
-			} else {
-				const millisecondsAndBelow = milliseconds + microseconds / 1e3 + nanoseconds / 1e6;
-				const millisecondsDecimalDigits = typeof options.millisecondsDecimalDigits === "number" ? options.millisecondsDecimalDigits : 0;
-				const roundedMilliseconds = millisecondsAndBelow >= 1 ? Math.round(millisecondsAndBelow) : Math.ceil(millisecondsAndBelow);
-				const maximumMilliseconds = 1e3 - 10 ** -millisecondsDecimalDigits;
-				const millisecondsString = millisecondsDecimalDigits ? Math.min(millisecondsAndBelow, maximumMilliseconds).toFixed(millisecondsDecimalDigits) : Math.min(roundedMilliseconds, maximumMilliseconds);
-				add(Number.parseFloat(millisecondsString), "millisecond", "ms", millisecondsString);
-			}
-		} else {
-			const secondsFixed = floorDecimals((isBigInt ? Number(milliseconds % ONE_DAY_IN_MILLISECONDS) : milliseconds) / 1e3 % 60, typeof options.secondsDecimalDigits === "number" ? options.secondsDecimalDigits : 1);
-			const secondsString = options.keepDecimalsOnWholeSeconds ? secondsFixed : secondsFixed.replace(/\.0+$/, "");
-			add(Number.parseFloat(secondsString), "second", "s", secondsString);
-		}
-	}
-	if (result.length === 0) return sign + "0" + (options.verbose ? " milliseconds" : "ms");
-	const separator = options.colonNotation ? ":" : " ";
-	if (typeof options.unitCount === "number") result = result.slice(0, Math.max(options.unitCount, 1));
-	return sign + result.join(separator);
-}
-// node_modules/.pnpm/@sindresorhus+merge-streams@4.0.0/node_modules/@sindresorhus/merge-streams/index.js
-function mergeStreams(streams) {
-	if (!Array.isArray(streams)) throw new TypeError(`Expected an array, got \`${typeof streams}\`.`);
-	for (const stream of streams) validateStream(stream);
-	const objectMode = streams.some(({ readableObjectMode }) => readableObjectMode);
-	const highWaterMark = getHighWaterMark(streams, objectMode);
-	const passThroughStream = new MergedStream({
-		objectMode,
-		writableHighWaterMark: highWaterMark,
-		readableHighWaterMark: highWaterMark
-	});
-	for (const stream of streams) passThroughStream.add(stream);
-	return passThroughStream;
-}
-const getHighWaterMark = (streams, objectMode) => {
-	if (streams.length === 0) return getDefaultHighWaterMark(objectMode);
-	const highWaterMarks = streams.filter(({ readableObjectMode }) => readableObjectMode === objectMode).map(({ readableHighWaterMark }) => readableHighWaterMark);
-	return Math.max(...highWaterMarks);
-};
-var MergedStream = class extends PassThrough {
-	#streams = /* @__PURE__ */ new Set([]);
-	#ended = /* @__PURE__ */ new Set([]);
-	#aborted = /* @__PURE__ */ new Set([]);
-	#onFinished;
-	#unpipeEvent = Symbol("unpipe");
-	#streamPromises = /* @__PURE__ */ new WeakMap();
-	add(stream) {
-		validateStream(stream);
-		if (this.#streams.has(stream)) return;
-		this.#streams.add(stream);
-		this.#onFinished ??= onMergedStreamFinished(this, this.#streams, this.#unpipeEvent);
-		const streamPromise = endWhenStreamsDone({
-			passThroughStream: this,
-			stream,
-			streams: this.#streams,
-			ended: this.#ended,
-			aborted: this.#aborted,
-			onFinished: this.#onFinished,
-			unpipeEvent: this.#unpipeEvent
-		});
-		this.#streamPromises.set(stream, streamPromise);
-		stream.pipe(this, { end: false });
-	}
-	async remove(stream) {
-		validateStream(stream);
-		if (!this.#streams.has(stream)) return false;
-		const streamPromise = this.#streamPromises.get(stream);
-		if (streamPromise === void 0) return false;
-		this.#streamPromises.delete(stream);
-		stream.unpipe(this);
-		await streamPromise;
-		return true;
-	}
-};
-const onMergedStreamFinished = async (passThroughStream, streams, unpipeEvent) => {
-	updateMaxListeners(passThroughStream, PASSTHROUGH_LISTENERS_COUNT);
-	const controller = new AbortController();
-	try {
-		await Promise.race([onMergedStreamEnd(passThroughStream, controller), onInputStreamsUnpipe(passThroughStream, streams, unpipeEvent, controller)]);
-	} finally {
-		controller.abort();
-		updateMaxListeners(passThroughStream, -PASSTHROUGH_LISTENERS_COUNT);
-	}
-};
-const onMergedStreamEnd = async (passThroughStream, { signal }) => {
-	try {
-		await finished(passThroughStream, {
-			signal,
-			cleanup: true
-		});
-	} catch (error) {
-		errorOrAbortStream(passThroughStream, error);
-		throw error;
-	}
-};
-const onInputStreamsUnpipe = async (passThroughStream, streams, unpipeEvent, { signal }) => {
-	for await (const [unpipedStream] of on(passThroughStream, "unpipe", { signal })) if (streams.has(unpipedStream)) unpipedStream.emit(unpipeEvent);
-};
-const validateStream = (stream) => {
-	if (typeof stream?.pipe !== "function") throw new TypeError(`Expected a readable stream, got: \`${typeof stream}\`.`);
-};
-const endWhenStreamsDone = async ({ passThroughStream, stream, streams, ended, aborted, onFinished, unpipeEvent }) => {
-	updateMaxListeners(passThroughStream, PASSTHROUGH_LISTENERS_PER_STREAM);
-	const controller = new AbortController();
-	try {
-		await Promise.race([
-			afterMergedStreamFinished(onFinished, stream, controller),
-			onInputStreamEnd({
-				passThroughStream,
-				stream,
-				streams,
-				ended,
-				aborted,
-				controller
-			}),
-			onInputStreamUnpipe({
-				stream,
-				streams,
-				ended,
-				aborted,
-				unpipeEvent,
-				controller
-			})
-		]);
-	} finally {
-		controller.abort();
-		updateMaxListeners(passThroughStream, -PASSTHROUGH_LISTENERS_PER_STREAM);
-	}
-	if (streams.size > 0 && streams.size === ended.size + aborted.size) {
-		if (ended.size === 0 && aborted.size > 0) abortStream(passThroughStream);
-		else endStream(passThroughStream);
-	}
-};
-const afterMergedStreamFinished = async (onFinished, stream, { signal }) => {
-	try {
-		await onFinished;
-		if (!signal.aborted) abortStream(stream);
-	} catch (error) {
-		if (!signal.aborted) errorOrAbortStream(stream, error);
-	}
-};
-const onInputStreamEnd = async ({ passThroughStream, stream, streams, ended, aborted, controller: { signal } }) => {
-	try {
-		await finished(stream, {
-			signal,
-			cleanup: true,
-			readable: true,
-			writable: false
-		});
-		if (streams.has(stream)) ended.add(stream);
-	} catch (error) {
-		if (signal.aborted || !streams.has(stream)) return;
-		if (isAbortError(error)) aborted.add(stream);
-		else errorStream(passThroughStream, error);
-	}
-};
-const onInputStreamUnpipe = async ({ stream, streams, ended, aborted, unpipeEvent, controller: { signal } }) => {
-	await once(stream, unpipeEvent, { signal });
-	if (!stream.readable) return once(signal, "abort", { signal });
-	streams.delete(stream);
-	ended.delete(stream);
-	aborted.delete(stream);
-};
-const endStream = (stream) => {
-	if (stream.writable) stream.end();
-};
-const errorOrAbortStream = (stream, error) => {
-	if (isAbortError(error)) abortStream(stream);
-	else errorStream(stream, error);
-};
-const isAbortError = (error) => error?.code === "ERR_STREAM_PREMATURE_CLOSE";
-const abortStream = (stream) => {
-	if (stream.readable || stream.writable) stream.destroy();
-};
-const errorStream = (stream, error) => {
-	if (!stream.destroyed) {
-		stream.once("error", noop);
-		stream.destroy(error);
-	}
-};
-const noop = () => {};
-const updateMaxListeners = (passThroughStream, increment) => {
-	const maxListeners = passThroughStream.getMaxListeners();
-	if (maxListeners !== 0 && maxListeners !== Number.POSITIVE_INFINITY) passThroughStream.setMaxListeners(maxListeners + increment);
-};
-const PASSTHROUGH_LISTENERS_COUNT = 2;
-const PASSTHROUGH_LISTENERS_PER_STREAM = 1;
-// node_modules/.pnpm/signal-exit@4.1.0/node_modules/signal-exit/dist/mjs/signals.js
-/**
-* This is not the set of all possible signals.
-*
-* It IS, however, the set of all signals that trigger
-* an exit on either Linux or BSD systems.  Linux is a
-* superset of the signal names supported on BSD, and
-* the unknown signals just fail to register, so we can
-* catch that easily enough.
-*
-* Windows signals are a different set, since there are
-* signals that terminate Windows processes, but don't
-* terminate (or don't even exist) on Posix systems.
-*
-* Don't bother with SIGKILL.  It's uncatchable, which
-* means that we can't fire any callbacks anyway.
-*
-* If a user does happen to register a handler on a non-
-* fatal signal like SIGWINCH or something, and then
-* exit, it'll end up firing `process.emit('exit')`, so
-* the handler will be fired anyway.
-*
-* SIGBUS, SIGFPE, SIGSEGV and SIGILL, when not raised
-* artificially, inherently leave the process in a
-* state from which it is not safe to try and enter JS
-* listeners.
-*/
-const signals = [];
-signals.push("SIGHUP", "SIGINT", "SIGTERM");
-if (process.platform !== "win32") signals.push("SIGALRM", "SIGABRT", "SIGVTALRM", "SIGXCPU", "SIGXFSZ", "SIGUSR2", "SIGTRAP", "SIGSYS", "SIGQUIT", "SIGIOT");
-if (process.platform === "linux") signals.push("SIGIO", "SIGPOLL", "SIGPWR", "SIGSTKFLT");
-// node_modules/.pnpm/signal-exit@4.1.0/node_modules/signal-exit/dist/mjs/index.js
-const processOk = (process) => !!process && typeof process === "object" && typeof process.removeListener === "function" && typeof process.emit === "function" && typeof process.reallyExit === "function" && typeof process.listeners === "function" && typeof process.kill === "function" && typeof process.pid === "number" && typeof process.on === "function";
-const kExitEmitter = Symbol.for("signal-exit emitter");
-const global$1 = globalThis;
-const ObjectDefineProperty = Object.defineProperty.bind(Object);
-var Emitter = class {
-	emitted = {
-		afterExit: false,
-		exit: false
-	};
-	listeners = {
-		afterExit: [],
-		exit: []
-	};
-	count = 0;
-	id = Math.random();
-	constructor() {
-		if (global$1[kExitEmitter]) return global$1[kExitEmitter];
-		ObjectDefineProperty(global$1, kExitEmitter, {
-			value: this,
-			writable: false,
-			enumerable: false,
-			configurable: false
-		});
-	}
-	on(ev, fn) {
-		this.listeners[ev].push(fn);
-	}
-	removeListener(ev, fn) {
-		const list = this.listeners[ev];
-		const i = list.indexOf(fn);
-		/* c8 ignore start */
-		if (i === -1) return;
-		/* c8 ignore stop */
-		if (i === 0 && list.length === 1) list.length = 0;
-		else list.splice(i, 1);
-	}
-	emit(ev, code, signal) {
-		if (this.emitted[ev]) return false;
-		this.emitted[ev] = true;
-		let ret = false;
-		for (const fn of this.listeners[ev]) ret = fn(code, signal) === true || ret;
-		if (ev === "exit") ret = this.emit("afterExit", code, signal) || ret;
-		return ret;
-	}
-};
-var SignalExitBase = class {};
-const signalExitWrap = (handler) => {
-	return {
-		onExit(cb, opts) {
-			return handler.onExit(cb, opts);
-		},
-		load() {
-			return handler.load();
-		},
-		unload() {
-			return handler.unload();
-		}
-	};
-};
-var SignalExitFallback = class extends SignalExitBase {
-	onExit() {
-		return () => {};
-	}
-	load() {}
-	unload() {}
-};
-var SignalExit = class extends SignalExitBase {
-	/* c8 ignore start */
-	#hupSig = process$2.platform === "win32" ? "SIGINT" : "SIGHUP";
-	/* c8 ignore stop */
-	#emitter = new Emitter();
-	#process;
-	#originalProcessEmit;
-	#originalProcessReallyExit;
-	#sigListeners = {};
-	#loaded = false;
-	constructor(process) {
-		super();
-		this.#process = process;
-		this.#sigListeners = {};
-		for (const sig of signals) this.#sigListeners[sig] = () => {
-			const listeners = this.#process.listeners(sig);
-			let { count } = this.#emitter;
-			/* c8 ignore start */
-			const p = process;
-			if (typeof p.__signal_exit_emitter__ === "object" && typeof p.__signal_exit_emitter__.count === "number") count += p.__signal_exit_emitter__.count;
-			/* c8 ignore stop */
-			if (listeners.length === count) {
-				this.unload();
-				const ret = this.#emitter.emit("exit", null, sig);
-				/* c8 ignore start */
-				const s = sig === "SIGHUP" ? this.#hupSig : sig;
-				if (!ret) process.kill(process.pid, s);
-			}
-		};
-		this.#originalProcessReallyExit = process.reallyExit;
-		this.#originalProcessEmit = process.emit;
-	}
-	onExit(cb, opts) {
-		/* c8 ignore start */
-		if (!processOk(this.#process)) return () => {};
-		/* c8 ignore stop */
-		if (this.#loaded === false) this.load();
-		const ev = opts?.alwaysLast ? "afterExit" : "exit";
-		this.#emitter.on(ev, cb);
-		return () => {
-			this.#emitter.removeListener(ev, cb);
-			if (this.#emitter.listeners["exit"].length === 0 && this.#emitter.listeners["afterExit"].length === 0) this.unload();
-		};
-	}
-	load() {
-		if (this.#loaded) return;
-		this.#loaded = true;
-		this.#emitter.count += 1;
-		for (const sig of signals) try {
-			const fn = this.#sigListeners[sig];
-			if (fn) this.#process.on(sig, fn);
-		} catch (_) {}
-		this.#process.emit = (ev, ...a) => {
-			return this.#processEmit(ev, ...a);
-		};
-		this.#process.reallyExit = (code) => {
-			return this.#processReallyExit(code);
-		};
-	}
-	unload() {
-		if (!this.#loaded) return;
-		this.#loaded = false;
-		signals.forEach((sig) => {
-			const listener = this.#sigListeners[sig];
-			/* c8 ignore start */
-			if (!listener) throw new Error("Listener not defined for signal: " + sig);
-			/* c8 ignore stop */
-			try {
-				this.#process.removeListener(sig, listener);
-			} catch (_) {}
-			/* c8 ignore stop */
-		});
-		this.#process.emit = this.#originalProcessEmit;
-		this.#process.reallyExit = this.#originalProcessReallyExit;
-		this.#emitter.count -= 1;
-	}
-	#processReallyExit(code) {
-		/* c8 ignore start */
-		if (!processOk(this.#process)) return 0;
-		this.#process.exitCode = code || 0;
-		/* c8 ignore stop */
-		this.#emitter.emit("exit", this.#process.exitCode, null);
-		return this.#originalProcessReallyExit.call(this.#process, this.#process.exitCode);
-	}
-	#processEmit(ev, ...args) {
-		const og = this.#originalProcessEmit;
-		if (ev === "exit" && processOk(this.#process)) {
-			if (typeof args[0] === "number") this.#process.exitCode = args[0];
-			/* c8 ignore start */
-			const ret = og.call(this.#process, ev, ...args);
-			/* c8 ignore start */
-			this.#emitter.emit("exit", this.#process.exitCode, null);
-			/* c8 ignore stop */
-			return ret;
-		} else return og.call(this.#process, ev, ...args);
-	}
-};
-const process$2 = globalThis.process;
-const { onExit, load, unload } = signalExitWrap(processOk(process$2) ? new SignalExit(process$2) : new SignalExitFallback());
-// node_modules/.pnpm/@alextheman+utility@5.31.0_zod@4.6.7/node_modules/@alextheman/utility/dist/internal/index.js
-const DependencyGroup = {
-	DEPENDENCIES: "dependencies",
-	DEV_DEPENDENCIES: "devDependencies"
-};
-const VERSION_NUMBER_REGEX_PATTERN = String.raw`(?:v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)`;
-const VERSION_NUMBER_REGEX = RegExp(`^${VERSION_NUMBER_REGEX_PATTERN}$`);
-/**
-* Represents errors that can be described using a standardised error code, and a human-readable error message.
-*
-* @category Types
-*
-* @template ErrorCode The type of the standardised error code.
-*/
-var CodeError$1 = class CodeError extends Error {
-	code;
-	/**
-	* @param code - A standardised code (e.g. UNEXPECTED_DATA).
-	* @param message  - A human-readable error message (e.g. The data provided is invalid).
-	* @param options - Extra options to pass to super Error constructor.
-	*/
-	constructor(code, message = "Something went wrong.", options) {
-		super(message, options);
-		if (Error.captureStackTrace) Error.captureStackTrace(this, new.target);
-		this.name = new.target.name;
-		this.code = code;
-		Object.defineProperty(this, "message", { enumerable: true });
-		Object.setPrototypeOf(this, new.target.prototype);
-	}
-	/**
-	* Checks whether the given input may have been caused by a CodeError.
-	*
-	* @param input - The input to check.
-	*
-	* @returns `true` if the input is a CodeError, and `false` otherwise. The type of the input will also be narrowed down to CodeError if `true`.
-	*/
-	static check(input) {
-		if (input instanceof CodeError) return true;
-		return containsKeys$1(input, ["message", "code"]) && typeof input.message === "string" && typeof input.code === "string";
-	}
-	static checkCaughtError(error, options) {
-		if (this.check(error)) {
-			if (options?.expectedCode && error.code !== options.expectedCode) throw new Error(normaliseIndents$1`The error code on the thrown error does not match the expected error code.
-            
-            Expected: ${options.expectedCode}
-            Received: ${error.code}
-            `, { cause: error });
-			return error;
-		}
-		throw error;
-	}
-	/**
-	* Check a `CodeError` against its error code
-	*
-	* This will also automatically narrow down the type of the input to be `CodeError`, with its error code properly typed if this function returns true.
-	*
-	* @template ErrorCode The type of the error code
-	*
-	* @param input - The input to check.
-	* @param code - The expected code of the resulting error.
-	*
-	* @returns `true` if the error code matches the expected code, and `false` otherwise. The type of the input will also be narrowed down to CodeError, and its code will be narrowed to the expected code's type if the function returns `true`.
-	*/
-	static checkWithCode(input, code) {
-		return this.check(input) && input.code === code;
-	}
-	/**
-	* Gets the thrown `CodeError` from a given function if one was thrown, and re-throws any other errors, or throws a default `CodeError` if no error thrown.
-	*
-	* @param errorFunction - The function expected to throw the error.
-	* @param options - Extra options to apply.
-	*
-	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `CodeError`.
-	* @throws {Error} If no `CodeError` was thrown by the `errorFunction`
-	*
-	* @returns The `CodeError` that was thrown by the `errorFunction`
-	*/
-	static expectError(errorFunction, options) {
-		try {
-			errorFunction();
-		} catch (error) {
-			return this.checkCaughtError(error, options);
-		}
-		throw new Error(`Expected a ${this.name} to be thrown but none was thrown`);
-	}
-	/**
-	* Gets the thrown `CodeError` from a given asynchronous function if one was thrown, and re-throws any other errors, or throws a default `CodeError` if no error thrown.
-	*
-	* @param errorFunction - The function expected to throw the error.
-	* @param options - Extra options to apply.
-	*
-	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `CodeError`.
-	* @throws {Error} If no `CodeError` was thrown by the `errorFunction`
-	*
-	* @returns The `CodeError` that was thrown by the `errorFunction`
-	*/
-	static async expectErrorAsync(errorFunction, options) {
-		try {
-			await errorFunction();
-		} catch (error) {
-			return this.checkCaughtError(error, options);
-		}
-		throw new Error(`Expected a ${this.name} to be thrown but none was thrown`);
-	}
-	/**
-	* Converts the `CodeError` instance to a serialised JSON payload.
-	*
-	* @returns A JSON serialised version of the current `CodeError` instance.
-	*/
-	toJSON() {
-		return {
-			code: this.code,
-			message: this.message
-		};
-	}
-};
-/**
-* Represents errors you may get that may've been caused by a specific piece of data.
-*
-* @category Types
-*
-* @template DataType The type of the data that caused the error.
-* @template ErrorCode The type of the standardised error code.
-*/
-var DataError$1 = class DataError extends CodeError$1 {
-	data;
-	/**
-	* @param data - The data that caused the error.
-	* @param code - A standardised code (e.g. UNEXPECTED_DATA).
-	* @param message - A human-readable error message (e.g. The data provided is invalid).
-	* @param options - Extra options to pass to super Error constructor.
-	*/
-	constructor(data, code, message = "The data provided is invalid", options) {
-		super(code, message, options);
-		if (Error.captureStackTrace) Error.captureStackTrace(this, new.target);
-		this.name = new.target.name;
-		this.data = data;
-		Object.defineProperty(this, "message", { enumerable: true });
-		Object.setPrototypeOf(this, new.target.prototype);
-	}
-	/**
-	* Checks whether the given input may have been caused by a DataError.
-	*
-	* @param input - The input to check.
-	*
-	* @returns `true` if the input is a DataError, and `false` otherwise. The type of the input will also be narrowed down to DataError if `true`.
-	*/
-	static check(input) {
-		if (input instanceof DataError) return true;
-		return containsKeys$1(input, [
-			"data",
-			"code",
-			"message"
-		]) && typeof input.message === "string" && typeof input.code === "string" && isNonNullableObject$1(input.data);
-	}
-	/**
-	* Check a `DataError` against its error code
-	*
-	* This will also automatically narrow down the type of the input to be `DataError`, with its error code properly typed if this function returns true.
-	*
-	* @template ErrorCode The type of the error code
-	*
-	* @param input - The input to check.
-	* @param code - The expected code of the resulting error.
-	*
-	* @returns `true` if the error code matches the expected code, and `false` otherwise. The type of the input will also be narrowed down to `DataError`, and its code will be narrowed to the expected code's type if the function returns `true`.
-	*/
-	static checkWithCode(input, code) {
-		return this.check(input) && input.code === code;
-	}
-	/**
-	* Gets the thrown `DataError` from a given function if one was thrown, and re-throws any other errors, or throws a default `DataError` if no error thrown.
-	*
-	* @param errorFunction - The function expected to throw the error.
-	* @param options - Extra options to apply.
-	*
-	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `DataError`.
-	* @throws {Error} If no `DataError` was thrown by the `errorFunction`
-	*
-	* @returns The `DataError` that was thrown by the `errorFunction`
-	*/
-	static expectError(errorFunction, options) {
-		return super.expectError(errorFunction, options);
-	}
-	/**
-	* Gets the thrown `DataError` from a given asynchronous function if one was thrown, and re-throws any other errors, or throws a default `DataError` if no error thrown.
-	*
-	* @param errorFunction - The function expected to throw the error.
-	* @param options - Extra options to apply.
-	*
-	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `DataError`.
-	* @throws {Error} If no `DataError` was thrown by the `errorFunction`
-	*
-	* @returns The `DataError` that was thrown by the `errorFunction`
-	*/
-	static async expectErrorAsync(errorFunction, options) {
-		return await super.expectErrorAsync(errorFunction, options);
-	}
-	/**
-	* Converts the `DataError` instance to a serialised JSON payload.
-	*
-	* @returns A JSON serialised version of the current `DataError` instance.
-	*/
-	toJSON() {
-		return {
-			...super.toJSON(),
-			data: this.data
-		};
-	}
-};
-/**
-* Creates an array of numbers within a given range.
-*
-* - The range is inclusive of `start` and exclusive of `stop`.
-* - The sign of `step` must match the direction of the range.
-*
-* @category Array Helpers
-*
-* @param start - The number to start at (inclusive).
-* @param stop - The number to stop at (exclusive).
-* @param step - The step size between numbers, defaulting to 1.
-*
-* @throws {DataError} If `step` is `0`.
-* @throws {DataError} If `step` direction does not match the order of `start` and `stop`.
-*
-* @returns An array of numbers satisfying the range provided.
-*/
-function range$1(start, stop, step = 1) {
-	const numbers = [];
-	if (step === 0) throw new DataError$1({ step }, "ZERO_STEP_SIZE", "Step size cannot be zero.");
-	else if (step > 0) {
-		if (start > stop) throw new DataError$1({
-			start,
-			stop,
-			step
-		}, "INVALID_BOUNDARIES", "The starting value cannot be bigger than the final value if step is positive");
-		for (let i = start; i < stop; i += step) numbers.push(i);
-	} else if (step < 0) {
-		if (start < stop) throw new DataError$1({
-			start,
-			stop,
-			step
-		}, "INVALID_BOUNDARIES", "The final value cannot be bigger than the starting value if step is negative");
-		for (let i = start; i > stop; i += step) numbers.push(i);
-	}
-	return numbers;
-}
-/**
-* Determines if the given input is a non-nullable object, narrowing the type down as such if it is
-*
-* @category Type Assertions
-*
-* @param input - The input to check
-*
-* @returns `true` if the input is a non-nullable object, and `false` otherwise. The input type will also be narrowed down to be a non-nullable object.
-*/
-function isNonNullableObject$1(input) {
-	return typeof input === "object" && input !== null;
-}
-/**
-* Determines if the given object contains all of the keys provided.
-*
-* @category Type Assertions
-*
-* @param input - The input object to check.
-* @param keys - The keys expected to be in the input object.
-*
-* @returns `true` if the input object contains all provided keys, and `false` otherwise. The input type will also be narrowed down to be a record with the provided keys with an unknown value type.
-*/
-function objectContainsKeys$1(input, keys) {
-	const expectedKeys = Array.isArray(keys) ? keys : [keys];
-	if (expectedKeys.length === 0) return false;
-	for (const key of expectedKeys) if (!(key in input)) return false;
-	return true;
-}
-/**
-* Determines if the given input is a non-nullable object, and if that object contains all of the keys provided.
-*
-* @category Type Assertions
-*
-* @param input - The input to check.
-* @param keys - The keys expected to be in the input if it's an object.
-*
-* @returns `true` if the input is an object containing all provided keys, and `false` otherwise. The input type will also be narrowed down to be a record with the provided keys, each with an unknown value type.
-*/
-function containsKeys$1(input, keys) {
-	return isNonNullableObject$1(input) && objectContainsKeys$1(input, keys);
-}
-/**
-* Creates a new array where each element is the result of the provided callback.
-*
-* If the callback returns at least one Promise, the entire result will be wrapped
-* in a `Promise` and resolved with `Promise.all`. Otherwise, a plain array is returned.
-*
-* @category Array Helpers
-*
-* @template ItemType - The return type of the callback (awaited if any items are a Promise) that becomes the type of the array items.
-*
-* @param callback - A function invoked with the current index. May return a value or a Promise.
-* @param length - The desired length of the resulting array.
-* @param options - Extra options to apply if any item is asynchronous.
-*
-* @returns An array of the callback results, or a Promise resolving to one if the callback is async.
-*/
-function fillArray$1(callback, length = 1, options) {
-	if (options?.sequential) return (async () => {
-		const resolvedArray = [];
-		for (const index of range$1(0, length)) resolvedArray.push(await callback(index));
-		return resolvedArray;
-	})();
-	const outputArray = new Array(length).fill(null).map((_, index) => {
-		return callback(index);
-	});
-	if (outputArray.some((item) => {
-		return item instanceof Promise || containsKeys$1(item, "then") && typeof item.then === "function";
-	})) return Promise.all(outputArray);
-	return outputArray;
-}
-/**
-* Creates a new array of tuples, each containing the item at the given index from both arrays.
-*
-* If `secondArray` is shorter than `firstArray`, the second position in the tuple
-* will be `undefined`. Iteration always uses the length of the first array.
-*
-* @category Array Helpers
-*
-* @template FirstArrayItem
-* @template SecondArrayItem
-*
-* @param firstArray - The first array. Each item in this will take up the first tuple spot.
-* @param secondArray - The second array. Each item in this will take up the second tuple spot.
-*
-* @returns An array of `[firstItem, secondItem]` tuples for each index in `firstArray`.
-*/
-function paralleliseArrays$1(firstArray, secondArray) {
-	const outputArray = [];
-	for (let i = 0; i < firstArray.length; i++) outputArray.push([firstArray[i], secondArray[i]]);
-	return outputArray;
-}
-/**
-* Converts a string to an integer and throws an error if it cannot be converted.
-*
-* @category Parsers
-*
-* @param string - A string to convert into a number.
-* @param radix - A value between 2 and 36 that specifies the base of the number in string. If this argument is not supplied, strings with a prefix of '0x' are considered hexadecimal. All other strings are considered decimal.
-*
-* @throws {DataError} If the provided string cannot safely be converted to an integer.
-*
-* @returns The integer parsed from the input string.
-*/
-function parseIntStrict(string, radix) {
-	const trimmedString = string.trim();
-	const maxAllowedAlphabeticalCharacter = radix && radix > 10 && radix <= 36 ? String.fromCharCode(87 + radix - 1) : void 0;
-	if (!(radix && radix > 10 && radix <= 36 ? new RegExp(`^[+-]?[0-9a-${maxAllowedAlphabeticalCharacter}]+$`, "i") : /^[+-]?\d+$/).test(trimmedString)) throw new DataError$1(radix ? {
-		string,
-		radix
-	} : { string }, "INTEGER_PARSING_ERROR", `Only numeric values${radix && radix > 10 && radix <= 36 ? ` or character${radix !== 11 ? "s" : ""} A${radix !== 11 ? `-${maxAllowedAlphabeticalCharacter?.toUpperCase()} ` : " "}` : " "}are allowed.`);
-	if (radix && radix < 10 && [...trimmedString.replace(/^[+-]/, "")].some((character) => {
-		return parseInt(character) >= radix;
-	})) throw new DataError$1({
-		string,
-		radix
-	}, "INTEGER_PARSING_ERROR", "Value contains one or more digits outside of the range of the given radix.");
-	const parseIntResult = parseInt(trimmedString, radix);
-	if (isNaN(parseIntResult)) throw new DataError$1({ string }, "INTEGER_PARSING_ERROR", "Value is not a valid integer.");
-	return parseIntResult;
-}
-/**
-* Represents the three common software version types.
-*
-* @category Types
-*/
-const VersionType = {
-	MAJOR: "major",
-	MINOR: "minor",
-	PATCH: "patch"
-};
-/**
-* Returns the result of interpolating a template string when given the strings and interpolations separately.
-*
-* You can pass a template string directly by doing:
-*
-* ```
-* interpolate`Template string here`;
-* ```
-*
-* In this case, it will be functionally the same as if you just wrote the template string by itself.
-*
-* @category Tagged Template
-*
-* @template InterpolationsType - The type of the interpolations.
-*
-* @param strings - The strings from the template to process.
-* @param interpolations - An array of all interpolations from the template.
-*
-* @returns A new string with the strings and interpolations from the template applied.
-*/
-function interpolate$1(strings, ...interpolations) {
-	let result = "";
-	for (const [string, interpolation = ""] of paralleliseArrays$1(strings, interpolations)) result += string + interpolation;
-	return result;
-}
-function calculateTabSize$1(line, whitespaceLength) {
-	const potentialWhitespacePart = line.slice(0, whitespaceLength);
-	const trimmedString = line.trimStart();
-	if (potentialWhitespacePart.trim() !== "") return 0;
-	const tabSize = line.length - (trimmedString.length + whitespaceLength);
-	return tabSize < 0 ? 0 : tabSize;
-}
-function getWhitespaceLength$1(lines) {
-	const [firstNonEmptyLine] = lines.filter((line) => {
-		return line.trim() !== "";
-	});
-	return firstNonEmptyLine.length - firstNonEmptyLine.trimStart().length;
-}
-function reduceLines$1(lines, { preserveTabs = true }) {
-	const slicedLines = lines.slice(1);
-	const isFirstLineEmpty = lines[0].trim() === "";
-	const whitespaceLength = getWhitespaceLength$1(isFirstLineEmpty ? lines : slicedLines);
-	return (isFirstLineEmpty ? slicedLines : lines).map((line) => {
-		const tabSize = calculateTabSize$1(line, whitespaceLength);
-		return (preserveTabs ? fillArray$1(() => {
-			return " ";
-		}, tabSize).join("") : "") + line.trimStart();
-	}).join("\n");
-}
-/**
-* Applies any options if provided, then removes any extraneous indents from a multi-line template string.
-*
-* You can pass a template string directly by doing:
-*
-* ```typescript
-* normaliseIndents`Template string here
-*     with a new line
-*     and another new line`;
-* ```
-*
-* You may also pass the options first, then invoke the resulting function with a template string:
-*
-* ```typescript
-* normaliseIndents({ preserveTabs: false })`Template string here
-*     with a new line
-*     and another new line`;
-* ```
-*
-* @category Tagged Template
-*
-* @param first - The strings from the template to process, or the options to apply.
-* @param args - An array of all interpolations from the template.
-*
-* @returns An additional function to invoke, or a new string with the strings and interpolations from the template applied, and extraneous indents removed.
-*/
-function normaliseIndents$1(first, ...args) {
-	if (isNonNullableObject$1(first) && !Array.isArray(first)) {
-		const options = first;
-		return (strings, ...interpolations) => {
-			return normaliseIndents$1(strings, ...interpolations, options);
-		};
-	}
-	const strings = first;
-	const options = typeof args[args.length - 1] === "object" && !Array.isArray(args[args.length - 1]) ? args.pop() : {};
-	return reduceLines$1(interpolate$1(strings, ...[...args]).split("\n"), options);
-}
-/**
-* Represents a software version number, considered to be made up of a major, minor, and patch part.
-*
-* @category Types
-*/
-var VersionNumber = class VersionNumber {
-	static NON_NEGATIVE_TUPLE_ERROR = "Input array must be a tuple of three non-negative integers.";
-	/** The major number. Increments when a feature is removed or changed in a way that is not backwards-compatible with the previous release. */
-	major = 0;
-	/** The minor number. Increments when a new feature is added/deprecated and is expected to be backwards-compatible with the previous release. */
-	minor = 0;
-	/** The patch number. Increments when the next release is fixing a bug or doing a small refactor that should not be noticeable in practice. */
-	patch = 0;
-	/**
-	* @param input - The input to create a new instance of `VersionNumber` from.
-	*/
-	constructor(input) {
-		if (input instanceof VersionNumber) {
-			this.major = input.major;
-			this.minor = input.minor;
-			this.patch = input.patch;
-		} else if (typeof input === "string") {
-			if (!VERSION_NUMBER_REGEX.test(input)) throw new DataError$1({ input }, "INVALID_VERSION", `"${input}" is not a valid version number. Version numbers must be of the format "X.Y.Z" or "vX.Y.Z", where X, Y, and Z are non-negative integers.`);
-			const [major, minor, patch] = VersionNumber.formatString(input, { omitPrefix: true }).split(".").map((number) => {
-				return parseIntStrict(number);
-			});
-			this.major = major;
-			this.minor = minor;
-			this.patch = patch;
-		} else if (Array.isArray(input)) {
-			if (input.length !== 3) throw new DataError$1({ input }, "INVALID_LENGTH", VersionNumber.NON_NEGATIVE_TUPLE_ERROR);
-			const [major, minor, patch] = input.map((number) => {
-				const parsedInteger = parseIntStrict(number?.toString());
-				if (parsedInteger < 0) throw new DataError$1({ input }, "NEGATIVE_INPUTS", VersionNumber.NON_NEGATIVE_TUPLE_ERROR);
-				return parsedInteger;
-			});
-			this.major = major;
-			this.minor = minor;
-			this.patch = patch;
-		} else throw new DataError$1({ input }, "INVALID_INPUT", normaliseIndents$1`
-        The provided input can not be parsed into a valid version number.
-        Expected either a string of format X.Y.Z or vX.Y.Z, a tuple of three numbers, or another \`VersionNumber\` instance.
-      `);
-	}
-	/**
-	* Gets the current version type of the current instance of `VersionNumber`.
-	*
-	* @returns Either `"major"`, `"minor"`, or `"patch"`, depending on the version type.
-	*/
-	get type() {
-		if (this.minor === 0 && this.patch === 0) return VersionType.MAJOR;
-		if (this.patch === 0) return VersionType.MINOR;
-		return VersionType.PATCH;
-	}
-	static formatString(input, options) {
-		if (options?.omitPrefix) return input.startsWith("v") ? input.slice(1) : input;
-		return input.startsWith("v") ? input : `v${input}`;
-	}
-	/**
-	* Compares two given `VersionNumber` instances depending on order.
-	*
-	* @param first - The first version number to compare.
-	* @param second - The second version number to compare.
-	*
-	* @returns 0 if the version numbers are equal, 1 if the first version number is bigger than the second, and -1 if the first version number is smaller than the second.
-	*/
-	static compare(first, second) {
-		if (first.major > second.major) return 1;
-		else if (first.major < second.major) return -1;
-		if (first.minor > second.minor) return 1;
-		else if (first.minor < second.minor) return -1;
-		if (first.patch > second.patch) return 1;
-		else if (first.patch < second.patch) return -1;
-		return 0;
-	}
-	/**
-	* Checks if the provided version numbers have the exact same major, minor, and patch numbers.
-	*
-	* @param first - The first version number to compare.
-	* @param second - The second version number to compare.
-	*
-	* @returns `true` if the provided version numbers have exactly the same major, minor, and patch numbers, and returns `false` otherwise.
-	*/
-	static isEqual(first, second) {
-		return VersionNumber.compare(first, second) === 0;
-	}
-	/**
-	* Get a formatted string representation of the current version number
-	*
-	* @param options - Options to apply to the string formatting.
-	*
-	* @returns A formatted string representation of the current version number with the options applied.
-	*/
-	format(options) {
-		let baseOutput = `${this.major}`;
-		if (!options?.omitMinor) {
-			baseOutput += `.${this.minor}`;
-			if (!options?.omitPatch) baseOutput += `.${this.patch}`;
-		}
-		return VersionNumber.formatString(baseOutput, { omitPrefix: options?.omitPrefix });
-	}
-	/**
-	* Increments the current version number by the given increment type, returning the result as a new reference in memory.
-	*
-	* @param incrementType - The type of increment. Can be one of the following:
-	* - `"major"`: Change the major version `v1.2.3` → `v2.0.0`
-	* - `"minor"`: Change the minor version `v1.2.3` → `v1.3.0`
-	* - `"patch"`: Change the patch version `v1.2.3` → `v1.2.4`
-	* @param incrementAmount - The amount to increment by (defaults to 1).
-	*
-	* @returns A new instance of `VersionNumber` with the increment applied.
-	*/
-	increment(incrementType, incrementAmount = 1) {
-		const incrementBy = parseIntStrict(String(incrementAmount));
-		try {
-			switch (incrementType) {
-				case "major": return new VersionNumber([
-					this.major + incrementBy,
-					0,
-					0
-				]);
-				case "minor": return new VersionNumber([
-					this.major,
-					this.minor + incrementBy,
-					0
-				]);
-				case "patch": return new VersionNumber([
-					this.major,
-					this.minor,
-					this.patch + incrementBy
-				]);
-				default: throw incrementType;
-			}
-		} catch (error) {
-			if (DataError$1.checkWithCode(error, "NEGATIVE_INPUTS")) throw new DataError$1({
-				currentVersion: this.toString(),
-				calculatedRawVersion: `v${error.data.input.join(".")}`,
-				incrementAmount
-			}, "NEGATIVE_VERSION", "Cannot apply this increment amount as it would lead to a negative version number.");
-			else throw error;
-		}
-	}
-	/**
-	* Checks if the current `VersionNumber` instance is bigger than the input `VersionNumber`.
-	*
-	* @param comparator - The `VersionNumber` to compare against.
-	*
-	* @returns `true` if the instance is bigger than the input, and `false` otherwise
-	*/
-	isGreaterThan(comparator) {
-		return VersionNumber.compare(this, comparator) === 1;
-	}
-	/**
-	* Checks if the current `VersionNumber` instance is smaller than the input `VersionNumber`.
-	*
-	* @param comparator - The `VersionNumber` to compare against.
-	*
-	* @returns `true` if the instance is smaller than the input, and `false` otherwise
-	*/
-	isLessThan(comparator) {
-		return VersionNumber.compare(this, comparator) === -1;
-	}
-	/**
-	* Ensures that the VersionNumber behaves correctly when attempted to be coerced to a string.
-	*
-	* @param hint - Not used as of now, but generally used to help with numeric coercion, I think (which we most likely do not need for version numbers).
-	*
-	* @returns A stringified representation of the current version number, prefixed with `v`.
-	*/
-	[Symbol.toPrimitive](hint) {
-		if (hint === "number") throw new DataError$1({ thisVersion: this.toString() }, "INVALID_COERCION", "VersionNumber cannot be coerced to a number type.");
-		return this.toString();
-	}
-	/**
-	* Ensures that the VersionNumber behaves correctly when attempted to be converted to JSON.
-	*
-	* @returns A stringified representation of the current version number, prefixed with `v`.
-	*/
-	toJSON() {
-		return this.toString();
-	}
-	/**
-	* Get a string representation of the current version number.
-	*
-	* @returns A stringified representation of the current version number with the prefix.
-	*/
-	toString() {
-		const rawString = `${this.major}.${this.minor}.${this.patch}`;
-		return VersionNumber.formatString(rawString, { omitPrefix: false });
-	}
-};
-const zodVersionNumber = union([
-	string(),
-	tuple([
-		number$1(),
-		number$1(),
-		number$1()
-	]),
-	_instanceof(VersionNumber)
-]).transform((rawVersionNumber) => {
-	return new VersionNumber(rawVersionNumber);
-});
-function _parseZodSchema(parsedResult, input, onError) {
-	if (!parsedResult.success) {
-		if (onError) {
-			if (onError instanceof Error) throw onError;
-			else if (typeof onError === "function") {
-				const evaluatedError = onError(parsedResult.error);
-				if (evaluatedError instanceof Error) throw evaluatedError;
-			}
-		}
-		throw new DataError$1({
-			input,
-			issues: parsedResult.error.issues
-		}, "ZOD_ERROR", `\n\n${prettifyError(parsedResult.error)}\n`);
-	}
-	return parsedResult.data;
-}
-/**
-* An alternative function to zodSchema.parse() that can be used to strictly parse Zod schemas.
-*
-* NOTE: Use `parseZodSchemaAsync` if your schema includes an asynchronous function.
-*
-* @category Parsers
-*
-* @deprecated Please use `az.with(schema).parse(input)` instead.
-*
-* @template SchemaType - The Zod schema type.
-* @template ErrorType - The type of error to throw on invalid data.
-*
-* @param schema - The Zod schema to use in parsing.
-* @param input - The data to parse.
-* @param onError - A custom error to throw on invalid data (defaults to `DataError`). May either be the error itself, or a function that returns the error or nothing. If nothing is returned, the default error is thrown instead.
-*
-* @throws {DataErrorCode} If the given data cannot be parsed according to the schema.
-*
-* @returns The parsed data from the Zod schema.
-*/
-function parseZodSchema(schema, input, onError) {
-	return _parseZodSchema(schema.safeParse(input), input, onError);
-}
-/**
-* An alternative function to zodSchema.parseAsync() that can be used to strictly parse asynchronous Zod schemas.
-*
-* @category Parsers
-*
-* @deprecated Please use `az.with(schema).parseAsync(input)` instead.
-*
-* @template SchemaType - The Zod schema type.
-* @template ErrorType - The type of error to throw on invalid data.
-*
-* @param schema - The Zod schema to use in parsing.
-* @param input - The data to parse.
-* @param onError - A custom error to throw on invalid data (defaults to `DataError`). May either be the error itself, or a function that returns the error or nothing. If nothing is returned, the default error is thrown instead.
-*
-* @throws {DataError} If the given data cannot be parsed according to the schema.
-*
-* @returns The parsed data from the Zod schema.
-*/
-async function parseZodSchemaAsync(schema, input, onError) {
-	return _parseZodSchema(await schema.safeParseAsync(input), input, onError);
-}
-function zodFieldWrapper(schema) {
-	return string().trim().transform((value) => {
-		return value === "" ? null : value;
-	}).pipe(schema);
-}
-const az = {
-	field: zodFieldWrapper,
-	fieldNumber: () => {
-		return number();
-	},
-	versionNumber: () => {
-		return zodVersionNumber;
-	},
-	fieldDate: () => {
-		return date();
-	},
-	with: (schema) => {
-		return {
-			parse: (input, error) => {
-				return parseZodSchema(schema, input, error);
-			},
-			parseAsync: async (input, error) => {
-				return await parseZodSchemaAsync(schema, input, error);
-			}
-		};
-	}
-};
-/**
-* Get the dependencies from a given dependency group in `package.json`.
-*
-* @category Miscellaneous
-*
-* @param packageInfo - The data coming from `package.json`.
-* @param dependencyGroup - The group to get dependency information about (can be `dependencies` or `devDependencies`).
-*
-* @returns A record consisting of the package names and version ranges from the given dependency group.
-*/
-function getDependenciesFromGroup(packageInfo, dependencyGroup) {
-	return {
-		dependencies: az.with(record(string(), string())).parse(packageInfo.dependencies ?? {}),
-		devDependencies: az.with(record(string(), string())).parse(packageInfo.devDependencies ?? {})
-	}[dependencyGroup];
-}
-function getPackageJsonPath(directory) {
-	return path.join(...directory.endsWith("package.json") ? [directory] : [directory, "package.json"]);
-}
-function packageJsonNotFoundError(packagePath) {
-	return new DataError$1({ packagePath: getPackageJsonPath(packagePath) }, "PACKAGE_JSON_NOT_FOUND", "Could not find package.json in directory.");
-}
-async function getPackageJsonContents(directory, options) {
-	const { strict = true } = options ?? {};
-	try {
-		return JSON.parse(await readFile(getPackageJsonPath(directory), "utf-8"));
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-			if (strict) throw packageJsonNotFoundError(directory);
-			else return null;
-		}
-		throw error;
-	}
-}
-const PackageManager = {
-	NPM: "npm",
-	PNPM: "pnpm"
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/file-url.js
-const safeNormalizeFileUrl = (file, name) => {
-	const fileString = normalizeFileUrl(normalizeDenoExecPath(file));
-	if (typeof fileString !== "string") throw new TypeError(`${name} must be a string or a file URL: ${fileString}.`);
-	return fileString;
-};
-const normalizeDenoExecPath = (file) => isDenoExecPath(file) ? file.toString() : file;
-const isDenoExecPath = (file) => typeof file !== "string" && file && Object.getPrototypeOf(file) === String.prototype;
-const normalizeFileUrl = (file) => file instanceof URL ? fileURLToPath(file) : file;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/methods/parameters.js
-const normalizeParameters = (rawFile, rawArguments = [], rawOptions, ...rawExtraArguments) => {
-	if (rawExtraArguments.length > 0) throw new TypeError("Execa accepts at most three arguments: file, arguments, options.");
-	if (rawOptions !== void 0 && isPlainObject(rawArguments)) throw new TypeError("Execa accepts at most one options object. Please merge the second and third arguments.");
-	const filePath = safeNormalizeFileUrl(rawFile, "First argument");
-	const [commandArguments, options = {}] = isPlainObject(rawArguments) ? [[], rawArguments] : [rawArguments, rawOptions];
-	if (!Array.isArray(commandArguments)) throw new TypeError(`Second argument must be either an array of arguments or an options object: ${commandArguments}`);
-	if (commandArguments.some((commandArgument) => typeof commandArgument === "object" && commandArgument !== null)) throw new TypeError(`Second argument must be an array of strings: ${commandArguments}`);
-	const normalizedArguments = commandArguments.map(String);
-	const nullByteArgument = normalizedArguments.find((normalizedArgument) => normalizedArgument.includes("\0"));
-	if (nullByteArgument !== void 0) throw new TypeError(`Arguments cannot contain null bytes ("\\0"): ${nullByteArgument}`);
-	if (!isPlainObject(options)) throw new TypeError(`Last argument must be an options object: ${options}`);
-	return [
-		filePath,
-		normalizedArguments,
-		{
-			__proto__: null,
-			...options
-		}
-	];
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/escape.js
-const joinCommand = (filePath, rawArguments, shell) => {
-	const fileAndArguments = [filePath, ...rawArguments];
-	const command = fileAndArguments.join(" ");
-	return {
-		command,
-		escapedCommand: shell ? escapeControlCharacters(command) : fileAndArguments.map((fileAndArgument) => quoteString(escapeControlCharacters(fileAndArgument))).join(" ")
-	};
-};
-const escapeLines = (lines) => stripVTControlCharacters(lines).split("\n").map((line) => escapeControlCharacters(line)).join("\n");
-const escapeControlCharacters = (line) => line.replaceAll(SPECIAL_CHAR_REGEXP, (character) => escapeControlCharacter(character));
-const escapeControlCharacter = (character) => {
-	const commonEscape = COMMON_ESCAPES[character];
-	if (commonEscape !== void 0) return commonEscape;
-	const codepoint = character.codePointAt(0);
-	const codepointHex = codepoint.toString(16);
-	return codepoint <= 65535 ? `\\u${codepointHex.padStart(4, "0")}` : `\\U${codepointHex}`;
-};
-const getSpecialCharRegExp = () => {
-	try {
-		return new RegExp("\\p{Separator}|\\p{Other}", "gu");
-	} catch {
-		return /[\s\u0000-\u001F\u007F-\u009F\u00AD]/g;
-	}
-};
-const SPECIAL_CHAR_REGEXP = getSpecialCharRegExp();
-const COMMON_ESCAPES = {
-	" ": " ",
-	"\b": "\\b",
-	"\f": "\\f",
-	"\n": "\\n",
-	"\r": "\\r",
-	"	": "\\t"
-};
-const ASTRAL_START = 65535;
-const quoteString = (escapedArgument) => {
-	if (NO_ESCAPE_REGEXP.test(escapedArgument)) return escapedArgument;
-	return platform === "win32" ? `"${escapedArgument.replaceAll("\"", "\"\"")}"` : `'${escapedArgument.replaceAll("'", "'\\''")}'`;
-};
-const NO_ESCAPE_REGEXP = /^[\w\-./]+$/;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/uint-array.js
-const { toString: objectToString } = Object.prototype;
-const isArrayBuffer = (value) => objectToString.call(value) === "[object ArrayBuffer]";
-const isUint8Array = (value) => objectToString.call(value) === "[object Uint8Array]";
-const bufferToUint8Array = (buffer) => new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
-const textEncoder = new TextEncoder();
-const stringToUint8Array = (string) => textEncoder.encode(string);
-const textDecoder = new TextDecoder();
-const uint8ArrayToString = (uint8Array) => textDecoder.decode(uint8Array);
-const joinToString = (uint8ArraysOrStrings, encoding) => {
-	return uint8ArraysToStrings(uint8ArraysOrStrings, encoding).join("");
-};
-const uint8ArraysToStrings = (uint8ArraysOrStrings, encoding) => {
-	if (encoding === "utf8" && uint8ArraysOrStrings.every((uint8ArrayOrString) => typeof uint8ArrayOrString === "string")) return uint8ArraysOrStrings;
-	const decoder = new StringDecoder(encoding);
-	const strings = uint8ArraysOrStrings.map((uint8ArrayOrString) => typeof uint8ArrayOrString === "string" ? stringToUint8Array(uint8ArrayOrString) : uint8ArrayOrString).map((uint8Array) => decoder.write(uint8Array));
-	const finalString = decoder.end();
-	return finalString === "" ? strings : [...strings, finalString];
-};
-const joinToUint8Array = (uint8ArraysOrStrings) => uint8ArraysOrStrings.length === 1 && isUint8Array(uint8ArraysOrStrings[0]) ? uint8ArraysOrStrings[0] : concatUint8Arrays(stringsToUint8Arrays(uint8ArraysOrStrings));
-const stringsToUint8Arrays = (uint8ArraysOrStrings) => uint8ArraysOrStrings.map((uint8ArrayOrString) => typeof uint8ArrayOrString === "string" ? stringToUint8Array(uint8ArrayOrString) : uint8ArrayOrString);
-const concatUint8Arrays = (uint8Arrays) => {
-	const result = new Uint8Array(getJoinLength(uint8Arrays));
-	let index = 0;
-	for (const uint8Array of uint8Arrays) {
-		result.set(uint8Array, index);
-		index += uint8Array.length;
-	}
-	return result;
-};
-const getJoinLength = (uint8Arrays) => {
-	let joinLength = 0;
-	for (const uint8Array of uint8Arrays) joinLength += uint8Array.length;
-	return joinLength;
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/return/final-error.js
-const getFinalError = (originalError, message, isSync) => {
-	return new (isSync ? ExecaSyncError : ExecaError)(message, originalError instanceof DiscardedError ? {} : { cause: originalError });
-};
-var DiscardedError = class extends Error {};
-const setErrorName = (ErrorClass, value) => {
-	Object.defineProperties(ErrorClass.prototype, {
-		name: {
-			value,
-			writable: true,
-			enumerable: false,
-			configurable: true
-		},
-		[execaErrorSymbol]: {
-			value: true,
-			writable: false,
-			enumerable: false,
-			configurable: false
-		}
-	});
-};
-const isExecaError = (error) => isErrorInstance(error) && execaErrorSymbol in error;
-const execaErrorSymbol = Symbol("isExecaError");
-const isErrorInstance = (value) => value instanceof Error || Object.prototype.toString.call(value) === "[object Error]";
-var ExecaError = class extends Error {};
-setErrorName(ExecaError, ExecaError.name);
-var ExecaSyncError = class extends Error {};
-setErrorName(ExecaSyncError, ExecaSyncError.name);
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/type-name.js
-const getTypeName = (value) => value === null ? "null" : typeof value;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/methods/template.js
-const isTemplateString = (templates) => Array.isArray(templates) && Array.isArray(templates.raw);
-const parseTemplates = (templates, expressions) => {
-	let tokens = [];
-	let isSeparated = false;
-	for (const [index, template] of templates.entries()) ({tokens, isSeparated} = parseTemplate({
-		templates,
-		expressions,
-		tokens,
-		isSeparated,
-		index,
-		template
-	}));
-	if (tokens.length === 0) throw new TypeError("Template script must not be empty");
-	const [file, ...commandArguments] = tokens;
-	return [
-		file,
-		commandArguments,
-		{}
-	];
-};
-const parseTemplate = ({ templates, expressions, tokens, isSeparated, index, template }) => {
-	if (template === void 0) throw new TypeError(`Invalid backslash sequence: ${templates.raw[index]}`);
-	const { nextTokens, leadingWhitespaces, trailingWhitespaces } = splitByWhitespaces(template, templates.raw[index]);
-	const newTokens = concatTokens(tokens, nextTokens, isSeparated || leadingWhitespaces);
-	const isTemplateSeparated = trailingWhitespaces || nextTokens.length === 0 && isSeparated;
-	if (index === expressions.length) return {
-		tokens: newTokens,
-		isSeparated: isTemplateSeparated
-	};
-	const expression = expressions[index];
-	const expressionTokens = Array.isArray(expression) ? expression.map((expression) => parseExpression(expression)) : [parseExpression(expression)];
-	return {
-		tokens: concatTokens(newTokens, expressionTokens, isTemplateSeparated),
-		isSeparated: expressionTokens.length === 0 && isTemplateSeparated
-	};
-};
-const splitByWhitespaces = (template, rawTemplate) => {
-	if (template.length === 0) return {
-		nextTokens: [],
-		leadingWhitespaces: false,
-		trailingWhitespaces: false
-	};
-	const nextTokens = [];
-	let templateStart = 0;
-	let isLeadingWhitespaces = false;
-	for (let templateIndex = 0, rawIndex = 0; templateIndex < template.length; templateIndex += 1, rawIndex += 1) {
-		const rawCharacter = rawTemplate[rawIndex];
-		if (DELIMITERS.has(rawCharacter)) {
-			if (templateIndex === 0) isLeadingWhitespaces = true;
-			if (templateStart !== templateIndex) nextTokens.push(template.slice(templateStart, templateIndex));
-			templateStart = templateIndex + 1;
-		} else if (rawCharacter === "\\") {
-			const nextRawCharacter = rawTemplate[rawIndex + 1];
-			if (nextRawCharacter === "\n") {
-				templateIndex -= 1;
-				rawIndex += 1;
-			} else if (nextRawCharacter === "u" && rawTemplate[rawIndex + 2] === "{") {
-				const closingBraceIndex = rawTemplate.indexOf("}", rawIndex + 3);
-				if (isAstralEscape(rawTemplate.slice(rawIndex + 3, closingBraceIndex))) templateIndex += 1;
-				rawIndex = closingBraceIndex;
-			} else rawIndex += ESCAPE_LENGTH[nextRawCharacter] ?? 1;
-		}
-	}
-	const isTrailingWhitespaces = templateStart === template.length;
-	if (!isTrailingWhitespaces) nextTokens.push(template.slice(templateStart));
-	return {
-		nextTokens,
-		leadingWhitespaces: isLeadingWhitespaces,
-		trailingWhitespaces: isTrailingWhitespaces
-	};
-};
-const isAstralEscape = (codePointHex) => Number.parseInt(codePointHex, 16) > ASTRAL_START;
-const DELIMITERS = /* @__PURE__ */ new Set([
-	" ",
-	"	",
-	"\r",
-	"\n"
-]);
-const ESCAPE_LENGTH = {
-	x: 3,
-	u: 5
-};
-const concatTokens = (tokens, nextTokens, isSeparated) => isSeparated || tokens.length === 0 || nextTokens.length === 0 ? [...tokens, ...nextTokens] : [
-	...tokens.slice(0, -1),
-	`${tokens.at(-1)}${nextTokens[0]}`,
-	...nextTokens.slice(1)
-];
-const parseExpression = (expression) => {
-	const typeOfExpression = getTypeName(expression);
-	if (typeOfExpression === "string") return expression;
-	if (typeOfExpression === "number") return String(expression);
-	if ((isPlainObject(expression) || isExecaError(expression)) && (Object.hasOwn(expression, "stdout") || Object.hasOwn(expression, "isMaxBuffer"))) return getSubprocessResult(expression);
-	if (expression instanceof ChildProcess || Object.prototype.toString.call(expression) === "[object Promise]") throw new TypeError("Unexpected subprocess in template expression. Please use ${await subprocess} instead of ${subprocess}.");
-	throw new TypeError(`Unexpected "${typeOfExpression}" in template expression`);
-};
-const getSubprocessResult = (result) => {
-	const stdout = Object.hasOwn(result, "stdout") ? result.stdout : void 0;
-	if (typeof stdout === "string") return stdout;
-	if (isUint8Array(stdout)) return uint8ArrayToString(stdout);
-	if (stdout === void 0) throw new TypeError("Missing result.stdout in template expression. This is probably due to the previous subprocess' \"stdout\" option.");
-	throw new TypeError(`Unexpected "${getTypeName(stdout)}" stdout in template expression`);
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/standard-stream.js
-const isStandardStream = (stream) => STANDARD_STREAMS.includes(stream);
-const STANDARD_STREAMS = [
-	process$1.stdin,
-	process$1.stdout,
-	process$1.stderr
-];
-const STANDARD_STREAMS_ALIASES = [
-	"stdin",
-	"stdout",
-	"stderr"
-];
-const getStreamName = (fdNumber) => STANDARD_STREAMS_ALIASES[fdNumber] ?? `stdio[${fdNumber}]`;
-const allStreamSymbol = Symbol("execa.allStream");
-const setAllStream = (stream) => Object.assign(stream, { [allStreamSymbol]: true });
-const isAllStream = (stream) => stream?.[allStreamSymbol] === true;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/options.js
-const copyOptions = (options = {}) => {
-	if (options === null) throw new TypeError("The options must be an object, not `null`.");
-	return {
-		__proto__: null,
-		...options
-	};
-};
-const checkBooleanOption = (value, optionName) => {
-	if (value !== void 0 && typeof value !== "boolean") throw new TypeError(`The \`${optionName}\` option must use a boolean.`);
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/specific.js
-const normalizeFdSpecificOptions = (options) => {
-	const optionsCopy = {
-		__proto__: null,
-		...options
-	};
-	for (const optionName of FD_SPECIFIC_OPTIONS) optionsCopy[optionName] = normalizeFdSpecificOption(options, optionName);
-	return optionsCopy;
-};
-const normalizeFdSpecificOption = (options, optionName) => {
-	const stdioLength = getStdioLength(options);
-	const optionBaseArray = Array.from({ length: stdioLength + 1 });
-	const optionArray = normalizeFdSpecificValue(options[optionName], optionBaseArray, optionName, stdioLength);
-	return addDefaultValue$1(optionArray, optionName);
-};
-const getStdioLength = ({ stdio }) => Array.isArray(stdio) ? Math.max(stdio.length, STANDARD_STREAMS_ALIASES.length) : STANDARD_STREAMS_ALIASES.length;
-const normalizeFdSpecificValue = (optionValue, optionArray, optionName, stdioLength) => {
-	if (isPlainObject(optionValue)) return normalizeOptionObject(optionValue, optionArray, optionName, stdioLength);
-	validateFdSpecificValue(optionValue, optionName);
-	return optionArray.fill(optionValue);
-};
-const normalizeOptionObject = (optionValue, optionArray, optionName, stdioLength) => {
-	for (const fdName of Object.keys(optionValue).sort(compareFdName)) {
-		validateFdSpecificValue(optionValue[fdName], optionName, `${optionName}.${fdName}`);
-		for (const fdNumber of parseFdName(fdName, optionName, stdioLength)) optionArray[fdNumber] = optionValue[fdName];
-	}
-	return optionArray;
-};
-const compareFdName = (fdNameA, fdNameB) => getFdNameOrder(fdNameA) < getFdNameOrder(fdNameB) ? 1 : -1;
-const getFdNameOrder = (fdName) => {
-	if (fdName === "stdout" || fdName === "stderr") return 0;
-	return fdName === "all" ? 2 : 1;
-};
-const parseFdName = (fdName, optionName, stdioLength) => {
-	if (fdName === "ipc") return [stdioLength];
-	const fdNumber = parseFd(fdName);
-	if (fdNumber === void 0 || fdNumber === 0) throw new TypeError(`"${optionName}.${fdName}" is invalid.
-It must be "${optionName}.stdout", "${optionName}.stderr", "${optionName}.all", "${optionName}.ipc", or "${optionName}.fd3", "${optionName}.fd4" (and so on).`);
-	if (fdNumber !== "all" && fdNumber >= stdioLength) throw new TypeError(`"${optionName}.${fdName}" is invalid: that file descriptor does not exist.
-Please set the "stdio" option to ensure that file descriptor exists.`);
-	return fdNumber === "all" ? [1, 2] : [fdNumber];
-};
-const parseFd = (fdName) => {
-	if (fdName === "all") return fdName;
-	if (STANDARD_STREAMS_ALIASES.includes(fdName)) return STANDARD_STREAMS_ALIASES.indexOf(fdName);
-	const regexpResult = FD_REGEXP.exec(fdName);
-	if (regexpResult !== null) return Number(regexpResult.groups.fdNumber);
-};
-const FD_REGEXP = /^fd(?<fdNumber>\d+)$/;
-const addDefaultValue$1 = (optionArray, optionName) => optionArray.map((optionValue) => optionValue === void 0 ? DEFAULT_OPTIONS[optionName] : optionValue);
-const BOOLEAN_FD_SPECIFIC_OPTIONS = /* @__PURE__ */ new Set([
-	"lines",
-	"buffer",
-	"stripFinalNewline"
-]);
-const validateFdSpecificValue = (optionValue, optionName, fullOptionName = optionName) => {
-	if (BOOLEAN_FD_SPECIFIC_OPTIONS.has(optionName)) checkBooleanOption(optionValue, fullOptionName);
-	else if (optionName === "maxBuffer" && optionValue !== void 0 && (typeof optionValue !== "number" || Number.isNaN(optionValue))) throw new TypeError(`The \`${fullOptionName}\` option must use a number.`);
-};
-const DEFAULT_OPTIONS = {
-	lines: false,
-	buffer: true,
-	maxBuffer: 1e8,
-	verbose: debuglog("execa").enabled ? "full" : "none",
-	stripFinalNewline: true
-};
-const FD_SPECIFIC_OPTIONS = [
-	"lines",
-	"buffer",
-	"maxBuffer",
-	"verbose",
-	"stripFinalNewline"
-];
-const getFdSpecificValue = (optionArray, fdNumber) => fdNumber === "ipc" ? optionArray.at(-1) : optionArray[fdNumber];
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/values.js
-const isVerbose = ({ verbose }, fdNumber) => getFdVerbose(verbose, fdNumber) !== "none";
-const isFullVerbose = ({ verbose }, fdNumber) => !["none", "short"].includes(getFdVerbose(verbose, fdNumber));
-const getVerboseFunction = ({ verbose }, fdNumber) => {
-	const fdVerbose = getFdVerbose(verbose, fdNumber);
-	return isVerboseFunction(fdVerbose) ? fdVerbose : void 0;
-};
-const getFdVerbose = (verbose, fdNumber) => fdNumber === void 0 ? getFdGenericVerbose(verbose) : getFdSpecificValue(verbose, fdNumber);
-const getFdGenericVerbose = (verbose) => verbose.find((fdVerbose) => isVerboseFunction(fdVerbose)) ?? VERBOSE_VALUES.findLast((fdVerbose) => verbose.includes(fdVerbose));
-const isVerboseFunction = (fdVerbose) => typeof fdVerbose === "function";
-const VERBOSE_VALUES = [
-	"none",
-	"short",
-	"full"
-];
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/default.js
-const hasColors = process$1.env.FORCE_COLOR !== void 0 || process$1.stderr.isTTY === true;
-const identity = (string) => string;
-const getColor = (color) => hasColors ? color : identity;
-const gray = getColor(gray$1);
-const bold = getColor(bold$1);
-const redBright = getColor(redBright$1);
-const yellowBright = getColor(yellowBright$1);
-const defaultVerboseFunction = ({ type, message, timestamp, piped, commandId, result: { failed = false } = {}, options: { reject = true } }) => {
-	const timestampString = serializeTimestamp(timestamp);
-	const icon = ICONS[type]({
-		failed,
-		reject,
-		piped
-	});
-	const color = COLORS[type]({ reject });
-	return `${gray(`[${timestampString}]`)} ${gray(`[${commandId}]`)} ${color(icon)} ${color(message)}`;
-};
-const serializeTimestamp = (timestamp) => `${padField(timestamp.getHours(), 2)}:${padField(timestamp.getMinutes(), 2)}:${padField(timestamp.getSeconds(), 2)}.${padField(timestamp.getMilliseconds(), 3)}`;
-const padField = (field, padding) => String(field).padStart(padding, "0");
-const getFinalIcon = ({ failed, reject }) => {
-	if (!failed) return figures.tick;
-	return reject ? figures.cross : figures.warning;
-};
-const ICONS = {
-	command: ({ piped }) => piped ? "|" : "$",
-	output: () => " ",
-	ipc: () => "*",
-	error: getFinalIcon,
-	duration: getFinalIcon
-};
-const COLORS = {
-	command: () => bold,
-	output: () => identity,
-	ipc: () => identity,
-	error: ({ reject }) => reject ? redBright : yellowBright,
-	duration: () => gray
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/custom.js
-const applyVerboseOnLines = (printedLines, verboseInfo, fdNumber) => {
-	const verboseFunction = getVerboseFunction(verboseInfo, fdNumber);
-	return printedLines.map(({ verboseLine, verboseObject }) => applyVerboseFunction(verboseLine, verboseObject, verboseFunction)).filter((printedLine) => printedLine !== void 0).map((printedLine) => appendNewline(printedLine)).join("");
-};
-const applyVerboseFunction = (verboseLine, verboseObject, verboseFunction) => {
-	if (verboseFunction === void 0) return verboseLine;
-	const printedLine = verboseFunction(verboseLine, verboseObject);
-	if (typeof printedLine === "string") return printedLine;
-};
-const appendNewline = (printedLine) => printedLine.endsWith("\n") ? printedLine : `${printedLine}\n`;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/log.js
-const verboseLog = ({ type, verboseMessage, fdNumber, verboseInfo, result }) => {
-	const verboseObject = getVerboseObject({
-		type,
-		result,
-		verboseInfo
-	});
-	const printedLines = getPrintedLines(verboseMessage, verboseObject);
-	const finalLines = applyVerboseOnLines(printedLines, verboseInfo, fdNumber);
-	if (finalLines !== "") console.warn(finalLines.slice(0, -1));
-};
-const getVerboseObject = ({ type, result, verboseInfo }) => {
-	const { escapedCommand, commandId, rawOptions } = verboseInfo;
-	const { piped = false, ...options } = rawOptions;
-	return {
-		type,
-		escapedCommand,
-		commandId: `${commandId}`,
-		timestamp: /* @__PURE__ */ new Date(),
-		piped,
-		result,
-		options
-	};
-};
-const getPrintedLines = (verboseMessage, verboseObject) => verboseMessage.split("\n").map((message) => getPrintedLine({
-	...verboseObject,
-	message
-}));
-const getPrintedLine = (verboseObject) => {
-	return {
-		verboseLine: defaultVerboseFunction(verboseObject),
-		verboseObject
-	};
-};
-const serializeVerboseMessage = (message) => {
-	const messageString = typeof message === "string" ? message : inspect(message);
-	return escapeLines(messageString);
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/start.js
-const logCommand = (escapedCommand, verboseInfo) => {
-	if (!isVerbose(verboseInfo)) return;
-	verboseLog({
-		type: "command",
-		verboseMessage: escapedCommand,
-		verboseInfo
-	});
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/info.js
-const getVerboseInfo = (verbose, escapedCommand, rawOptions) => {
-	validateVerbose(verbose);
-	return {
-		verbose,
-		escapedCommand,
-		commandId: getCommandId(verbose),
-		rawOptions
-	};
-};
-const getCommandId = (verbose) => isVerbose({ verbose }) ? COMMAND_ID++ : void 0;
-let COMMAND_ID = 0n;
-const validateVerbose = (verbose) => {
-	for (const fdVerbose of verbose) {
-		if (fdVerbose === false) throw new TypeError("The \"verbose: false\" option was renamed to \"verbose: 'none'\".");
-		if (fdVerbose === true) throw new TypeError("The \"verbose: true\" option was renamed to \"verbose: 'short'\".");
-		if (!VERBOSE_VALUES.includes(fdVerbose) && !isVerboseFunction(fdVerbose)) {
-			const allowedValues = VERBOSE_VALUES.map((allowedValue) => `'${allowedValue}'`).join(", ");
-			throw new TypeError(`The "verbose" option must not be ${fdVerbose}. Allowed values are: ${allowedValues} or a function.`);
-		}
-	}
-};
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/return/duration.js
-const getStartTime = () => hrtime.bigint();
-const getDurationMs = (startTime) => Number(hrtime.bigint() - startTime) / 1e6;
-// node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/command.js
-const handleCommand = (filePath, rawArguments, rawOptions) => {
-	const startTime = getStartTime();
-	const { command, escapedCommand } = joinCommand(filePath, rawArguments, rawOptions.shell && !rawOptions.node);
-	const verbose = normalizeFdSpecificOption(rawOptions, "verbose");
-	const verboseInfo = getVerboseInfo(verbose, escapedCommand, {
-		__proto__: null,
-		...rawOptions
-	});
-	logCommand(escapedCommand, verboseInfo);
-	return {
-		command,
-		escapedCommand,
-		startTime,
-		verboseInfo
-	};
-};
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/terminate/signal.js
 const normalizeKillSignal = (killSignal) => {
 	const optionName = "option `killSignal`";
@@ -25846,6 +24193,60 @@ const ENCODING_ALIASES = {
 	binary: "latin1"
 };
 const serializeEncoding = (encoding) => typeof encoding === "string" ? `"${encoding}"` : String(encoding);
+// node_modules/.pnpm/which-command@0.1.0/node_modules/which-command/index.js
+const isWindows$1 = process$1.platform === "win32";
+const separatorPattern = isWindows$1 ? /[\/\\]/v : /\//v;
+const defaultPathExt = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
+function resolveOptions(command, options) {
+	if (typeof command !== "string" || command.length === 0) throw new TypeError("Expected a non-empty string.");
+	const { cwd = process$1.cwd(), path: searchPath = process$1.env.PATH ?? (isWindows$1 ? process$1.env.Path : void 0) ?? "", pathExt = process$1.env.PATHEXT || defaultPathExt } = options;
+	return {
+		cwd,
+		searchPath,
+		pathExt
+	};
+}
+function windowsExtensions(command, pathExt) {
+	const extensions = pathExt.split(path.delimiter).filter(Boolean);
+	const commandExtension = path.extname(command).toLowerCase();
+	if (commandExtension !== "" && extensions.some((extension) => extension.toLowerCase() === commandExtension)) return ["", ...extensions];
+	return extensions;
+}
+function* candidatePaths(command, { cwd, searchPath, pathExt }) {
+	const extensions = isWindows$1 ? windowsExtensions(command, pathExt) : [""];
+	if (separatorPattern.test(command)) {
+		const base = path.resolve(cwd, command);
+		for (const extension of extensions) yield base + extension;
+		return;
+	}
+	const directories = [...isWindows$1 ? [cwd] : [], ...searchPath.split(path.delimiter)];
+	for (const directory of directories) {
+		const unquoted = isWindows$1 && directory.length > 1 && directory.startsWith("\"") && directory.endsWith("\"") ? directory.slice(1, -1) : directory;
+		if (unquoted === "") continue;
+		const base = path.resolve(cwd, unquoted, command);
+		for (const extension of extensions) yield base + extension;
+	}
+}
+function isExecutableSync(filePath) {
+	let stats;
+	try {
+		stats = fs.statSync(filePath);
+	} catch (error) {
+		return isWindows$1 && error.code === "EACCES";
+	}
+	if (!stats.isFile()) return false;
+	if (isWindows$1) return true;
+	try {
+		fs.accessSync(filePath, fs.constants.X_OK);
+		return true;
+	} catch {
+		return false;
+	}
+}
+function whichCommandSync(command, options = {}) {
+	const resolved = resolveOptions(command, options);
+	for (const candidate of candidatePaths(command, resolved)) if (isExecutableSync(candidate)) return candidate;
+}
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/command-file.js
 const parseCommandFile = (file, commandArguments, options) => {
 	const parsed = {
@@ -26170,6 +24571,18 @@ const LINES_BYTES_INFO = {
 		concat: concatUint8Array
 	}
 };
+// node_modules/.pnpm/strip-final-newline@4.0.0/node_modules/strip-final-newline/index.js
+function stripFinalNewline(input) {
+	if (typeof input === "string") return stripFinalNewlineString(input);
+	if (!(ArrayBuffer.isView(input) && input.BYTES_PER_ELEMENT === 1)) throw new Error("Input must be a string or a Uint8Array");
+	return stripFinalNewlineBinary(input);
+}
+const stripFinalNewlineString = (input) => input.at(-1) === LF ? input.slice(0, input.at(-2) === CR ? -2 : -1) : input;
+const stripFinalNewlineBinary = (input) => input.at(-1) === LF_BINARY ? input.subarray(0, input.at(-2) === CR_BINARY ? -2 : -1) : input;
+const LF = "\n";
+const LF_BINARY = LF.codePointAt(0);
+const CR = "\r";
+const CR_BINARY = CR.codePointAt(0);
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/io/strip-newline.js
 const stripNewline = (value, { stripFinalNewline: stripFinalNewline$1 }, fdNumber, allFds) => value !== void 0 && !Array.isArray(value) && getStripFinalNewline(stripFinalNewline$1, fdNumber, allFds) ? stripFinalNewline(value) : value;
 const getStripFinalNewline = (stripFinalNewline, fdNumber, allFds) => fdNumber === "all" ? allFds.some((allFd) => stripFinalNewline[allFd]) : stripFinalNewline[fdNumber];
@@ -26188,6 +24601,326 @@ const concatBase64 = (stdout, stderr, encoding) => Buffer$1.concat([Buffer$1.fro
 const BASE64_ENCODINGS = /* @__PURE__ */ new Set(["base64", "base64url"]);
 const hasLines = ({ lines }) => Boolean(lines[1] || lines[2]);
 const splitAllLines = (value, allFds, options) => value === void 0 || Array.isArray(value) || !hasLines(options) ? value : splitLinesSync(value, !getStripFinalNewline(options.stripFinalNewline, "all", allFds), false);
+// node_modules/.pnpm/is-stream@4.0.1/node_modules/is-stream/index.js
+function isStream(stream, { checkOpen = true } = {}) {
+	return stream !== null && typeof stream === "object" && (stream.writable || stream.readable || !checkOpen || stream.writable === void 0 && stream.readable === void 0) && typeof stream.pipe === "function";
+}
+function isWritableStream$1(stream, { checkOpen = true } = {}) {
+	return isStream(stream, { checkOpen }) && (stream.writable || !checkOpen) && typeof stream.write === "function" && typeof stream.end === "function" && typeof stream.writable === "boolean" && typeof stream.writableObjectMode === "boolean" && typeof stream.destroy === "function" && typeof stream.destroyed === "boolean";
+}
+function isReadableStream$1(stream, { checkOpen = true } = {}) {
+	return isStream(stream, { checkOpen }) && (stream.readable || !checkOpen) && typeof stream.read === "function" && typeof stream.readable === "boolean" && typeof stream.readableObjectMode === "boolean" && typeof stream.destroy === "function" && typeof stream.destroyed === "boolean";
+}
+function isDuplexStream(stream, options) {
+	return isWritableStream$1(stream, options) && isReadableStream$1(stream, options);
+}
+// node_modules/.pnpm/@sec-ant+readable-stream@0.4.1/node_modules/@sec-ant/readable-stream/dist/ponyfill/asyncIterator.js
+const a = Object.getPrototypeOf(Object.getPrototypeOf(
+	/* istanbul ignore next */
+	async function* () {}
+).prototype);
+var c = class {
+	#t;
+	#n;
+	#r = !1;
+	#e = void 0;
+	constructor(e, t) {
+		this.#t = e, this.#n = t;
+	}
+	next() {
+		const e = () => this.#s();
+		return this.#e = this.#e ? this.#e.then(e, e) : e(), this.#e;
+	}
+	return(e) {
+		const t = () => this.#i(e);
+		return this.#e ? this.#e.then(t, t) : t();
+	}
+	async #s() {
+		if (this.#r) return {
+			done: !0,
+			value: void 0
+		};
+		let e;
+		try {
+			e = await this.#t.read();
+		} catch (t) {
+			throw this.#e = void 0, this.#r = !0, this.#t.releaseLock(), t;
+		}
+		return e.done && (this.#e = void 0, this.#r = !0, this.#t.releaseLock()), e;
+	}
+	async #i(e) {
+		if (this.#r) return {
+			done: !0,
+			value: e
+		};
+		if (this.#r = !0, !this.#n) {
+			const t = this.#t.cancel(e);
+			return this.#t.releaseLock(), await t, {
+				done: !0,
+				value: e
+			};
+		}
+		return this.#t.releaseLock(), {
+			done: !0,
+			value: e
+		};
+	}
+};
+const n = Symbol();
+function i() {
+	return this[n].next();
+}
+Object.defineProperty(i, "name", { value: "next" });
+function o(r) {
+	return this[n].return(r);
+}
+Object.defineProperty(o, "name", { value: "return" });
+const u = Object.create(a, {
+	next: {
+		enumerable: !0,
+		configurable: !0,
+		writable: !0,
+		value: i
+	},
+	return: {
+		enumerable: !0,
+		configurable: !0,
+		writable: !0,
+		value: o
+	}
+});
+function h({ preventCancel: r = !1 } = {}) {
+	const t = new c(this.getReader(), r), s = Object.create(u);
+	return s[n] = t, s;
+}
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/stream.js
+const getAsyncIterable = (stream) => {
+	if (isReadableStream$1(stream, { checkOpen: false }) && nodeImports.on !== void 0) return getStreamIterable(stream);
+	if (typeof stream?.[Symbol.asyncIterator] === "function") return stream;
+	if (toString.call(stream) === "[object ReadableStream]") return h.call(stream);
+	throw new TypeError("The first argument must be a Readable, a ReadableStream, or an async iterable.");
+};
+const { toString } = Object.prototype;
+const getStreamIterable = async function* (stream) {
+	const controller = new AbortController();
+	const state = {};
+	handleStreamEnd(stream, controller, state);
+	try {
+		for await (const [chunk] of nodeImports.on(stream, "data", { signal: controller.signal })) yield chunk;
+	} catch (error) {
+		if (state.error !== void 0) throw state.error;
+		else if (!controller.signal.aborted) throw error;
+	} finally {
+		stream.destroy();
+	}
+};
+const handleStreamEnd = async (stream, controller, state) => {
+	try {
+		await nodeImports.finished(stream, {
+			cleanup: true,
+			readable: true,
+			writable: false,
+			error: false
+		});
+	} catch (error) {
+		state.error = error;
+	} finally {
+		controller.abort();
+	}
+};
+const nodeImports = {};
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/contents.js
+const getStreamContents$1 = async (stream, { init, convertChunk, getSize, truncateChunk, addChunk, getFinalChunk, finalize }, { maxBuffer = Number.POSITIVE_INFINITY } = {}) => {
+	const asyncIterable = getAsyncIterable(stream);
+	const state = init();
+	state.length = 0;
+	try {
+		for await (const chunk of asyncIterable) {
+			const convertedChunk = convertChunk[getChunkType(chunk)](chunk, state);
+			appendChunk({
+				convertedChunk,
+				state,
+				getSize,
+				truncateChunk,
+				addChunk,
+				maxBuffer
+			});
+		}
+		appendFinalChunk({
+			state,
+			convertChunk,
+			getSize,
+			truncateChunk,
+			addChunk,
+			getFinalChunk,
+			maxBuffer
+		});
+		return finalize(state);
+	} catch (error) {
+		const normalizedError = typeof error === "object" && error !== null ? error : new Error(error);
+		normalizedError.bufferedData = finalize(state);
+		throw normalizedError;
+	}
+};
+const appendFinalChunk = ({ state, getSize, truncateChunk, addChunk, getFinalChunk, maxBuffer }) => {
+	const convertedChunk = getFinalChunk(state);
+	if (convertedChunk !== void 0) appendChunk({
+		convertedChunk,
+		state,
+		getSize,
+		truncateChunk,
+		addChunk,
+		maxBuffer
+	});
+};
+const appendChunk = ({ convertedChunk, state, getSize, truncateChunk, addChunk, maxBuffer }) => {
+	const chunkSize = getSize(convertedChunk);
+	const newLength = state.length + chunkSize;
+	if (newLength <= maxBuffer) {
+		addNewChunk(convertedChunk, state, addChunk, newLength);
+		return;
+	}
+	const truncatedChunk = truncateChunk(convertedChunk, maxBuffer - state.length);
+	if (truncatedChunk !== void 0) addNewChunk(truncatedChunk, state, addChunk, maxBuffer);
+	throw new MaxBufferError();
+};
+const addNewChunk = (convertedChunk, state, addChunk, newLength) => {
+	state.contents = addChunk(convertedChunk, state, newLength);
+	state.length = newLength;
+};
+const getChunkType = (chunk) => {
+	const typeOfChunk = typeof chunk;
+	if (typeOfChunk === "string") return "string";
+	if (typeOfChunk !== "object" || chunk === null) return "others";
+	if (globalThis.Buffer?.isBuffer(chunk)) return "buffer";
+	const prototypeName = objectToString.call(chunk);
+	if (prototypeName === "[object ArrayBuffer]") return "arrayBuffer";
+	if (prototypeName === "[object DataView]") return "dataView";
+	if (Number.isInteger(chunk.byteLength) && Number.isInteger(chunk.byteOffset) && objectToString.call(chunk.buffer) === "[object ArrayBuffer]") return "typedArray";
+	return "others";
+};
+const { toString: objectToString } = Object.prototype;
+var MaxBufferError = class extends Error {
+	name = "MaxBufferError";
+	constructor() {
+		super("maxBuffer exceeded");
+	}
+};
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/utils.js
+const identity = (value) => value;
+const noop$1 = () => void 0;
+const getContentsProperty = ({ contents }) => contents;
+const throwObjectStream = (chunk) => {
+	throw new Error(`Streams in object mode are not supported: ${String(chunk)}`);
+};
+const getLengthProperty = (convertedChunk) => convertedChunk.length;
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/array.js
+async function getStreamAsArray(stream, options) {
+	return getStreamContents$1(stream, arrayMethods, options);
+}
+const initArray = () => ({ contents: [] });
+const increment = () => 1;
+const addArrayChunk = (convertedChunk, { contents }) => {
+	contents.push(convertedChunk);
+	return contents;
+};
+const arrayMethods = {
+	init: initArray,
+	convertChunk: {
+		string: identity,
+		buffer: identity,
+		arrayBuffer: identity,
+		dataView: identity,
+		typedArray: identity,
+		others: identity
+	},
+	getSize: increment,
+	truncateChunk: noop$1,
+	addChunk: addArrayChunk,
+	getFinalChunk: noop$1,
+	finalize: getContentsProperty
+};
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/array-buffer.js
+async function getStreamAsArrayBuffer(stream, options) {
+	return getStreamContents$1(stream, arrayBufferMethods, options);
+}
+const initArrayBuffer = () => ({ contents: /* @__PURE__ */ new ArrayBuffer(0) });
+const useTextEncoder = (chunk) => textEncoder.encode(chunk);
+const textEncoder = new TextEncoder();
+const useUint8Array = (chunk) => new Uint8Array(chunk);
+const useUint8ArrayWithOffset = (chunk) => new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength);
+const truncateArrayBufferChunk = (convertedChunk, chunkSize) => convertedChunk.slice(0, chunkSize);
+const addArrayBufferChunk = (convertedChunk, { contents, length: previousLength }, length) => {
+	const newContents = hasArrayBufferResize() ? resizeArrayBuffer(contents, length) : resizeArrayBufferSlow(contents, length);
+	new Uint8Array(newContents).set(convertedChunk, previousLength);
+	return newContents;
+};
+const resizeArrayBufferSlow = (contents, length) => {
+	if (length <= contents.byteLength) return contents;
+	const arrayBuffer = new ArrayBuffer(getNewContentsLength(length));
+	new Uint8Array(arrayBuffer).set(new Uint8Array(contents), 0);
+	return arrayBuffer;
+};
+const resizeArrayBuffer = (contents, length) => {
+	if (length <= contents.maxByteLength) {
+		contents.resize(length);
+		return contents;
+	}
+	const arrayBuffer = new ArrayBuffer(length, { maxByteLength: getNewContentsLength(length) });
+	new Uint8Array(arrayBuffer).set(new Uint8Array(contents), 0);
+	return arrayBuffer;
+};
+const getNewContentsLength = (length) => SCALE_FACTOR ** Math.ceil(Math.log(length) / Math.log(SCALE_FACTOR));
+const SCALE_FACTOR = 2;
+const finalizeArrayBuffer = ({ contents, length }) => hasArrayBufferResize() ? contents : contents.slice(0, length);
+const hasArrayBufferResize = () => "resize" in ArrayBuffer.prototype;
+const arrayBufferMethods = {
+	init: initArrayBuffer,
+	convertChunk: {
+		string: useTextEncoder,
+		buffer: useUint8Array,
+		arrayBuffer: useUint8Array,
+		dataView: useUint8ArrayWithOffset,
+		typedArray: useUint8ArrayWithOffset,
+		others: throwObjectStream
+	},
+	getSize: getLengthProperty,
+	truncateChunk: truncateArrayBufferChunk,
+	addChunk: addArrayBufferChunk,
+	getFinalChunk: noop$1,
+	finalize: finalizeArrayBuffer
+};
+// node_modules/.pnpm/get-stream@9.0.1/node_modules/get-stream/source/string.js
+async function getStreamAsString(stream, options) {
+	return getStreamContents$1(stream, stringMethods, options);
+}
+const initString = () => ({
+	contents: "",
+	textDecoder: new TextDecoder()
+});
+const useTextDecoder = (chunk, { textDecoder }) => textDecoder.decode(chunk, { stream: true });
+const addStringChunk = (convertedChunk, { contents }) => contents + convertedChunk;
+const truncateStringChunk = (convertedChunk, chunkSize) => convertedChunk.slice(0, chunkSize);
+const getFinalStringChunk = ({ textDecoder }) => {
+	const finalChunk = textDecoder.decode();
+	return finalChunk === "" ? void 0 : finalChunk;
+};
+const stringMethods = {
+	init: initString,
+	convertChunk: {
+		string: identity,
+		buffer: useTextDecoder,
+		arrayBuffer: useTextDecoder,
+		dataView: useTextDecoder,
+		typedArray: useTextDecoder,
+		others: throwObjectStream
+	},
+	getSize: getLengthProperty,
+	truncateChunk: truncateStringChunk,
+	addChunk: addStringChunk,
+	getFinalChunk: getFinalStringChunk,
+	finalize: getContentsProperty
+};
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/io/max-buffer.js
 const handleMaxBuffer = ({ error, stream, readableObjectMode, lines, encoding, fdNumber }) => {
 	if (!(error instanceof MaxBufferError)) throw error;
@@ -26452,6 +25185,118 @@ const normalizeExitPayload = (rawExitCode, rawSignal) => {
 		signalDescription: signal === void 0 ? void 0 : getSignalDescription(rawSignal)
 	};
 };
+// node_modules/.pnpm/parse-ms@4.0.0/node_modules/parse-ms/index.js
+const toZeroIfInfinity = (value) => Number.isFinite(value) ? value : 0;
+function parseNumber(milliseconds) {
+	return {
+		days: Math.trunc(milliseconds / 864e5),
+		hours: Math.trunc(milliseconds / 36e5 % 24),
+		minutes: Math.trunc(milliseconds / 6e4 % 60),
+		seconds: Math.trunc(milliseconds / 1e3 % 60),
+		milliseconds: Math.trunc(milliseconds % 1e3),
+		microseconds: Math.trunc(toZeroIfInfinity(milliseconds * 1e3) % 1e3),
+		nanoseconds: Math.trunc(toZeroIfInfinity(milliseconds * 1e6) % 1e3)
+	};
+}
+function parseBigint(milliseconds) {
+	return {
+		days: milliseconds / 86400000n,
+		hours: milliseconds / 3600000n % 24n,
+		minutes: milliseconds / 60000n % 60n,
+		seconds: milliseconds / 1000n % 60n,
+		milliseconds: milliseconds % 1000n,
+		microseconds: 0n,
+		nanoseconds: 0n
+	};
+}
+function parseMilliseconds(milliseconds) {
+	switch (typeof milliseconds) {
+		case "number":
+			if (Number.isFinite(milliseconds)) return parseNumber(milliseconds);
+			break;
+		case "bigint": return parseBigint(milliseconds);
+	}
+	throw new TypeError("Expected a finite number or bigint");
+}
+// node_modules/.pnpm/pretty-ms@9.3.1/node_modules/pretty-ms/index.js
+const isZero = (value) => value === 0 || value === 0n;
+const pluralize = (word, count) => count === 1 || count === 1n ? word : `${word}s`;
+const SECOND_ROUNDING_EPSILON = 1e-7;
+const ONE_DAY_IN_MILLISECONDS = 24n * 60n * 60n * 1000n;
+function prettyMilliseconds(milliseconds, options) {
+	const isBigInt = typeof milliseconds === "bigint";
+	if (!isBigInt && !Number.isFinite(milliseconds)) throw new TypeError("Expected a finite number or bigint");
+	options = { ...options };
+	const sign = milliseconds < 0 ? "-" : "";
+	milliseconds = milliseconds < 0 ? -milliseconds : milliseconds;
+	if (options.colonNotation) {
+		options.compact = false;
+		options.formatSubMilliseconds = false;
+		options.separateMilliseconds = false;
+		options.verbose = false;
+	}
+	if (options.compact) {
+		options.unitCount = 1;
+		options.secondsDecimalDigits = 0;
+		options.millisecondsDecimalDigits = 0;
+	}
+	let result = [];
+	const floorDecimals = (value, decimalDigits) => {
+		const flooredInterimValue = Math.floor(value * 10 ** decimalDigits + SECOND_ROUNDING_EPSILON);
+		return (Math.round(flooredInterimValue) / 10 ** decimalDigits).toFixed(decimalDigits);
+	};
+	const add = (value, long, short, valueString) => {
+		if ((result.length === 0 || !options.colonNotation) && isZero(value) && !(options.colonNotation && short === "m")) return;
+		valueString ??= String(value);
+		if (options.colonNotation) {
+			const wholeDigits = valueString.includes(".") ? valueString.split(".")[0].length : valueString.length;
+			const minLength = result.length > 0 ? 2 : 1;
+			valueString = "0".repeat(Math.max(0, minLength - wholeDigits)) + valueString;
+		} else valueString += options.verbose ? " " + pluralize(long, value) : short;
+		result.push(valueString);
+	};
+	const parsed = parseMilliseconds(milliseconds);
+	const days = BigInt(parsed.days);
+	if (options.hideYearAndDays) add(BigInt(days) * 24n + BigInt(parsed.hours), "hour", "h");
+	else {
+		if (options.hideYear) add(days, "day", "d");
+		else {
+			add(days / 365n, "year", "y");
+			add(days % 365n, "day", "d");
+		}
+		add(Number(parsed.hours), "hour", "h");
+	}
+	add(Number(parsed.minutes), "minute", "m");
+	if (!options.hideSeconds) {
+		if (options.separateMilliseconds || options.formatSubMilliseconds || !options.colonNotation && milliseconds < 1e3 && !options.subSecondsAsDecimals) {
+			const seconds = Number(parsed.seconds);
+			const milliseconds = Number(parsed.milliseconds);
+			const microseconds = Number(parsed.microseconds);
+			const nanoseconds = Number(parsed.nanoseconds);
+			add(seconds, "second", "s");
+			if (options.formatSubMilliseconds) {
+				add(milliseconds, "millisecond", "ms");
+				add(microseconds, "microsecond", "µs");
+				add(nanoseconds, "nanosecond", "ns");
+			} else {
+				const millisecondsAndBelow = milliseconds + microseconds / 1e3 + nanoseconds / 1e6;
+				const millisecondsDecimalDigits = typeof options.millisecondsDecimalDigits === "number" ? options.millisecondsDecimalDigits : 0;
+				const roundedMilliseconds = millisecondsAndBelow >= 1 ? Math.round(millisecondsAndBelow) : Math.ceil(millisecondsAndBelow);
+				const maximumMilliseconds = 1e3 - 10 ** -millisecondsDecimalDigits;
+				const millisecondsString = millisecondsDecimalDigits ? Math.min(millisecondsAndBelow, maximumMilliseconds).toFixed(millisecondsDecimalDigits) : Math.min(roundedMilliseconds, maximumMilliseconds);
+				add(Number.parseFloat(millisecondsString), "millisecond", "ms", millisecondsString);
+			}
+		} else {
+			const secondsFixed = floorDecimals((isBigInt ? Number(milliseconds % ONE_DAY_IN_MILLISECONDS) : milliseconds) / 1e3 % 60, typeof options.secondsDecimalDigits === "number" ? options.secondsDecimalDigits : 1);
+			const secondsString = options.keepDecimalsOnWholeSeconds ? secondsFixed : secondsFixed.replace(/\.0+$/, "");
+			add(Number.parseFloat(secondsString), "second", "s", secondsString);
+		}
+	}
+	if (result.length === 0) return sign + "0" + (options.verbose ? " milliseconds" : "ms");
+	const separator = options.colonNotation ? ":" : " ";
+	if (typeof options.unitCount === "number") result = result.slice(0, Math.max(options.unitCount, 1));
+	return sign + result.join(separator);
+}
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/error.js
 const logError = (result, verboseInfo) => {
 	if (result.failed) verboseLog({
@@ -28136,6 +26981,173 @@ const addPropertiesAsync = {
 		uint8Array: forbiddenIfAsync
 	}
 };
+// node_modules/.pnpm/@sindresorhus+merge-streams@4.0.0/node_modules/@sindresorhus/merge-streams/index.js
+function mergeStreams(streams) {
+	if (!Array.isArray(streams)) throw new TypeError(`Expected an array, got \`${typeof streams}\`.`);
+	for (const stream of streams) validateStream(stream);
+	const objectMode = streams.some(({ readableObjectMode }) => readableObjectMode);
+	const highWaterMark = getHighWaterMark(streams, objectMode);
+	const passThroughStream = new MergedStream({
+		objectMode,
+		writableHighWaterMark: highWaterMark,
+		readableHighWaterMark: highWaterMark
+	});
+	for (const stream of streams) passThroughStream.add(stream);
+	return passThroughStream;
+}
+const getHighWaterMark = (streams, objectMode) => {
+	if (streams.length === 0) return getDefaultHighWaterMark(objectMode);
+	const highWaterMarks = streams.filter(({ readableObjectMode }) => readableObjectMode === objectMode).map(({ readableHighWaterMark }) => readableHighWaterMark);
+	return Math.max(...highWaterMarks);
+};
+var MergedStream = class extends PassThrough {
+	#streams = /* @__PURE__ */ new Set([]);
+	#ended = /* @__PURE__ */ new Set([]);
+	#aborted = /* @__PURE__ */ new Set([]);
+	#onFinished;
+	#unpipeEvent = Symbol("unpipe");
+	#streamPromises = /* @__PURE__ */ new WeakMap();
+	add(stream) {
+		validateStream(stream);
+		if (this.#streams.has(stream)) return;
+		this.#streams.add(stream);
+		this.#onFinished ??= onMergedStreamFinished(this, this.#streams, this.#unpipeEvent);
+		const streamPromise = endWhenStreamsDone({
+			passThroughStream: this,
+			stream,
+			streams: this.#streams,
+			ended: this.#ended,
+			aborted: this.#aborted,
+			onFinished: this.#onFinished,
+			unpipeEvent: this.#unpipeEvent
+		});
+		this.#streamPromises.set(stream, streamPromise);
+		stream.pipe(this, { end: false });
+	}
+	async remove(stream) {
+		validateStream(stream);
+		if (!this.#streams.has(stream)) return false;
+		const streamPromise = this.#streamPromises.get(stream);
+		if (streamPromise === void 0) return false;
+		this.#streamPromises.delete(stream);
+		stream.unpipe(this);
+		await streamPromise;
+		return true;
+	}
+};
+const onMergedStreamFinished = async (passThroughStream, streams, unpipeEvent) => {
+	updateMaxListeners(passThroughStream, PASSTHROUGH_LISTENERS_COUNT);
+	const controller = new AbortController();
+	try {
+		await Promise.race([onMergedStreamEnd(passThroughStream, controller), onInputStreamsUnpipe(passThroughStream, streams, unpipeEvent, controller)]);
+	} finally {
+		controller.abort();
+		updateMaxListeners(passThroughStream, -PASSTHROUGH_LISTENERS_COUNT);
+	}
+};
+const onMergedStreamEnd = async (passThroughStream, { signal }) => {
+	try {
+		await finished(passThroughStream, {
+			signal,
+			cleanup: true
+		});
+	} catch (error) {
+		errorOrAbortStream(passThroughStream, error);
+		throw error;
+	}
+};
+const onInputStreamsUnpipe = async (passThroughStream, streams, unpipeEvent, { signal }) => {
+	for await (const [unpipedStream] of on(passThroughStream, "unpipe", { signal })) if (streams.has(unpipedStream)) unpipedStream.emit(unpipeEvent);
+};
+const validateStream = (stream) => {
+	if (typeof stream?.pipe !== "function") throw new TypeError(`Expected a readable stream, got: \`${typeof stream}\`.`);
+};
+const endWhenStreamsDone = async ({ passThroughStream, stream, streams, ended, aborted, onFinished, unpipeEvent }) => {
+	updateMaxListeners(passThroughStream, PASSTHROUGH_LISTENERS_PER_STREAM);
+	const controller = new AbortController();
+	try {
+		await Promise.race([
+			afterMergedStreamFinished(onFinished, stream, controller),
+			onInputStreamEnd({
+				passThroughStream,
+				stream,
+				streams,
+				ended,
+				aborted,
+				controller
+			}),
+			onInputStreamUnpipe({
+				stream,
+				streams,
+				ended,
+				aborted,
+				unpipeEvent,
+				controller
+			})
+		]);
+	} finally {
+		controller.abort();
+		updateMaxListeners(passThroughStream, -PASSTHROUGH_LISTENERS_PER_STREAM);
+	}
+	if (streams.size > 0 && streams.size === ended.size + aborted.size) {
+		if (ended.size === 0 && aborted.size > 0) abortStream(passThroughStream);
+		else endStream(passThroughStream);
+	}
+};
+const afterMergedStreamFinished = async (onFinished, stream, { signal }) => {
+	try {
+		await onFinished;
+		if (!signal.aborted) abortStream(stream);
+	} catch (error) {
+		if (!signal.aborted) errorOrAbortStream(stream, error);
+	}
+};
+const onInputStreamEnd = async ({ passThroughStream, stream, streams, ended, aborted, controller: { signal } }) => {
+	try {
+		await finished(stream, {
+			signal,
+			cleanup: true,
+			readable: true,
+			writable: false
+		});
+		if (streams.has(stream)) ended.add(stream);
+	} catch (error) {
+		if (signal.aborted || !streams.has(stream)) return;
+		if (isAbortError(error)) aborted.add(stream);
+		else errorStream(passThroughStream, error);
+	}
+};
+const onInputStreamUnpipe = async ({ stream, streams, ended, aborted, unpipeEvent, controller: { signal } }) => {
+	await once(stream, unpipeEvent, { signal });
+	if (!stream.readable) return once(signal, "abort", { signal });
+	streams.delete(stream);
+	ended.delete(stream);
+	aborted.delete(stream);
+};
+const endStream = (stream) => {
+	if (stream.writable) stream.end();
+};
+const errorOrAbortStream = (stream, error) => {
+	if (isAbortError(error)) abortStream(stream);
+	else errorStream(stream, error);
+};
+const isAbortError = (error) => error?.code === "ERR_STREAM_PREMATURE_CLOSE";
+const abortStream = (stream) => {
+	if (stream.readable || stream.writable) stream.destroy();
+};
+const errorStream = (stream, error) => {
+	if (!stream.destroyed) {
+		stream.once("error", noop);
+		stream.destroy(error);
+	}
+};
+const noop = () => {};
+const updateMaxListeners = (passThroughStream, increment) => {
+	const maxListeners = passThroughStream.getMaxListeners();
+	if (maxListeners !== 0 && maxListeners !== Number.POSITIVE_INFINITY) passThroughStream.setMaxListeners(maxListeners + increment);
+};
+const PASSTHROUGH_LISTENERS_COUNT = 2;
+const PASSTHROUGH_LISTENERS_PER_STREAM = 1;
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/io/pipeline.js
 const pipeStreams = (source, destination, onDestinationEnd) => {
 	source.pipe(destination);
@@ -28260,6 +27272,203 @@ const isWindowsDriveAbsolutePath = (directory) => {
 	const { root } = path$1.parse(directory);
 	return /^[a-z]:[/\\]/i.test(root);
 };
+// node_modules/.pnpm/signal-exit@4.1.0/node_modules/signal-exit/dist/mjs/signals.js
+/**
+* This is not the set of all possible signals.
+*
+* It IS, however, the set of all signals that trigger
+* an exit on either Linux or BSD systems.  Linux is a
+* superset of the signal names supported on BSD, and
+* the unknown signals just fail to register, so we can
+* catch that easily enough.
+*
+* Windows signals are a different set, since there are
+* signals that terminate Windows processes, but don't
+* terminate (or don't even exist) on Posix systems.
+*
+* Don't bother with SIGKILL.  It's uncatchable, which
+* means that we can't fire any callbacks anyway.
+*
+* If a user does happen to register a handler on a non-
+* fatal signal like SIGWINCH or something, and then
+* exit, it'll end up firing `process.emit('exit')`, so
+* the handler will be fired anyway.
+*
+* SIGBUS, SIGFPE, SIGSEGV and SIGILL, when not raised
+* artificially, inherently leave the process in a
+* state from which it is not safe to try and enter JS
+* listeners.
+*/
+const signals = [];
+signals.push("SIGHUP", "SIGINT", "SIGTERM");
+if (process.platform !== "win32") signals.push("SIGALRM", "SIGABRT", "SIGVTALRM", "SIGXCPU", "SIGXFSZ", "SIGUSR2", "SIGTRAP", "SIGSYS", "SIGQUIT", "SIGIOT");
+if (process.platform === "linux") signals.push("SIGIO", "SIGPOLL", "SIGPWR", "SIGSTKFLT");
+// node_modules/.pnpm/signal-exit@4.1.0/node_modules/signal-exit/dist/mjs/index.js
+const processOk = (process) => !!process && typeof process === "object" && typeof process.removeListener === "function" && typeof process.emit === "function" && typeof process.reallyExit === "function" && typeof process.listeners === "function" && typeof process.kill === "function" && typeof process.pid === "number" && typeof process.on === "function";
+const kExitEmitter = Symbol.for("signal-exit emitter");
+const global$1 = globalThis;
+const ObjectDefineProperty = Object.defineProperty.bind(Object);
+var Emitter = class {
+	emitted = {
+		afterExit: false,
+		exit: false
+	};
+	listeners = {
+		afterExit: [],
+		exit: []
+	};
+	count = 0;
+	id = Math.random();
+	constructor() {
+		if (global$1[kExitEmitter]) return global$1[kExitEmitter];
+		ObjectDefineProperty(global$1, kExitEmitter, {
+			value: this,
+			writable: false,
+			enumerable: false,
+			configurable: false
+		});
+	}
+	on(ev, fn) {
+		this.listeners[ev].push(fn);
+	}
+	removeListener(ev, fn) {
+		const list = this.listeners[ev];
+		const i = list.indexOf(fn);
+		/* c8 ignore start */
+		if (i === -1) return;
+		/* c8 ignore stop */
+		if (i === 0 && list.length === 1) list.length = 0;
+		else list.splice(i, 1);
+	}
+	emit(ev, code, signal) {
+		if (this.emitted[ev]) return false;
+		this.emitted[ev] = true;
+		let ret = false;
+		for (const fn of this.listeners[ev]) ret = fn(code, signal) === true || ret;
+		if (ev === "exit") ret = this.emit("afterExit", code, signal) || ret;
+		return ret;
+	}
+};
+var SignalExitBase = class {};
+const signalExitWrap = (handler) => {
+	return {
+		onExit(cb, opts) {
+			return handler.onExit(cb, opts);
+		},
+		load() {
+			return handler.load();
+		},
+		unload() {
+			return handler.unload();
+		}
+	};
+};
+var SignalExitFallback = class extends SignalExitBase {
+	onExit() {
+		return () => {};
+	}
+	load() {}
+	unload() {}
+};
+var SignalExit = class extends SignalExitBase {
+	/* c8 ignore start */
+	#hupSig = process$2.platform === "win32" ? "SIGINT" : "SIGHUP";
+	/* c8 ignore stop */
+	#emitter = new Emitter();
+	#process;
+	#originalProcessEmit;
+	#originalProcessReallyExit;
+	#sigListeners = {};
+	#loaded = false;
+	constructor(process) {
+		super();
+		this.#process = process;
+		this.#sigListeners = {};
+		for (const sig of signals) this.#sigListeners[sig] = () => {
+			const listeners = this.#process.listeners(sig);
+			let { count } = this.#emitter;
+			/* c8 ignore start */
+			const p = process;
+			if (typeof p.__signal_exit_emitter__ === "object" && typeof p.__signal_exit_emitter__.count === "number") count += p.__signal_exit_emitter__.count;
+			/* c8 ignore stop */
+			if (listeners.length === count) {
+				this.unload();
+				const ret = this.#emitter.emit("exit", null, sig);
+				/* c8 ignore start */
+				const s = sig === "SIGHUP" ? this.#hupSig : sig;
+				if (!ret) process.kill(process.pid, s);
+			}
+		};
+		this.#originalProcessReallyExit = process.reallyExit;
+		this.#originalProcessEmit = process.emit;
+	}
+	onExit(cb, opts) {
+		/* c8 ignore start */
+		if (!processOk(this.#process)) return () => {};
+		/* c8 ignore stop */
+		if (this.#loaded === false) this.load();
+		const ev = opts?.alwaysLast ? "afterExit" : "exit";
+		this.#emitter.on(ev, cb);
+		return () => {
+			this.#emitter.removeListener(ev, cb);
+			if (this.#emitter.listeners["exit"].length === 0 && this.#emitter.listeners["afterExit"].length === 0) this.unload();
+		};
+	}
+	load() {
+		if (this.#loaded) return;
+		this.#loaded = true;
+		this.#emitter.count += 1;
+		for (const sig of signals) try {
+			const fn = this.#sigListeners[sig];
+			if (fn) this.#process.on(sig, fn);
+		} catch (_) {}
+		this.#process.emit = (ev, ...a) => {
+			return this.#processEmit(ev, ...a);
+		};
+		this.#process.reallyExit = (code) => {
+			return this.#processReallyExit(code);
+		};
+	}
+	unload() {
+		if (!this.#loaded) return;
+		this.#loaded = false;
+		signals.forEach((sig) => {
+			const listener = this.#sigListeners[sig];
+			/* c8 ignore start */
+			if (!listener) throw new Error("Listener not defined for signal: " + sig);
+			/* c8 ignore stop */
+			try {
+				this.#process.removeListener(sig, listener);
+			} catch (_) {}
+			/* c8 ignore stop */
+		});
+		this.#process.emit = this.#originalProcessEmit;
+		this.#process.reallyExit = this.#originalProcessReallyExit;
+		this.#emitter.count -= 1;
+	}
+	#processReallyExit(code) {
+		/* c8 ignore start */
+		if (!processOk(this.#process)) return 0;
+		this.#process.exitCode = code || 0;
+		/* c8 ignore stop */
+		this.#emitter.emit("exit", this.#process.exitCode, null);
+		return this.#originalProcessReallyExit.call(this.#process, this.#process.exitCode);
+	}
+	#processEmit(ev, ...args) {
+		const og = this.#originalProcessEmit;
+		if (ev === "exit" && processOk(this.#process)) {
+			if (typeof args[0] === "number") this.#process.exitCode = args[0];
+			/* c8 ignore start */
+			const ret = og.call(this.#process, ev, ...args);
+			/* c8 ignore start */
+			this.#emitter.emit("exit", this.#process.exitCode, null);
+			/* c8 ignore stop */
+			return ret;
+		} else return og.call(this.#process, ev, ...args);
+	}
+};
+const process$2 = globalThis.process;
+const { onExit, load, unload } = signalExitWrap(processOk(process$2) ? new SignalExit(process$2) : new SignalExitFallback());
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/terminate/cleanup.js
 const cleanupOnExit = (kill, { cleanup, detached }, { signal }) => {
 	if (!cleanup || detached) return;
@@ -29683,7 +28892,798 @@ createExeca(() => ({ isSync: true }));
 createExeca(mapNode);
 createExeca(mapScriptAsync, {}, deepScriptOptions, setScriptSync);
 const { sendMessage, getOneMessage, getEachMessage, getCancelSignal } = getIpcExport();
-// node_modules/.pnpm/@alextheman+utility@5.31.0_zod@4.6.7/node_modules/@alextheman/utility/dist/v6/index.js
+// node_modules/.pnpm/@alextheman+utility@5.32.0_zod@4.6.7/node_modules/@alextheman/utility/dist/internal/index.js
+const DependencyGroup = {
+	DEPENDENCIES: "dependencies",
+	DEV_DEPENDENCIES: "devDependencies"
+};
+const VERSION_NUMBER_REGEX_PATTERN = String.raw`(?:v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)`;
+const VERSION_NUMBER_REGEX = RegExp(`^${VERSION_NUMBER_REGEX_PATTERN}$`);
+/**
+* Represents errors that can be described using a standardised error code, and a human-readable error message.
+*
+* @category Types
+*
+* @template ErrorCode The type of the standardised error code.
+*/
+var CodeError$1 = class CodeError extends Error {
+	code;
+	/**
+	* @param code - A standardised code (e.g. UNEXPECTED_DATA).
+	* @param message  - A human-readable error message (e.g. The data provided is invalid).
+	* @param options - Extra options to pass to super Error constructor.
+	*/
+	constructor(code, message = "Something went wrong.", options) {
+		super(message, options);
+		if (Error.captureStackTrace) Error.captureStackTrace(this, new.target);
+		this.name = new.target.name;
+		this.code = code;
+		Object.defineProperty(this, "message", { enumerable: true });
+		Object.setPrototypeOf(this, new.target.prototype);
+	}
+	/**
+	* Checks whether the given input may have been caused by a CodeError.
+	*
+	* @param input - The input to check.
+	*
+	* @returns `true` if the input is a CodeError, and `false` otherwise. The type of the input will also be narrowed down to CodeError if `true`.
+	*/
+	static check(input) {
+		if (input instanceof CodeError) return true;
+		return containsKeys$1(input, ["message", "code"]) && typeof input.message === "string" && typeof input.code === "string";
+	}
+	static checkCaughtError(error, options) {
+		if (this.check(error)) {
+			if (options?.expectedCode && error.code !== options.expectedCode) throw new Error(normaliseIndents$1`The error code on the thrown error does not match the expected error code.
+            
+            Expected: ${options.expectedCode}
+            Received: ${error.code}
+            `, { cause: error });
+			return error;
+		}
+		throw error;
+	}
+	/**
+	* Check a `CodeError` against its error code
+	*
+	* This will also automatically narrow down the type of the input to be `CodeError`, with its error code properly typed if this function returns true.
+	*
+	* @template ErrorCode The type of the error code
+	*
+	* @param input - The input to check.
+	* @param code - The expected code of the resulting error.
+	*
+	* @returns `true` if the error code matches the expected code, and `false` otherwise. The type of the input will also be narrowed down to CodeError, and its code will be narrowed to the expected code's type if the function returns `true`.
+	*/
+	static checkWithCode(input, code) {
+		return this.check(input) && input.code === code;
+	}
+	/**
+	* Gets the thrown `CodeError` from a given function if one was thrown, and re-throws any other errors, or throws a default `CodeError` if no error thrown.
+	*
+	* @param errorFunction - The function expected to throw the error.
+	* @param options - Extra options to apply.
+	*
+	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `CodeError`.
+	* @throws {Error} If no `CodeError` was thrown by the `errorFunction`
+	*
+	* @returns The `CodeError` that was thrown by the `errorFunction`
+	*/
+	static expectError(errorFunction, options) {
+		try {
+			errorFunction();
+		} catch (error) {
+			return this.checkCaughtError(error, options);
+		}
+		throw new Error(`Expected a ${this.name} to be thrown but none was thrown`);
+	}
+	/**
+	* Gets the thrown `CodeError` from a given asynchronous function if one was thrown, and re-throws any other errors, or throws a default `CodeError` if no error thrown.
+	*
+	* @param errorFunction - The function expected to throw the error.
+	* @param options - Extra options to apply.
+	*
+	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `CodeError`.
+	* @throws {Error} If no `CodeError` was thrown by the `errorFunction`
+	*
+	* @returns The `CodeError` that was thrown by the `errorFunction`
+	*/
+	static async expectErrorAsync(errorFunction, options) {
+		try {
+			await errorFunction();
+		} catch (error) {
+			return this.checkCaughtError(error, options);
+		}
+		throw new Error(`Expected a ${this.name} to be thrown but none was thrown`);
+	}
+	/**
+	* Converts the `CodeError` instance to a serialised JSON payload.
+	*
+	* @returns A JSON serialised version of the current `CodeError` instance.
+	*/
+	toJSON() {
+		return {
+			code: this.code,
+			message: this.message
+		};
+	}
+};
+/**
+* Represents errors you may get that may've been caused by a specific piece of data.
+*
+* @category Types
+*
+* @template DataType The type of the data that caused the error.
+* @template ErrorCode The type of the standardised error code.
+*/
+var DataError$1 = class DataError extends CodeError$1 {
+	data;
+	/**
+	* @param data - The data that caused the error.
+	* @param code - A standardised code (e.g. UNEXPECTED_DATA).
+	* @param message - A human-readable error message (e.g. The data provided is invalid).
+	* @param options - Extra options to pass to super Error constructor.
+	*/
+	constructor(data, code, message = "The data provided is invalid", options) {
+		super(code, message, options);
+		if (Error.captureStackTrace) Error.captureStackTrace(this, new.target);
+		this.name = new.target.name;
+		this.data = data;
+		Object.defineProperty(this, "message", { enumerable: true });
+		Object.setPrototypeOf(this, new.target.prototype);
+	}
+	/**
+	* Checks whether the given input may have been caused by a DataError.
+	*
+	* @param input - The input to check.
+	*
+	* @returns `true` if the input is a DataError, and `false` otherwise. The type of the input will also be narrowed down to DataError if `true`.
+	*/
+	static check(input) {
+		if (input instanceof DataError) return true;
+		return containsKeys$1(input, [
+			"data",
+			"code",
+			"message"
+		]) && typeof input.message === "string" && typeof input.code === "string" && isNonNullableObject$1(input.data);
+	}
+	/**
+	* Check a `DataError` against its error code
+	*
+	* This will also automatically narrow down the type of the input to be `DataError`, with its error code properly typed if this function returns true.
+	*
+	* @template ErrorCode The type of the error code
+	*
+	* @param input - The input to check.
+	* @param code - The expected code of the resulting error.
+	*
+	* @returns `true` if the error code matches the expected code, and `false` otherwise. The type of the input will also be narrowed down to `DataError`, and its code will be narrowed to the expected code's type if the function returns `true`.
+	*/
+	static checkWithCode(input, code) {
+		return this.check(input) && input.code === code;
+	}
+	/**
+	* Gets the thrown `DataError` from a given function if one was thrown, and re-throws any other errors, or throws a default `DataError` if no error thrown.
+	*
+	* @param errorFunction - The function expected to throw the error.
+	* @param options - Extra options to apply.
+	*
+	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `DataError`.
+	* @throws {Error} If no `DataError` was thrown by the `errorFunction`
+	*
+	* @returns The `DataError` that was thrown by the `errorFunction`
+	*/
+	static expectError(errorFunction, options) {
+		return super.expectError(errorFunction, options);
+	}
+	/**
+	* Gets the thrown `DataError` from a given asynchronous function if one was thrown, and re-throws any other errors, or throws a default `DataError` if no error thrown.
+	*
+	* @param errorFunction - The function expected to throw the error.
+	* @param options - Extra options to apply.
+	*
+	* @throws {Error} Any other errors thrown by the `errorFunction` that are not a `DataError`.
+	* @throws {Error} If no `DataError` was thrown by the `errorFunction`
+	*
+	* @returns The `DataError` that was thrown by the `errorFunction`
+	*/
+	static async expectErrorAsync(errorFunction, options) {
+		return await super.expectErrorAsync(errorFunction, options);
+	}
+	/**
+	* Converts the `DataError` instance to a serialised JSON payload.
+	*
+	* @returns A JSON serialised version of the current `DataError` instance.
+	*/
+	toJSON() {
+		return {
+			...super.toJSON(),
+			data: this.data
+		};
+	}
+};
+/**
+* Creates an array of numbers within a given range.
+*
+* - The range is inclusive of `start` and exclusive of `stop`.
+* - The sign of `step` must match the direction of the range.
+*
+* @category Array Helpers
+*
+* @param start - The number to start at (inclusive).
+* @param stop - The number to stop at (exclusive).
+* @param step - The step size between numbers, defaulting to 1.
+*
+* @throws {DataError} If `step` is `0`.
+* @throws {DataError} If `step` direction does not match the order of `start` and `stop`.
+*
+* @returns An array of numbers satisfying the range provided.
+*/
+function range$1(start, stop, step = 1) {
+	const numbers = [];
+	if (step === 0) throw new DataError$1({ step }, "ZERO_STEP_SIZE", "Step size cannot be zero.");
+	else if (step > 0) {
+		if (start > stop) throw new DataError$1({
+			start,
+			stop,
+			step
+		}, "INVALID_BOUNDARIES", "The starting value cannot be bigger than the final value if step is positive");
+		for (let i = start; i < stop; i += step) numbers.push(i);
+	} else if (step < 0) {
+		if (start < stop) throw new DataError$1({
+			start,
+			stop,
+			step
+		}, "INVALID_BOUNDARIES", "The final value cannot be bigger than the starting value if step is negative");
+		for (let i = start; i > stop; i += step) numbers.push(i);
+	}
+	return numbers;
+}
+/**
+* Determines if the given input is a non-nullable object, narrowing the type down as such if it is
+*
+* @category Type Assertions
+*
+* @param input - The input to check
+*
+* @returns `true` if the input is a non-nullable object, and `false` otherwise. The input type will also be narrowed down to be a non-nullable object.
+*/
+function isNonNullableObject$1(input) {
+	return typeof input === "object" && input !== null;
+}
+/**
+* Determines if the given object contains all of the keys provided.
+*
+* @category Type Assertions
+*
+* @param input - The input object to check.
+* @param keys - The keys expected to be in the input object.
+*
+* @returns `true` if the input object contains all provided keys, and `false` otherwise. The input type will also be narrowed down to be a record with the provided keys with an unknown value type.
+*/
+function objectContainsKeys$1(input, keys) {
+	const expectedKeys = Array.isArray(keys) ? keys : [keys];
+	if (expectedKeys.length === 0) return false;
+	for (const key of expectedKeys) if (!(key in input)) return false;
+	return true;
+}
+/**
+* Determines if the given input is a non-nullable object, and if that object contains all of the keys provided.
+*
+* @category Type Assertions
+*
+* @param input - The input to check.
+* @param keys - The keys expected to be in the input if it's an object.
+*
+* @returns `true` if the input is an object containing all provided keys, and `false` otherwise. The input type will also be narrowed down to be a record with the provided keys, each with an unknown value type.
+*/
+function containsKeys$1(input, keys) {
+	return isNonNullableObject$1(input) && objectContainsKeys$1(input, keys);
+}
+/**
+* Creates a new array where each element is the result of the provided callback.
+*
+* If the callback returns at least one Promise, the entire result will be wrapped
+* in a `Promise` and resolved with `Promise.all`. Otherwise, a plain array is returned.
+*
+* @category Array Helpers
+*
+* @template ItemType - The return type of the callback (awaited if any items are a Promise) that becomes the type of the array items.
+*
+* @param callback - A function invoked with the current index. May return a value or a Promise.
+* @param length - The desired length of the resulting array.
+* @param options - Extra options to apply if any item is asynchronous.
+*
+* @returns An array of the callback results, or a Promise resolving to one if the callback is async.
+*/
+function fillArray$1(callback, length = 1, options) {
+	if (options?.sequential) return (async () => {
+		const resolvedArray = [];
+		for (const index of range$1(0, length)) resolvedArray.push(await callback(index));
+		return resolvedArray;
+	})();
+	const outputArray = new Array(length).fill(null).map((_, index) => {
+		return callback(index);
+	});
+	if (outputArray.some((item) => {
+		return item instanceof Promise || containsKeys$1(item, "then") && typeof item.then === "function";
+	})) return Promise.all(outputArray);
+	return outputArray;
+}
+/**
+* Creates a new array of tuples, each containing the item at the given index from both arrays.
+*
+* If `secondArray` is shorter than `firstArray`, the second position in the tuple
+* will be `undefined`. Iteration always uses the length of the first array.
+*
+* @category Array Helpers
+*
+* @template FirstArrayItem
+* @template SecondArrayItem
+*
+* @param firstArray - The first array. Each item in this will take up the first tuple spot.
+* @param secondArray - The second array. Each item in this will take up the second tuple spot.
+*
+* @returns An array of `[firstItem, secondItem]` tuples for each index in `firstArray`.
+*/
+function paralleliseArrays$1(firstArray, secondArray) {
+	const outputArray = [];
+	for (let i = 0; i < firstArray.length; i++) outputArray.push([firstArray[i], secondArray[i]]);
+	return outputArray;
+}
+/**
+* Converts a string to an integer and throws an error if it cannot be converted.
+*
+* @category Parsers
+*
+* @param string - A string to convert into a number.
+* @param radix - A value between 2 and 36 that specifies the base of the number in string. If this argument is not supplied, strings with a prefix of '0x' are considered hexadecimal. All other strings are considered decimal.
+*
+* @throws {DataError} If the provided string cannot safely be converted to an integer.
+*
+* @returns The integer parsed from the input string.
+*/
+function parseIntStrict(string, radix) {
+	const trimmedString = string.trim();
+	const maxAllowedAlphabeticalCharacter = radix && radix > 10 && radix <= 36 ? String.fromCharCode(87 + radix - 1) : void 0;
+	if (!(radix && radix > 10 && radix <= 36 ? new RegExp(`^[+-]?[0-9a-${maxAllowedAlphabeticalCharacter}]+$`, "i") : /^[+-]?\d+$/).test(trimmedString)) throw new DataError$1(radix ? {
+		string,
+		radix
+	} : { string }, "INTEGER_PARSING_ERROR", `Only numeric values${radix && radix > 10 && radix <= 36 ? ` or character${radix !== 11 ? "s" : ""} A${radix !== 11 ? `-${maxAllowedAlphabeticalCharacter?.toUpperCase()} ` : " "}` : " "}are allowed.`);
+	if (radix && radix < 10 && [...trimmedString.replace(/^[+-]/, "")].some((character) => {
+		return parseInt(character) >= radix;
+	})) throw new DataError$1({
+		string,
+		radix
+	}, "INTEGER_PARSING_ERROR", "Value contains one or more digits outside of the range of the given radix.");
+	const parseIntResult = parseInt(trimmedString, radix);
+	if (isNaN(parseIntResult)) throw new DataError$1({ string }, "INTEGER_PARSING_ERROR", "Value is not a valid integer.");
+	return parseIntResult;
+}
+/**
+* Represents the three common software version types.
+*
+* @category Types
+*/
+const VersionType = {
+	MAJOR: "major",
+	MINOR: "minor",
+	PATCH: "patch"
+};
+/**
+* Returns the result of interpolating a template string when given the strings and interpolations separately.
+*
+* You can pass a template string directly by doing:
+*
+* ```
+* interpolate`Template string here`;
+* ```
+*
+* In this case, it will be functionally the same as if you just wrote the template string by itself.
+*
+* @category Tagged Template
+*
+* @template InterpolationsType - The type of the interpolations.
+*
+* @param strings - The strings from the template to process.
+* @param interpolations - An array of all interpolations from the template.
+*
+* @returns A new string with the strings and interpolations from the template applied.
+*/
+function interpolate$1(strings, ...interpolations) {
+	let result = "";
+	for (const [string, interpolation = ""] of paralleliseArrays$1(strings, interpolations)) result += string + interpolation;
+	return result;
+}
+function calculateTabSize$1(line, whitespaceLength) {
+	const potentialWhitespacePart = line.slice(0, whitespaceLength);
+	const trimmedString = line.trimStart();
+	if (potentialWhitespacePart.trim() !== "") return 0;
+	const tabSize = line.length - (trimmedString.length + whitespaceLength);
+	return tabSize < 0 ? 0 : tabSize;
+}
+function getWhitespaceLength$1(lines) {
+	const [firstNonEmptyLine] = lines.filter((line) => {
+		return line.trim() !== "";
+	});
+	return firstNonEmptyLine.length - firstNonEmptyLine.trimStart().length;
+}
+function reduceLines$1(lines, { preserveTabs = true }) {
+	const slicedLines = lines.slice(1);
+	const isFirstLineEmpty = lines[0].trim() === "";
+	const whitespaceLength = getWhitespaceLength$1(isFirstLineEmpty ? lines : slicedLines);
+	return (isFirstLineEmpty ? slicedLines : lines).map((line) => {
+		const tabSize = calculateTabSize$1(line, whitespaceLength);
+		return (preserveTabs ? fillArray$1(() => {
+			return " ";
+		}, tabSize).join("") : "") + line.trimStart();
+	}).join("\n");
+}
+/**
+* Applies any options if provided, then removes any extraneous indents from a multi-line template string.
+*
+* You can pass a template string directly by doing:
+*
+* ```typescript
+* normaliseIndents`Template string here
+*     with a new line
+*     and another new line`;
+* ```
+*
+* You may also pass the options first, then invoke the resulting function with a template string:
+*
+* ```typescript
+* normaliseIndents({ preserveTabs: false })`Template string here
+*     with a new line
+*     and another new line`;
+* ```
+*
+* @category Tagged Template
+*
+* @param first - The strings from the template to process, or the options to apply.
+* @param args - An array of all interpolations from the template.
+*
+* @returns An additional function to invoke, or a new string with the strings and interpolations from the template applied, and extraneous indents removed.
+*/
+function normaliseIndents$1(first, ...args) {
+	if (isNonNullableObject$1(first) && !Array.isArray(first)) {
+		const options = first;
+		return (strings, ...interpolations) => {
+			return normaliseIndents$1(strings, ...interpolations, options);
+		};
+	}
+	const strings = first;
+	const options = typeof args[args.length - 1] === "object" && !Array.isArray(args[args.length - 1]) ? args.pop() : {};
+	return reduceLines$1(interpolate$1(strings, ...[...args]).split("\n"), options);
+}
+/**
+* Represents a software version number, considered to be made up of a major, minor, and patch part.
+*
+* @category Types
+*/
+var VersionNumber = class VersionNumber {
+	static NON_NEGATIVE_TUPLE_ERROR = "Input array must be a tuple of three non-negative integers.";
+	/** The major number. Increments when a feature is removed or changed in a way that is not backwards-compatible with the previous release. */
+	major = 0;
+	/** The minor number. Increments when a new feature is added/deprecated and is expected to be backwards-compatible with the previous release. */
+	minor = 0;
+	/** The patch number. Increments when the next release is fixing a bug or doing a small refactor that should not be noticeable in practice. */
+	patch = 0;
+	/**
+	* @param input - The input to create a new instance of `VersionNumber` from.
+	*/
+	constructor(input) {
+		if (input instanceof VersionNumber) {
+			this.major = input.major;
+			this.minor = input.minor;
+			this.patch = input.patch;
+		} else if (typeof input === "string") {
+			if (!VERSION_NUMBER_REGEX.test(input)) throw new DataError$1({ input }, "INVALID_VERSION", `"${input}" is not a valid version number. Version numbers must be of the format "X.Y.Z" or "vX.Y.Z", where X, Y, and Z are non-negative integers.`);
+			const [major, minor, patch] = VersionNumber.formatString(input, { omitPrefix: true }).split(".").map((number) => {
+				return parseIntStrict(number);
+			});
+			this.major = major;
+			this.minor = minor;
+			this.patch = patch;
+		} else if (Array.isArray(input)) {
+			if (input.length !== 3) throw new DataError$1({ input }, "INVALID_LENGTH", VersionNumber.NON_NEGATIVE_TUPLE_ERROR);
+			const [major, minor, patch] = input.map((number) => {
+				const parsedInteger = parseIntStrict(number?.toString());
+				if (parsedInteger < 0) throw new DataError$1({ input }, "NEGATIVE_INPUTS", VersionNumber.NON_NEGATIVE_TUPLE_ERROR);
+				return parsedInteger;
+			});
+			this.major = major;
+			this.minor = minor;
+			this.patch = patch;
+		} else throw new DataError$1({ input }, "INVALID_INPUT", normaliseIndents$1`
+        The provided input can not be parsed into a valid version number.
+        Expected either a string of format X.Y.Z or vX.Y.Z, a tuple of three numbers, or another \`VersionNumber\` instance.
+      `);
+	}
+	/**
+	* Gets the current version type of the current instance of `VersionNumber`.
+	*
+	* @returns Either `"major"`, `"minor"`, or `"patch"`, depending on the version type.
+	*/
+	get type() {
+		if (this.minor === 0 && this.patch === 0) return VersionType.MAJOR;
+		if (this.patch === 0) return VersionType.MINOR;
+		return VersionType.PATCH;
+	}
+	static formatString(input, options) {
+		if (options?.omitPrefix) return input.startsWith("v") ? input.slice(1) : input;
+		return input.startsWith("v") ? input : `v${input}`;
+	}
+	/**
+	* Compares two given `VersionNumber` instances depending on order.
+	*
+	* @param first - The first version number to compare.
+	* @param second - The second version number to compare.
+	*
+	* @returns 0 if the version numbers are equal, 1 if the first version number is bigger than the second, and -1 if the first version number is smaller than the second.
+	*/
+	static compare(first, second) {
+		if (first.major > second.major) return 1;
+		else if (first.major < second.major) return -1;
+		if (first.minor > second.minor) return 1;
+		else if (first.minor < second.minor) return -1;
+		if (first.patch > second.patch) return 1;
+		else if (first.patch < second.patch) return -1;
+		return 0;
+	}
+	/**
+	* Checks if the provided version numbers have the exact same major, minor, and patch numbers.
+	*
+	* @param first - The first version number to compare.
+	* @param second - The second version number to compare.
+	*
+	* @returns `true` if the provided version numbers have exactly the same major, minor, and patch numbers, and returns `false` otherwise.
+	*/
+	static isEqual(first, second) {
+		return VersionNumber.compare(first, second) === 0;
+	}
+	/**
+	* Get a formatted string representation of the current version number
+	*
+	* @param options - Options to apply to the string formatting.
+	*
+	* @returns A formatted string representation of the current version number with the options applied.
+	*/
+	format(options) {
+		let baseOutput = `${this.major}`;
+		if (!options?.omitMinor) {
+			baseOutput += `.${this.minor}`;
+			if (!options?.omitPatch) baseOutput += `.${this.patch}`;
+		}
+		return VersionNumber.formatString(baseOutput, { omitPrefix: options?.omitPrefix });
+	}
+	/**
+	* Increments the current version number by the given increment type, returning the result as a new reference in memory.
+	*
+	* @param incrementType - The type of increment. Can be one of the following:
+	* - `"major"`: Change the major version `v1.2.3` → `v2.0.0`
+	* - `"minor"`: Change the minor version `v1.2.3` → `v1.3.0`
+	* - `"patch"`: Change the patch version `v1.2.3` → `v1.2.4`
+	* @param incrementAmount - The amount to increment by (defaults to 1).
+	*
+	* @returns A new instance of `VersionNumber` with the increment applied.
+	*/
+	increment(incrementType, incrementAmount = 1) {
+		const incrementBy = parseIntStrict(String(incrementAmount));
+		try {
+			switch (incrementType) {
+				case "major": return new VersionNumber([
+					this.major + incrementBy,
+					0,
+					0
+				]);
+				case "minor": return new VersionNumber([
+					this.major,
+					this.minor + incrementBy,
+					0
+				]);
+				case "patch": return new VersionNumber([
+					this.major,
+					this.minor,
+					this.patch + incrementBy
+				]);
+				default: throw incrementType;
+			}
+		} catch (error) {
+			if (DataError$1.checkWithCode(error, "NEGATIVE_INPUTS")) throw new DataError$1({
+				currentVersion: this.toString(),
+				calculatedRawVersion: `v${error.data.input.join(".")}`,
+				incrementAmount
+			}, "NEGATIVE_VERSION", "Cannot apply this increment amount as it would lead to a negative version number.");
+			else throw error;
+		}
+	}
+	/**
+	* Checks if the current `VersionNumber` instance is bigger than the input `VersionNumber`.
+	*
+	* @param comparator - The `VersionNumber` to compare against.
+	*
+	* @returns `true` if the instance is bigger than the input, and `false` otherwise
+	*/
+	isGreaterThan(comparator) {
+		return VersionNumber.compare(this, comparator) === 1;
+	}
+	/**
+	* Checks if the current `VersionNumber` instance is smaller than the input `VersionNumber`.
+	*
+	* @param comparator - The `VersionNumber` to compare against.
+	*
+	* @returns `true` if the instance is smaller than the input, and `false` otherwise
+	*/
+	isLessThan(comparator) {
+		return VersionNumber.compare(this, comparator) === -1;
+	}
+	/**
+	* Ensures that the VersionNumber behaves correctly when attempted to be coerced to a string.
+	*
+	* @param hint - Not used as of now, but generally used to help with numeric coercion, I think (which we most likely do not need for version numbers).
+	*
+	* @returns A stringified representation of the current version number, prefixed with `v`.
+	*/
+	[Symbol.toPrimitive](hint) {
+		if (hint === "number") throw new DataError$1({ thisVersion: this.toString() }, "INVALID_COERCION", "VersionNumber cannot be coerced to a number type.");
+		return this.toString();
+	}
+	/**
+	* Ensures that the VersionNumber behaves correctly when attempted to be converted to JSON.
+	*
+	* @returns A stringified representation of the current version number, prefixed with `v`.
+	*/
+	toJSON() {
+		return this.toString();
+	}
+	/**
+	* Get a string representation of the current version number.
+	*
+	* @returns A stringified representation of the current version number with the prefix.
+	*/
+	toString() {
+		const rawString = `${this.major}.${this.minor}.${this.patch}`;
+		return VersionNumber.formatString(rawString, { omitPrefix: false });
+	}
+};
+const zodVersionNumber = union([
+	string(),
+	tuple([
+		number$1(),
+		number$1(),
+		number$1()
+	]),
+	_instanceof(VersionNumber)
+]).transform((rawVersionNumber) => {
+	return new VersionNumber(rawVersionNumber);
+});
+function _parseZodSchema(parsedResult, input, onError) {
+	if (!parsedResult.success) {
+		if (onError) {
+			if (onError instanceof Error) throw onError;
+			else if (typeof onError === "function") {
+				const evaluatedError = onError(parsedResult.error);
+				if (evaluatedError instanceof Error) throw evaluatedError;
+			}
+		}
+		throw new DataError$1({
+			input,
+			issues: parsedResult.error.issues
+		}, "ZOD_ERROR", `\n\n${prettifyError(parsedResult.error)}\n`);
+	}
+	return parsedResult.data;
+}
+/**
+* An alternative function to zodSchema.parse() that can be used to strictly parse Zod schemas.
+*
+* NOTE: Use `parseZodSchemaAsync` if your schema includes an asynchronous function.
+*
+* @category Parsers
+*
+* @deprecated Please use `az.with(schema).parse(input)` instead.
+*
+* @template SchemaType - The Zod schema type.
+* @template ErrorType - The type of error to throw on invalid data.
+*
+* @param schema - The Zod schema to use in parsing.
+* @param input - The data to parse.
+* @param onError - A custom error to throw on invalid data (defaults to `DataError`). May either be the error itself, or a function that returns the error or nothing. If nothing is returned, the default error is thrown instead.
+*
+* @throws {DataErrorCode} If the given data cannot be parsed according to the schema.
+*
+* @returns The parsed data from the Zod schema.
+*/
+function parseZodSchema(schema, input, onError) {
+	return _parseZodSchema(schema.safeParse(input), input, onError);
+}
+/**
+* An alternative function to zodSchema.parseAsync() that can be used to strictly parse asynchronous Zod schemas.
+*
+* @category Parsers
+*
+* @deprecated Please use `az.with(schema).parseAsync(input)` instead.
+*
+* @template SchemaType - The Zod schema type.
+* @template ErrorType - The type of error to throw on invalid data.
+*
+* @param schema - The Zod schema to use in parsing.
+* @param input - The data to parse.
+* @param onError - A custom error to throw on invalid data (defaults to `DataError`). May either be the error itself, or a function that returns the error or nothing. If nothing is returned, the default error is thrown instead.
+*
+* @throws {DataError} If the given data cannot be parsed according to the schema.
+*
+* @returns The parsed data from the Zod schema.
+*/
+async function parseZodSchemaAsync(schema, input, onError) {
+	return _parseZodSchema(await schema.safeParseAsync(input), input, onError);
+}
+function zodFieldWrapper(schema) {
+	return string().trim().transform((value) => {
+		return value === "" ? null : value;
+	}).pipe(schema);
+}
+const az = {
+	field: zodFieldWrapper,
+	fieldNumber: () => {
+		return number();
+	},
+	versionNumber: () => {
+		return zodVersionNumber;
+	},
+	fieldDate: () => {
+		return date();
+	},
+	with: (schema) => {
+		return {
+			parse: (input, error) => {
+				return parseZodSchema(schema, input, error);
+			},
+			parseAsync: async (input, error) => {
+				return await parseZodSchemaAsync(schema, input, error);
+			}
+		};
+	}
+};
+/**
+* Get the dependencies from a given dependency group in `package.json`.
+*
+* @category Miscellaneous
+*
+* @param packageInfo - The data coming from `package.json`.
+* @param dependencyGroup - The group to get dependency information about (can be `dependencies` or `devDependencies`).
+*
+* @returns A record consisting of the package names and version ranges from the given dependency group.
+*/
+function getDependenciesFromGroup(packageInfo, dependencyGroup) {
+	return {
+		dependencies: az.with(record(string(), string())).parse(packageInfo.dependencies ?? {}),
+		devDependencies: az.with(record(string(), string())).parse(packageInfo.devDependencies ?? {})
+	}[dependencyGroup];
+}
+function getPackageJsonPath(directory) {
+	return path.join(...directory.endsWith("package.json") ? [directory] : [directory, "package.json"]);
+}
+function packageJsonNotFoundError(packagePath) {
+	return new DataError$1({ packagePath: getPackageJsonPath(packagePath) }, "PACKAGE_JSON_NOT_FOUND", "Could not find package.json in directory.");
+}
+async function getPackageJsonContents(directory, options) {
+	const { strict = true } = options ?? {};
+	try {
+		return JSON.parse(await readFile(getPackageJsonPath(directory), "utf-8"));
+	} catch (error) {
+		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+			if (strict) throw packageJsonNotFoundError(directory);
+			else return null;
+		}
+		throw error;
+	}
+}
+const PackageManager = {
+	NPM: "npm",
+	PNPM: "pnpm"
+};
+// node_modules/.pnpm/@alextheman+utility@5.32.0_zod@4.6.7/node_modules/@alextheman/utility/dist/v6/index.js
 /**
 * Creates an array of numbers within a given range.
 *
