@@ -98,7 +98,7 @@ jobs:
           app-slug: ${{ steps.app-token.outputs.app-slug }}
 
       - name: Commit the change request
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         with:
           message: |
             ${{ inputs.reason }}

@@ -1,0 +1,21 @@
+name: "Commit Changes"
+description: "Commit changes and set the changes_detected output to true if changes are present, otherwise set the changes_detected output to false."
+
+inputs:
+  message:
+    description: "The commit message"
+    required: true
+    type: string
+  path:
+    description: "The path to commit"
+    required: false
+    default: "-A"
+
+outputs:
+  changes_detected:
+    description: "Whether changes were detected and committed"
+    value: ${{ steps.commit_changes.outputs.changes_detected }}
+
+runs:
+  using: node24
+  main: dist/index.js

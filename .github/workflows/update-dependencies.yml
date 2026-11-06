@@ -127,7 +127,7 @@ jobs:
 
       - name: Commit PNPM update
         if: ${{ inputs.update_pnpm == true }}
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         with:
           message: "Update PNPM"
 
@@ -143,7 +143,7 @@ jobs:
 
       - name: Commit JavaScript dependencies updates
         if: ${{ inputs.update_javascript_dependencies }}
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         with:
           message: "Update JavaScript dependencies"
 
@@ -168,7 +168,7 @@ jobs:
 
       - name: Commit GitHub Actions updates
         if: ${{ inputs.update_actions == true }}
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         id: commit_actions_updates
         with:
           message: "Update GitHub Actions"
@@ -199,7 +199,7 @@ jobs:
 
       - name: Commit Python updates
         if: ${{ inputs.update_python_dependencies == true }}
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         with:
           message: "Update Python dependencies"
 
@@ -225,7 +225,7 @@ jobs:
 
       - name: Commit Terraform updates
         if: ${{ inputs.update_terraform == true }}
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         id: commit_terraform_updates
         with:
           message: "Update Terraform Providers"
