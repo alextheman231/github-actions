@@ -23100,8 +23100,8 @@ createExeca(mapScriptAsync, {}, deepScriptOptions, setScriptSync);
 const { sendMessage, getOneMessage, getEachMessage, getCancelSignal } = getIpcExport();
 // src/composite/commit-changes/commitChanges.ts
 async function commitChanges({ message, path }) {
-	const { exitCode } = await execa({ reject: false })`git status --porcelain`;
-	if (exitCode === 0) {
+	const { stdout } = await execa`git status --porcelain`;
+	if (stdout !== "") {
 		await execa({ stdio: "inherit" })`git add ${path}`;
 		await execa({ stdio: "inherit" })`git commit -m ${message}`;
 		setOutput("changes-detected", true);
