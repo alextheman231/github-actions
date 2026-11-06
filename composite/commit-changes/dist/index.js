@@ -23102,12 +23102,12 @@ const { sendMessage, getOneMessage, getEachMessage, getCancelSignal } = getIpcEx
 async function commitChanges({ message, path }) {
 	const { exitCode } = await execa({ reject: false })`git status --porcelain`;
 	if (exitCode === 0) {
-		console.info("No changes detected.");
-		setOutput("changes-detected", false);
-	} else {
 		await execa({ stdio: "inherit" })`git add ${path}`;
 		await execa({ stdio: "inherit" })`git commit -m ${message}`;
 		setOutput("changes-detected", true);
+	} else {
+		console.info("No changes detected.");
+		setOutput("changes-detected", false);
 	}
 }
 // src/utility/getOptionalInput.ts
