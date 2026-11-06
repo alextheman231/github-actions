@@ -86,7 +86,7 @@ jobs:
 
       - name: Use PNPM
         if: ${{ inputs.update_javascript_dependencies == true || inputs.update_pnpm == true  }}
-        uses: pnpm/action-setup@v6.1.0
+        uses: pnpm/action-setup@v6.1.1
         with:
           run_install: false
 
