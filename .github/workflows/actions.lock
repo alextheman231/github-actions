@@ -8,6 +8,7 @@ workflows:
     '.github/workflows/_check-labels.yml': []
     '.github/workflows/_ci.yml':
         - 'actions/checkout@v7.0.1'
+        - 'actions/create-github-app-token@v3.3.0'
         - 'actions/setup-node@v7.1.0'
         - 'actions/setup-python@v7.1.0'
         - 'pnpm/action-setup@v6.1.0'
@@ -22,6 +23,7 @@ workflows:
         - 'pnpm/action-setup@v6.1.0'
     '.github/workflows/actions-ci.yml':
         - 'actions/checkout@v7.0.1'
+        - 'actions/create-github-app-token@v3.3.0'
         - 'zizmorcore/zizmor-action@v0.8.0'
     '.github/workflows/add-risk-label.yml':
         - 'actions/create-github-app-token@v3.3.0'

@@ -20,3 +20,21 @@ jobs:
         uses: zizmorcore/zizmor-action@v0.8.0
         with:
           advanced-security: false
+
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
+          permission-contents: read
+          permission-actions: read
+          permission-workflows: read
+
+      - name: Install gh-actions-lock
+        run: gh extension install github/gh-actions-lock
+
+      - name: Verify the actions lockfile
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: gh actions-lock --verify
