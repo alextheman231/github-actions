@@ -7,9 +7,9 @@ export interface CommitChangesInputs {
 }
 
 async function commitChanges({ message, path }: CommitChangesInputs) {
-  const { exitCode } = await execa({ reject: false })`git status --porcelain`;
+  const { stdout } = await execa`git status --porcelain`;
 
-  if (exitCode === 0) {
+  if (stdout !== "") {
     await execa({ stdio: "inherit" })`git add ${path}`;
     await execa({ stdio: "inherit" })`git commit -m ${message}`;
     setOutput("changes-detected", true);
