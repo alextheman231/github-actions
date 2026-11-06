@@ -174,10 +174,6 @@ jobs:
           message: "Update GitHub Actions"
           path: .github
 
-      - name: Discard extraneous updates caused by actions updates
-        if: ${{ inputs.update_actions == true }}
-        run: git reset --hard
-
       - name: Setup PDM
         if: ${{ inputs.update_python_dependencies == true }}
         run: pip install pdm
