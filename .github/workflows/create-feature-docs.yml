@@ -67,7 +67,7 @@ jobs:
         run: pnpm run create-feature-docs
 
       - name: Commit the feature docs creation
-        uses: $/.github/actions/commit-changes
+        uses: $/composite/commit-changes
         with:
           message: Create feature docs
 

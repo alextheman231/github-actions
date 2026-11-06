@@ -25,6 +25,9 @@ runs:
         MESSAGE: ${{ inputs.message }}
         COMMIT_PATH: ${{ inputs.path }}
       run: |
+        echo "WARNING: This action is deprecated and will be removed in the next major release."
+        echo "Please use the action from `alextheman231/github-actions/composite/commit-changes` instead."
+
         if [ -n "$(git status --porcelain)" ]; then
           git add "$COMMIT_PATH"
           git commit -m "$MESSAGE"

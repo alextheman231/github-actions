@@ -28,6 +28,10 @@ const config: Array<UserConfig> = [
     entry: ["src/composite/configure-github-bot-user/index.ts"],
     outDir: "composite/configure-github-bot-user/dist",
   },
+  {
+    entry: ["src/composite/commit-changes/index.ts"],
+    outDir: "composite/commit-changes/dist",
+  },
 ].map(({ entry, outDir }) => {
   return {
     entry,
