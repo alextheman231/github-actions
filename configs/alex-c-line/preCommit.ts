@@ -13,6 +13,7 @@ const preCommitConfig: PreCommitConfig<keyof typeof scripts> = {
     "lint",
     async (stepRunner) => {
       await stepRunner`pdm run lint`;
+      await stepRunner`gh actions-lock --verify`;
     },
   ],
 };
