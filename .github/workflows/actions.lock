@@ -8,10 +8,7 @@ workflows:
     '.github/workflows/_check-labels.yml': []
     '.github/workflows/_ci.yml':
         - 'actions/checkout@v7.0.1'
-        - 'actions/create-github-app-token@v3.3.0'
-        - 'actions/setup-go@v7.0.0'
         - 'actions/setup-node@v7.1.0'
-        - 'actions/setup-python@v7.1.0'
         - 'pnpm/action-setup@v6.1.1'
     '.github/workflows/_commit-version-change.yml': []
     '.github/workflows/_create-github-release.yml': []
@@ -26,7 +23,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
         - 'actions/setup-go@v7.0.0'
-        - 'zizmorcore/zizmor-action@v0.8.1'
+        - 'actions/setup-python@v7.1.0'
     '.github/workflows/add-risk-label.yml':
         - 'actions/create-github-app-token@v3.3.0'
     '.github/workflows/audit-javascript-dependencies.yml':
@@ -180,11 +177,6 @@ dependencies:
         commit: 'sha1-4cccd600fd3890a7aba07fd0a45e483f3099fe70'
         owner_id: 27360172
         repo_id: 257326204
-    'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370':
-        ref: 'v4.39.1'
-        commit: 'sha1-9b3254085494b55a0f7c4c2b3d2d52cc712ce370'
-        owner_id: 9919
-        repo_id: 259445878
     'hashicorp/setup-terraform@v4.0.1':
         ref: 'v4.0.1'
         commit: 'sha1-dfe3c3f87815947d99a8997f908cb6525fc44e9e'
@@ -210,10 +202,3 @@ dependencies:
         commit: 'sha1-73e46992e05b19abd31f2f3c20e0e7370d762115'
         owner_id: 21320719
         repo_id: 262289747
-    'zizmorcore/zizmor-action@v0.8.1':
-        ref: 'v0.8.1'
-        commit: 'sha1-45d7276c9ca790aabd705e31ca99c6185c3e76dd'
-        owner_id: 210636713
-        repo_id: 985558803
-        uses:
-            - 'github/codeql-action@9b3254085494b55a0f7c4c2b3d2d52cc712ce370'

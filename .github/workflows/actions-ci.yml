@@ -15,13 +15,23 @@ permissions:
 
 jobs:
   actions-ci:
-    if: ${{ github.head_ref != 'alex-up-bot/change-major-version' && github.head_ref != 'alex-up-bot/change-minor-version' && github.head_ref != 'alex-up-bot/change-patch-version' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Setup PDM
+        run: pip install pdm
+
+      - name: Install Python dependencies
+        run: pdm install
 
       - name: Install Go
         uses: actions/setup-go@v7.0.0
@@ -43,9 +53,7 @@ jobs:
           permission-workflows: read
 
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@v0.8.1
-        with:
-          advanced-security: false
+        run: pdm run lint-zizmor
 
       - name: Run actionlint
         run: actionlint
