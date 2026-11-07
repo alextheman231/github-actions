@@ -26,17 +26,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Python
-        uses: actions/setup-python@v7.1.0
-        with:
-          python-version: "3.14"
-
-      - name: Setup PDM
-        run: pip install pdm
-
-      - name: Install Python dependencies
-        run: pdm install
-
       - name: Install Go
         uses: actions/setup-go@v7.0.0
 
@@ -55,9 +44,6 @@ jobs:
           permission-contents: read
           permission-actions: read
           permission-workflows: read
-
-      - name: Run zizmor
-        run: pdm run lint-zizmor
 
       - name: Run actionlint
         run: actionlint

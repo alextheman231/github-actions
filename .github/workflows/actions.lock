@@ -23,7 +23,6 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
         - 'actions/setup-go@v7.0.0'
-        - 'actions/setup-python@v7.1.0'
     '.github/workflows/add-risk-label.yml':
         - 'actions/create-github-app-token@v3.3.0'
     '.github/workflows/audit-javascript-dependencies.yml':
@@ -83,6 +82,9 @@ workflows:
         - 'actions/setup-node@v7.1.0'
         - 'actions/upload-pages-artifact@v5.0.0'
         - 'pnpm/action-setup@v6.1.1'
+    '.github/workflows/pyproject-ci.yml':
+        - 'actions/checkout@v7.0.1'
+        - 'actions/setup-python@v7.1.0'
     '.github/workflows/report-npm-version-existence.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'

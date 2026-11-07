@@ -65,3 +65,8 @@ jobs:
       github-pull-base-sha: ${{ github.event.pull_request.base.sha }}
     secrets:
       GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+  pyproject-ci:
+    permissions:
+      contents: read
+    uses: $/.github/workflows/pyproject-ci.yml
