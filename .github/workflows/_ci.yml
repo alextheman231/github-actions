@@ -10,68 +10,18 @@ on:
 
 jobs:
   actions-ci:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v7.0.1
-        with:
-          persist-credentials: false
+    uses: $/.github/workflows/actions-ci.yml
+    with:
+      CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
 
-      - name: Setup Python
-        uses: actions/setup-python@v7.1.0
-        with:
-          python-version: "3.14"
-
-      - name: Setup PDM
-        run: pip install pdm
-
-      - name: Install Python dependencies
-        run: pdm install
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v6.1.1
-        with:
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7.1.0
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install JavaScript dependencies
-        run: pnpm install
-
-      - name: Install gh-actions-lock
-        run: gh extension install github/gh-actions-lock
-
-      - name: Get alex-up-bot GitHub token
-        id: app-token
-        uses: actions/create-github-app-token@v3.3.0
-        with:
-          client-id: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
-          private-key: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
-          permission-contents: read
-          permission-actions: read
-          permission-workflows: read
-
-      - name: Install Go
-        uses: actions/setup-go@v7.0.0
-
-      - name: Install actionlint
-        run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
-
-      - name: Run actionlint
-        run: actionlint
-
-      - name: Run linting checks
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          pdm run lint
-          pnpm run lint
+  composite-ci:
+    permissions:
+      contents: read
+    uses: $/.github/workflows/package-ci.yml
 
   build-ci:
     runs-on: ubuntu-latest
