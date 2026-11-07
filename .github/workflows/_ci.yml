@@ -57,6 +57,15 @@ jobs:
           permission-actions: read
           permission-workflows: read
 
+      - name: Install Go
+        uses: actions/setup-go@v7.0.0
+
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
+
+      - name: Run actionlint
+        run: actionlint
+
       - name: Run linting checks
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
