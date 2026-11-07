@@ -9,6 +9,7 @@ workflows:
     '.github/workflows/_ci.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
+        - 'actions/setup-go@v7.0.0'
         - 'actions/setup-node@v7.1.0'
         - 'actions/setup-python@v7.1.0'
         - 'pnpm/action-setup@v6.1.1'
@@ -24,6 +25,7 @@ workflows:
     '.github/workflows/actions-ci.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
+        - 'actions/setup-go@v7.0.0'
         - 'zizmorcore/zizmor-action@v0.8.1'
     '.github/workflows/add-risk-label.yml':
         - 'actions/create-github-app-token@v3.3.0'
@@ -141,6 +143,11 @@ dependencies:
         commit: 'sha1-9000827ccba6bdab643e8b6fd33ac0654aef8333'
         owner_id: 44036562
         repo_id: 192626254
+    'actions/setup-go@v7.0.0':
+        ref: 'v7.0.0'
+        commit: 'sha1-b7ad1dad31e06c5925ef5d2fc7ad053ef454303e'
+        owner_id: 44036562
+        repo_id: 192624594
     'actions/setup-node@v7.1.0':
         ref: 'v7.1.0'
         commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'

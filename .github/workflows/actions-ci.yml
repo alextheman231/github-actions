@@ -16,10 +16,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@v0.8.1
-        with:
-          advanced-security: false
+      - name: Install Go
+        uses: actions/setup-go@v7.0.0
+
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
+
+      - name: Install gh-actions-lock
+        run: gh extension install github/gh-actions-lock
 
       - name: Get alex-up-bot GitHub token
         id: app-token
@@ -31,8 +35,13 @@ jobs:
           permission-actions: read
           permission-workflows: read
 
-      - name: Install gh-actions-lock
-        run: gh extension install github/gh-actions-lock
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@v0.8.1
+        with:
+          advanced-security: false
+
+      - name: Run actionlint
+        run: actionlint
 
       - name: Verify the actions lockfile
         env:
