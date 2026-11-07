@@ -2,6 +2,13 @@ name: Actions CI
 
 on:
   workflow_call:
+    inputs:
+      CLIENT_ID:
+        type: string
+        required: true
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
 
 permissions:
   contents: read
@@ -29,8 +36,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3.3.0
         with:
-          client-id: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
-          private-key: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}
+          client-id: ${{ inputs.CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: read
           permission-actions: read
           permission-workflows: read
