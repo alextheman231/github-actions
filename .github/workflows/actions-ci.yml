@@ -6,6 +6,10 @@ on:
       CLIENT_ID:
         type: string
         required: true
+      runs-on:
+        type: string
+        required: false
+        default: ubuntu-latest
     secrets:
       APP_PRIVATE_KEY:
         required: true
@@ -15,7 +19,7 @@ permissions:
 
 jobs:
   actions-ci:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v7.0.1
