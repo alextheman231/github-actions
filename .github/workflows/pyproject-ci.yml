@@ -1,0 +1,34 @@
+name: Pyproject CI
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        type: string
+        required: false
+        default: ubuntu-latest
+
+jobs:
+  pyproject-lint-ci:
+    runs-on: ${{ inputs.runs-on }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Setup PDM
+        run: pip install pdm
+
+      - name: Install Python dependencies
+        run: pdm install
+
+      - name: Run linting checks
+        run: pdm run lint
