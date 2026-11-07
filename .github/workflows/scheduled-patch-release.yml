@@ -130,4 +130,4 @@ jobs:
           PULL_REQUEST_URL: ${{ steps.pull-request.outputs.pull-request-url }}
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh pr edit $PULL_REQUEST_URL --add-label "low risk,tooling,documentation"
+        run: gh pr edit "$PULL_REQUEST_URL" --add-label "low risk,tooling,documentation"

@@ -125,4 +125,4 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
           LABELS: ${{ inputs.labels }}
-        run: gh pr edit $PULL_REQUEST_URL --add-label "$LABELS"
+        run: gh pr edit "$PULL_REQUEST_URL" --add-label "$LABELS"
