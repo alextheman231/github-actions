@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  actions-ci:
+  lockfile-ci:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Checkout the repository
@@ -28,9 +28,6 @@ jobs:
 
       - name: Install Go
         uses: actions/setup-go@v7.0.0
-
-      - name: Install actionlint
-        run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
 
       - name: Install gh-actions-lock
         run: gh extension install github/gh-actions-lock
@@ -45,10 +42,24 @@ jobs:
           permission-actions: read
           permission-workflows: read
 
-      - name: Run actionlint
-        run: actionlint
-
       - name: Verify the actions lockfile
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh actions-lock --verify
+
+  actionlint-ci:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Go
+        uses: actions/setup-go@v7.0.0
+
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
+
+      - name: Run actionlint
+        run: actionlint
