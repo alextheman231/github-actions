@@ -26,9 +26,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install Go
-        uses: actions/setup-go@v7.0.0
-
       - name: Install gh-actions-lock
         run: gh extension install github/gh-actions-lock
 
