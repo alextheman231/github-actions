@@ -3,5 +3,3 @@ rules:
     disable: true
   superfluous-actions:
     disable: true
-  unpinned-uses:
-    disable: true
