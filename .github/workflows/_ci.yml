@@ -70,3 +70,7 @@ jobs:
     permissions:
       contents: read
     uses: $/.github/workflows/pyproject-ci.yml
+    with:
+      CLIENT_ID: ${{ vars.ALEX_UP_BOT_CLIENT_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.ALEX_UP_BOT_PRIVATE_KEY }}

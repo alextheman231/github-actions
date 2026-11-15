@@ -84,6 +84,7 @@ workflows:
         - 'pnpm/action-setup@v6.1.1'
     '.github/workflows/pyproject-ci.yml':
         - 'actions/checkout@v7.0.1'
+        - 'actions/create-github-app-token@v3.3.0'
         - 'actions/setup-python@v7.1.0'
     '.github/workflows/report-npm-version-existence.yml':
         - 'actions/checkout@v7.0.1'

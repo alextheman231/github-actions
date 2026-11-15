@@ -3,10 +3,16 @@ name: Pyproject CI
 on:
   workflow_call:
     inputs:
+      CLIENT_ID:
+        type: string
+        required: true
       runs-on:
         type: string
         required: false
         default: ubuntu-latest
+    secrets:
+      APP_PRIVATE_KEY:
+        required: true
 
 jobs:
   pyproject-lint-ci:
@@ -30,5 +36,17 @@ jobs:
       - name: Install Python dependencies
         run: pdm install
 
+      - name: Get alex-up-bot GitHub token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ inputs.CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-actions: read
+          permission-workflows: read
+
       - name: Run linting checks
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: pdm run lint
