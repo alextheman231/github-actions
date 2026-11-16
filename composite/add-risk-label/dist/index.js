@@ -1,27 +1,27 @@
 import { createRequire } from "node:module";
-import os, { EOL } from "os";
-import * as fs$1 from "fs";
+import os$1, { EOL } from "os";
+import * as fs from "fs";
 import { constants, promises } from "fs";
 import "path";
 import * as events from "events";
 import { Duplex, PassThrough, Readable, Transform, Writable, getDefaultHighWaterMark } from "node:stream";
 import { Buffer as Buffer$1 } from "node:buffer";
-import { aborted, callbackify, debuglog, inspect, promisify, stripVTControlCharacters } from "node:util";
+import { aborted as aborted$1, callbackify, debuglog, inspect, promisify, stripVTControlCharacters } from "node:util";
 import { EventEmitter, addAbortListener, on, once, setMaxListeners } from "node:events";
 import { fileURLToPath } from "node:url";
 import "child_process";
 import "timers";
 import { ChildProcess, execFile, spawn, spawnSync } from "node:child_process";
-import process$1, { execArgv, execPath, hrtime, platform } from "node:process";
+import process$2, { execArgv, execPath, hrtime, platform as platform$1 } from "node:process";
 import { StringDecoder } from "node:string_decoder";
 import tty from "node:tty";
-import path from "node:path";
+import path$1 from "node:path";
 import { scheduler, setImmediate as setImmediate$1, setTimeout as setTimeout$2 } from "node:timers/promises";
 import { constants as constants$1 } from "node:os";
 import { serialize } from "node:v8";
-import fs, { appendFileSync, closeSync, createReadStream, createWriteStream, openSync, readFileSync, readSync, statSync, writeFileSync } from "node:fs";
+import fs$1, { appendFileSync, closeSync, createReadStream, createWriteStream, openSync, readFileSync, readSync, statSync, writeFileSync } from "node:fs";
 import { finished } from "node:stream/promises";
-import path$1 from "node:path/win32";
+import path$2 from "node:path/win32";
 var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod, mod.exports), cb = null), mod.exports);
 var __require = /* #__PURE__ */ (() => createRequire(import.meta.url))();
 // node_modules/.pnpm/tunnel@0.0.6/node_modules/tunnel/lib/tunnel.js
@@ -6037,7 +6037,7 @@ var require_client_h2 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		});
 		return {
 			version: "h2",
-			defaultPipelining: Infinity,
+			defaultPipelining: 1e400,
 			write(...args) {
 				return writeH2(client, ...args);
 			},
@@ -9426,7 +9426,7 @@ var require_pending_interceptors_formatter = /* @__PURE__ */ __commonJSMin(((exp
 				"Status code": statusCode,
 				Persistent: persist ? PERSISTENT : NOT_PERSISTENT,
 				Invocations: timesInvoked,
-				Remaining: persist ? Infinity : times - timesInvoked
+				Remaining: persist ? 1e400 : times - timesInvoked
 			}));
 			this.logger.table(withPrettyHeaders);
 			return this.transform.read().toString();
@@ -9876,7 +9876,7 @@ var require_dns = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			pick: interceptorOpts?.pick ?? null,
 			dualStack,
 			affinity,
-			maxItems: interceptorOpts?.maxItems ?? Infinity
+			maxItems: interceptorOpts?.maxItems ?? 1e400
 		});
 		return (dispatch) => {
 			return function dnsInterceptor(origDispatchOpts, handler) {
@@ -12957,7 +12957,7 @@ var require_cache = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			}
 			return true;
 		}
-		#internalMatchAll(request, options, maxResponses = Infinity) {
+		#internalMatchAll(request, options, maxResponses = 1e400) {
 			let r = null;
 			if (request !== void 0) {
 				if (request instanceof Request) {
@@ -16309,14 +16309,14 @@ var Summary = class {
 	}
 };
 new Summary();
-const { chmod, copyFile, lstat, mkdir, open: open$1, readdir, rename, rm, rmdir, stat, symlink, unlink } = fs$1.promises;
+const { chmod, copyFile, lstat, mkdir, open: open$1, readdir, rename, rm, rmdir, stat, symlink, unlink } = fs.promises;
 process.platform;
-fs$1.constants.O_RDONLY;
+fs.constants.O_RDONLY;
 process.platform;
 events.EventEmitter;
 events.EventEmitter;
-os.platform();
-os.arch();
+os$1.platform();
+os$1.arch();
 /**
 * The code to exit an action
 */
@@ -16632,7 +16632,7 @@ function required(Class, schema, mask) {
 	}));
 	return clone(schema, mergeDefs(schema._zod.def, { shape: newShape }));
 }
-function aborted$1(x, startIndex = 0) {
+function aborted(x, startIndex = 0) {
 	if (x.aborted === true) return true;
 	for (let i = startIndex; i < x.issues.length; i++) if (x.issues[i]?.continue !== true) return true;
 	return false;
@@ -17811,7 +17811,7 @@ const $ZodType = /*@__PURE__*/ $constructor("$ZodType", (inst, def) => {
 	} else {
 		const runChecks = (payload, checks, ctx) => {
 			if (payload.memo) return payload;
-			let isAborted = aborted$1(payload);
+			let isAborted = aborted(payload);
 			let asyncResult;
 			for (const ch of checks) {
 				if (ch._zod.def.when) {
@@ -17825,12 +17825,12 @@ const $ZodType = /*@__PURE__*/ $constructor("$ZodType", (inst, def) => {
 					await _;
 					if (payload.issues.length === currLen) return;
 					attachSchema(payload.issues, currLen, inst);
-					if (!isAborted) isAborted = aborted$1(payload, currLen);
+					if (!isAborted) isAborted = aborted(payload, currLen);
 				});
 				else {
 					if (payload.issues.length === currLen) continue;
 					attachSchema(payload.issues, currLen, inst);
-					if (!isAborted) isAborted = aborted$1(payload, currLen);
+					if (!isAborted) isAborted = aborted(payload, currLen);
 				}
 			}
 			if (asyncResult) return asyncResult.then(() => {
@@ -17839,7 +17839,7 @@ const $ZodType = /*@__PURE__*/ $constructor("$ZodType", (inst, def) => {
 			return payload;
 		};
 		const handleCanaryResult = (canary, payload, ctx) => {
-			if (aborted$1(canary)) {
+			if (aborted(canary)) {
 				canary.aborted = true;
 				return canary;
 			}
@@ -18342,7 +18342,7 @@ const $ZodArray = /*@__PURE__*/ $constructor("$ZodArray", (inst, def) => {
 			if (result instanceof Promise) proms.push(result.then((result) => handleArrayResult(result, payload, i)));
 			else {
 				handleArrayResult(result, payload, i);
-				if (abortEarly && result.issues.length !== 0 && aborted$1(result)) break;
+				if (abortEarly && result.issues.length !== 0 && aborted(result)) break;
 			}
 		}
 		if (proms.length) return Promise.all(proms).then(() => payload);
@@ -18398,7 +18398,7 @@ function handleCatchall(proms, input, payload, ctx, def, inst, abortEarly) {
 	let seen = 0;
 	for (const key in input) {
 		if (abortEarly && payload.issues.length !== seen) {
-			if (aborted$1(payload, seen)) break;
+			if (aborted(payload, seen)) break;
 			seen = payload.issues.length;
 		}
 		if (keySet.has(key)) continue;
@@ -18481,7 +18481,7 @@ const $ZodObject = /*@__PURE__*/ $constructor("$ZodObject", (inst, def) => {
 		let seen = payload.issues.length;
 		for (const key of value.allKeys) {
 			if (abortEarly && payload.issues.length !== seen) {
-				if (aborted$1(payload, seen)) break;
+				if (aborted(payload, seen)) break;
 				seen = payload.issues.length;
 			}
 			if (key === "__proto__") continue;
@@ -18626,7 +18626,7 @@ function handleUnionResults(results, final, inst, ctx) {
 		final.value = result.value;
 		return final;
 	}
-	const nonaborted = results.filter((r) => !aborted$1(r));
+	const nonaborted = results.filter((r) => !aborted(r));
 	if (nonaborted.length === 1) {
 		final.value = nonaborted[0].value;
 		return nonaborted[0];
@@ -18784,7 +18784,7 @@ function handleIntersectionResults(result, left, right) {
 	}
 	const merged = mergeValues(left.value, right.value);
 	if (!merged.valid) {
-		if (aborted$1(result)) return result;
+		if (aborted(result)) return result;
 		throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged.mergeErrorPath)}`);
 	}
 	result.value = merged.data;
@@ -18844,7 +18844,7 @@ const $ZodTuple = /*@__PURE__*/ $constructor("$ZodTuple", (inst, def) => {
 			}));
 			else {
 				itemResults[i] = r;
-				if (abortEarly && !itemAborted && r.issues.length) itemAborted = aborted$1(r);
+				if (abortEarly && !itemAborted && r.issues.length) itemAborted = aborted(r);
 			}
 		}
 		if (def.rest && !itemAborted) {
@@ -18853,7 +18853,7 @@ const $ZodTuple = /*@__PURE__*/ $constructor("$ZodTuple", (inst, def) => {
 			let seen = payload.issues.length;
 			for (const el of rest) {
 				if (abortEarly && payload.issues.length !== seen) {
-					if (aborted$1(payload, seen)) break;
+					if (aborted(payload, seen)) break;
 					seen = payload.issues.length;
 				}
 				i++;
@@ -21851,7 +21851,7 @@ function number(params) {
 function date(params) {
 	return /* @__PURE__ */ _coercedDate(ZodDate, params);
 }
-// node_modules/.pnpm/@alextheman+utility@5.32.0_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
+// node_modules/.pnpm/@alextheman+utility@5.32.1_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
 const FILE_PATH_REGEX_PATTERN = String.raw`(?<directory>.+)[\/\\](?<base>[^\/\\]+)`;
 RegExp(`^${FILE_PATH_REGEX_PATTERN}$`);
 new RegExp(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`);
@@ -22604,7 +22604,7 @@ function normaliseIndents$1(first, ...args) {
 	return reduceLines$1(interpolate$1(strings, ...[...args]).split("\n"), options);
 }
 String.raw`^(?:v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$`;
-// node_modules/.pnpm/@alextheman+utility@5.32.0_zod@4.6.7/node_modules/@alextheman/utility/dist/v6/index.js
+// node_modules/.pnpm/@alextheman+utility@5.32.1_zod@4.6.7/node_modules/@alextheman/utility/dist/v6/index.js
 /**
 * Creates an array of numbers within a given range.
 *
@@ -23096,7 +23096,7 @@ const COMMON_ESCAPES = {
 const ASTRAL_START = 65535;
 const quoteString = (escapedArgument) => {
 	if (NO_ESCAPE_REGEXP.test(escapedArgument)) return escapedArgument;
-	return platform === "win32" ? `"${escapedArgument.replaceAll("\"", "\"\"")}"` : `'${escapedArgument.replaceAll("'", "'\\''")}'`;
+	return platform$1 === "win32" ? `"${escapedArgument.replaceAll("\"", "\"\"")}"` : `'${escapedArgument.replaceAll("'", "'\\''")}'`;
 };
 const NO_ESCAPE_REGEXP = /^[\w\-./]+$/;
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/uint-array.js
@@ -23270,9 +23270,9 @@ const getSubprocessResult = (result) => {
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/standard-stream.js
 const isStandardStream = (stream) => STANDARD_STREAMS.includes(stream);
 const STANDARD_STREAMS = [
-	process$1.stdin,
-	process$1.stdout,
-	process$1.stderr
+	process$2.stdin,
+	process$2.stdout,
+	process$2.stderr
 ];
 const STANDARD_STREAMS_ALIASES = [
 	"stdin",
@@ -23385,9 +23385,9 @@ const VERBOSE_VALUES = [
 ];
 // node_modules/.pnpm/is-unicode-supported@2.1.0/node_modules/is-unicode-supported/index.js
 function isUnicodeSupported() {
-	const { env } = process$1;
+	const { env } = process$2;
 	const { TERM, TERM_PROGRAM } = env;
-	if (process$1.platform !== "win32") return TERM !== "linux";
+	if (process$2.platform !== "win32") return TERM !== "linux";
 	return Boolean(env.WT_SESSION) || Boolean(env.TERMINUS_SUBLIME) || env.ConEmuTask === "{cmd::Cmder}" || TERM_PROGRAM === "Terminus-Sublime" || TERM_PROGRAM === "vscode" || TERM === "xterm-256color" || TERM === "alacritty" || TERM === "rxvt-unicode" || TERM === "rxvt-unicode-256color" || env.TERMINAL_EMULATOR === "JetBrains-JediTerm";
 }
 // node_modules/.pnpm/figures@6.1.0/node_modules/figures/index.js
@@ -23753,7 +23753,7 @@ format("58;5;13", 59);
 format("58;5;14", 59);
 format("58;5;15", 59);
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/verbose/default.js
-const hasColors = process$1.env.FORCE_COLOR !== void 0 || process$1.stderr.isTTY === true;
+const hasColors = process$2.env.FORCE_COLOR !== void 0 || process$2.stderr.isTTY === true;
 const identity$1 = (string) => string;
 const getColor = (color) => hasColors ? color : identity$1;
 const gray = getColor(gray$1);
@@ -23902,35 +23902,35 @@ function toPath(urlOrPath) {
 }
 function traversePathUp(startPath) {
 	return { *[Symbol.iterator]() {
-		let currentPath = path.resolve(toPath(startPath));
+		let currentPath = path$1.resolve(toPath(startPath));
 		let previousPath;
 		while (previousPath !== currentPath) {
 			yield currentPath;
 			previousPath = currentPath;
-			currentPath = path.resolve(currentPath, "..");
+			currentPath = path$1.resolve(currentPath, "..");
 		}
 	} };
 }
 // node_modules/.pnpm/npm-run-path@6.0.0/node_modules/npm-run-path/index.js
-const npmRunPath = ({ cwd = process$1.cwd(), path: pathOption = process$1.env[pathKey()], preferLocal = true, execPath = process$1.execPath, addExecPath = true } = {}) => {
-	const cwdPath = path.resolve(toPath(cwd));
+const npmRunPath = ({ cwd = process$2.cwd(), path: pathOption = process$2.env[pathKey()], preferLocal = true, execPath = process$2.execPath, addExecPath = true } = {}) => {
+	const cwdPath = path$1.resolve(toPath(cwd));
 	const result = [];
-	const pathParts = pathOption.split(path.delimiter);
+	const pathParts = pathOption.split(path$1.delimiter);
 	if (preferLocal) applyPreferLocal(result, pathParts, cwdPath);
 	if (addExecPath) applyExecPath(result, pathParts, execPath, cwdPath);
-	return pathOption === "" || pathOption === path.delimiter ? `${result.join(path.delimiter)}${pathOption}` : [...result, pathOption].join(path.delimiter);
+	return pathOption === "" || pathOption === path$1.delimiter ? `${result.join(path$1.delimiter)}${pathOption}` : [...result, pathOption].join(path$1.delimiter);
 };
 const applyPreferLocal = (result, pathParts, cwdPath) => {
 	for (const directory of traversePathUp(cwdPath)) {
-		const pathPart = path.join(directory, "node_modules/.bin");
+		const pathPart = path$1.join(directory, "node_modules/.bin");
 		if (!pathParts.includes(pathPart)) result.push(pathPart);
 	}
 };
 const applyExecPath = (result, pathParts, execPath, cwdPath) => {
-	const pathPart = path.resolve(cwdPath, toPath(execPath), "..");
+	const pathPart = path$1.resolve(cwdPath, toPath(execPath), "..");
 	if (!pathParts.includes(pathPart)) result.push(pathPart);
 };
-const npmRunPathEnv = ({ env = process$1.env, ...options } = {}) => {
+const npmRunPathEnv = ({ env = process$2.env, ...options } = {}) => {
 	env = { ...env };
 	const pathName = pathKey({ env });
 	options.path = env[pathName];
@@ -24468,7 +24468,7 @@ const createDeferred = () => {
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/utils/max-listeners.js
 const incrementMaxListeners = (eventEmitter, maxListenersIncrement, signal) => {
 	const maxListeners = eventEmitter.getMaxListeners();
-	if (maxListeners === 0 || maxListeners === Infinity) return;
+	if (maxListeners === 0 || maxListeners === 1e400) return;
 	eventEmitter.setMaxListeners(maxListeners + maxListenersIncrement);
 	addAbortListener(signal, () => {
 		eventEmitter.setMaxListeners(eventEmitter.getMaxListeners() - maxListenersIncrement);
@@ -24867,7 +24867,7 @@ const handleNodeOption = (file, commandArguments, { node: shouldHandleNode = fal
 	if (formerNodePath !== void 0) throw new TypeError("The \"execPath\" option has been removed. Please use the \"nodePath\" option instead.");
 	if (!Array.isArray(nodeOptions) || nodeOptions.some((nodeOption) => typeof nodeOption !== "string")) throw new TypeError("The \"nodeOptions\" option must be an array of strings.");
 	const normalizedNodePath = safeNormalizeFileUrl(nodePath, "The \"nodePath\" option");
-	const resolvedNodePath = path.resolve(cwd, normalizedNodePath);
+	const resolvedNodePath = path$1.resolve(cwd, normalizedNodePath);
 	const newOptions = {
 		__proto__: null,
 		shell: false,
@@ -24881,7 +24881,7 @@ const handleNodeOption = (file, commandArguments, { node: shouldHandleNode = fal
 		commandArguments,
 		newOptions
 	];
-	if (path.basename(file, ".exe") === "node") throw new TypeError("When the \"node\" option is true, the first argument does not need to be \"node\".");
+	if (path$1.basename(file, ".exe") === "node") throw new TypeError("When the \"node\" option is true, the first argument does not need to be \"node\".");
 	return [
 		resolvedNodePath,
 		[
@@ -24970,12 +24970,12 @@ const ENCODING_ALIASES = {
 };
 const serializeEncoding = (encoding) => typeof encoding === "string" ? `"${encoding}"` : String(encoding);
 // node_modules/.pnpm/which-command@0.1.0/node_modules/which-command/index.js
-const isWindows$1 = process$1.platform === "win32";
+const isWindows$1 = process$2.platform === "win32";
 const separatorPattern = isWindows$1 ? /[\/\\]/v : /\//v;
 const defaultPathExt = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
 function resolveOptions(command, options) {
 	if (typeof command !== "string" || command.length === 0) throw new TypeError("Expected a non-empty string.");
-	const { cwd = process$1.cwd(), path: searchPath = process$1.env.PATH ?? (isWindows$1 ? process$1.env.Path : void 0) ?? "", pathExt = process$1.env.PATHEXT || defaultPathExt } = options;
+	const { cwd = process$2.cwd(), path: searchPath = process$2.env.PATH ?? (isWindows$1 ? process$2.env.Path : void 0) ?? "", pathExt = process$2.env.PATHEXT || defaultPathExt } = options;
 	return {
 		cwd,
 		searchPath,
@@ -24983,37 +24983,37 @@ function resolveOptions(command, options) {
 	};
 }
 function windowsExtensions(command, pathExt) {
-	const extensions = pathExt.split(path.delimiter).filter(Boolean);
-	const commandExtension = path.extname(command).toLowerCase();
+	const extensions = pathExt.split(path$1.delimiter).filter(Boolean);
+	const commandExtension = path$1.extname(command).toLowerCase();
 	if (commandExtension !== "" && extensions.some((extension) => extension.toLowerCase() === commandExtension)) return ["", ...extensions];
 	return extensions;
 }
 function* candidatePaths(command, { cwd, searchPath, pathExt }) {
 	const extensions = isWindows$1 ? windowsExtensions(command, pathExt) : [""];
 	if (separatorPattern.test(command)) {
-		const base = path.resolve(cwd, command);
+		const base = path$1.resolve(cwd, command);
 		for (const extension of extensions) yield base + extension;
 		return;
 	}
-	const directories = [...isWindows$1 ? [cwd] : [], ...searchPath.split(path.delimiter)];
+	const directories = [...isWindows$1 ? [cwd] : [], ...searchPath.split(path$1.delimiter)];
 	for (const directory of directories) {
 		const unquoted = isWindows$1 && directory.length > 1 && directory.startsWith("\"") && directory.endsWith("\"") ? directory.slice(1, -1) : directory;
 		if (unquoted === "") continue;
-		const base = path.resolve(cwd, unquoted, command);
+		const base = path$1.resolve(cwd, unquoted, command);
 		for (const extension of extensions) yield base + extension;
 	}
 }
 function isExecutableSync(filePath) {
 	let stats;
 	try {
-		stats = fs.statSync(filePath);
+		stats = fs$1.statSync(filePath);
 	} catch (error) {
 		return isWindows$1 && error.code === "EACCES";
 	}
 	if (!stats.isFile()) return false;
 	if (isWindows$1) return true;
 	try {
-		fs.accessSync(filePath, fs.constants.X_OK);
+		fs$1.accessSync(filePath, fs$1.constants.X_OK);
 		return true;
 	} catch {
 		return false;
@@ -25030,7 +25030,7 @@ const parseCommandFile = (file, commandArguments, options) => {
 		commandArguments: [...commandArguments],
 		options
 	};
-	return options.shell || process$1.platform !== "win32" ? parsed : escapeWindowsCommand(parsed);
+	return options.shell || process$2.platform !== "win32" ? parsed : escapeWindowsCommand(parsed);
 };
 const directlyExecutableRegExp = /\.(?:com|exe)$/i;
 const escapeWindowsCommand = (parsed) => {
@@ -25041,10 +25041,10 @@ const escapeWindowsCommand = (parsed) => {
 		return parsed;
 	}
 	for (const value of [parsed.file, ...parsed.commandArguments]) assertNoLineBreak(value);
-	const commandLine = `"${[escapeMetaChars(path.normalize(resolvedFile ?? parsed.file)), ...parsed.commandArguments.map((argument) => escapeArgument(argument))].join(" ")}"`;
+	const commandLine = `"${[escapeMetaChars(path$1.normalize(resolvedFile ?? parsed.file)), ...parsed.commandArguments.map((argument) => escapeArgument(argument))].join(" ")}"`;
 	parsed.options.windowsVerbatimArguments = true;
 	return {
-		file: process$1.env.comspec || "cmd.exe",
+		file: process$2.env.comspec || "cmd.exe",
 		commandArguments: [
 			"/d",
 			"/e:on",
@@ -25065,29 +25065,29 @@ const resolveWithShebang = (parsed) => {
 	return resolvePath(parsed);
 };
 const resolvePath = (parsed) => {
-	const environment = parsed.options.env || process$1.env;
-	const cwd = parsed.options.cwd ?? process$1.cwd();
+	const environment = parsed.options.env || process$2.env;
+	const cwd = parsed.options.cwd ?? process$2.cwd();
 	const environmentPathExt = getWindowsEnvironmentValue(environment, "PATHEXT");
-	const commandExtension = path.extname(parsed.file);
-	const pathExt = commandExtension === "" ? environmentPathExt : `${commandExtension}${path.delimiter}${environmentPathExt ?? ""}`;
-	if (hasWindowsPathSeparator(parsed.file)) return whichCommandSync(path.resolve(cwd, parsed.file), {
+	const commandExtension = path$1.extname(parsed.file);
+	const pathExt = commandExtension === "" ? environmentPathExt : `${commandExtension}${path$1.delimiter}${environmentPathExt ?? ""}`;
+	if (hasWindowsPathSeparator(parsed.file)) return whichCommandSync(path$1.resolve(cwd, parsed.file), {
 		cwd,
 		pathExt
 	});
 	const resolveOptions = {
 		cwd,
-		path: getWindowsEnvironmentValue(environment, "PATH") ?? getWindowsEnvironmentValue(process$1.env, "PATH") ?? "",
+		path: getWindowsEnvironmentValue(environment, "PATH") ?? getWindowsEnvironmentValue(process$2.env, "PATH") ?? "",
 		pathExt
 	};
 	return shouldSearchCurrentDirectory(environment) ? whichCommandSync(parsed.file, resolveOptions) : resolvePathDirectories(parsed.file, resolveOptions);
 };
 const hasWindowsPathSeparator = (file) => file.includes("/") || file.includes("\\") || file.includes(":");
-const shouldSearchCurrentDirectory = (environment) => getWindowsEnvironmentValue(process$1.env, "NODEFAULTCURRENTDIRECTORYINEXEPATH") === void 0 && getWindowsEnvironmentValue(environment, "NODEFAULTCURRENTDIRECTORYINEXEPATH") === void 0;
+const shouldSearchCurrentDirectory = (environment) => getWindowsEnvironmentValue(process$2.env, "NODEFAULTCURRENTDIRECTORYINEXEPATH") === void 0 && getWindowsEnvironmentValue(environment, "NODEFAULTCURRENTDIRECTORYINEXEPATH") === void 0;
 const resolvePathDirectories = (file, { cwd, path: searchPath, pathExt }) => {
-	for (const directory of searchPath.split(path.delimiter)) {
+	for (const directory of searchPath.split(path$1.delimiter)) {
 		const unquotedDirectory = directory.length > 1 && directory.startsWith("\"") && directory.endsWith("\"") ? directory.slice(1, -1) : directory;
 		if (unquotedDirectory === "") continue;
-		const resolvedFile = whichCommandSync(path.resolve(cwd, unquotedDirectory, file), {
+		const resolvedFile = whichCommandSync(path$1.resolve(cwd, unquotedDirectory, file), {
 			cwd,
 			pathExt
 		});
@@ -25143,11 +25143,11 @@ const shouldQuoteArgument = (argument) => argument === "" || argument.endsWith("
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/arguments/cwd.js
 const normalizeCwd = (cwd = getDefaultCwd()) => {
 	const cwdString = safeNormalizeFileUrl(cwd, "The \"cwd\" option");
-	return path.resolve(cwdString);
+	return path$1.resolve(cwdString);
 };
 const getDefaultCwd = () => {
 	try {
-		return process$1.cwd();
+		return process$2.cwd();
 	} catch (error) {
 		error.message = `The current directory does not exist.\n${error.message}`;
 		throw error;
@@ -25155,7 +25155,7 @@ const getDefaultCwd = () => {
 };
 const getCurrentCwd = () => {
 	try {
-		return process$1.cwd();
+		return process$2.cwd();
 	} catch {}
 };
 const fixCwdError = (originalMessage, cwd) => {
@@ -25193,7 +25193,7 @@ const normalizeOptions = (filePath, rawArguments, rawOptions) => {
 	options.killSignal = normalizeKillSignal(options.killSignal);
 	options.forceKillAfterDelay = normalizeForceKillAfterDelay(options.forceKillAfterDelay);
 	options.lines = options.lines.map((lines, fdNumber) => lines && !BINARY_ENCODINGS.has(options.encoding) && options.buffer[fdNumber]);
-	if (process$1.platform === "win32" && cmdExeRegExp.test(path.basename(file))) commandArguments.unshift("/q");
+	if (process$2.platform === "win32" && cmdExeRegExp.test(path$1.basename(file))) commandArguments.unshift("/q");
 	return {
 		file,
 		commandArguments,
@@ -25244,7 +25244,7 @@ const getEnv = (options) => ({
 const computeEnv = ({ env: envOption, extendEnv, preferLocal, node, localDirectory, nodePath }) => {
 	const env = {
 		__proto__: null,
-		...extendEnv && process$1.env,
+		...extendEnv && process$2.env,
 		...envOption
 	};
 	if (preferLocal || node) return npmRunPathEnv({
@@ -26365,12 +26365,12 @@ const guessStreamDirection = {
 	}
 };
 const getStandardStreamDirection = (value) => {
-	if ([0, process$1.stdin].includes(value)) return "input";
+	if ([0, process$2.stdin].includes(value)) return "input";
 	if ([
 		1,
 		2,
-		process$1.stdout,
-		process$1.stderr
+		process$2.stdout,
+		process$2.stderr
 	].includes(value)) return "output";
 };
 const DEFAULT_DIRECTION = "output";
@@ -26583,7 +26583,7 @@ const getInputFileType = (inputFile) => {
 };
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/stdio/duplicate.js
 const isFileType = (type) => SPECIAL_DUPLICATE_TYPES_SYNC.has(type);
-const getFileTarget = ({ type, value }) => type === "filePath" ? path.resolve(value.file) : fileURLToPath(value);
+const getFileTarget = ({ type, value }) => type === "filePath" ? path$1.resolve(value.file) : fileURLToPath(value);
 const filterDuplicates = (stdioItems) => stdioItems.filter((stdioItemOne, indexOne) => stdioItems.every((stdioItemTwo, indexTwo) => !hasSameValueAndDirection(stdioItemOne, stdioItemTwo) || indexOne >= indexTwo || stdioItemOne.type === "generator" || stdioItemOne.type === "asyncGenerator"));
 const hasSameValueAndDirection = (stdioItemOne, stdioItemTwo) => stdioItemOne.value === stdioItemTwo.value && stdioItemOne.direction === stdioItemTwo.direction;
 const getDuplicateStream = ({ stdioItem: { type, value, optionName }, direction, fileDescriptors, isSync }) => {
@@ -27568,9 +27568,9 @@ const addIpcMethods = (target, subprocess, { ipc }) => {
 	Object.assign(target, getIpcMethods(subprocess, false, ipc, target));
 };
 const getIpcExport = () => {
-	const anyProcess = process$1;
+	const anyProcess = process$2;
 	const isSubprocess = true;
-	const isIpc = process$1.channel !== void 0;
+	const isIpc = process$2.channel !== void 0;
 	return {
 		...getIpcMethods(anyProcess, isSubprocess, isIpc),
 		getCancelSignal: getCancelSignal$1.bind(void 0, {
@@ -28004,7 +28004,7 @@ const setStandardStreamMaxListeners = (stream, { signal }) => {
 };
 const MAX_LISTENERS_INCREMENT = 2;
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/terminate/kill-descendants.js
-const isWindows = process$1.platform === "win32";
+const isWindows = process$2.platform === "win32";
 const getSpawnOptions = (options) => !isWindows && options.killDescendants ? {
 	...options,
 	detached: true
@@ -28021,7 +28021,7 @@ const hasExited = ({ exitCode, signalCode }) => exitCode !== null || signalCode 
 const killDescendantsUnix = (subprocess, signal) => {
 	if (isAbandoned(subprocess)) return false;
 	try {
-		return process$1.kill(-subprocess.pid, signal);
+		return process$2.kill(-subprocess.pid, signal);
 	} catch {
 		return subprocess.kill(signal);
 	}
@@ -28041,11 +28041,11 @@ const killDescendantsWindows = (subprocess, signal) => {
 	return true;
 };
 const getTaskkillFile = () => {
-	const windowsDirectory = [process$1.env.SystemRoot, process$1.env.windir].find((directory) => directory && isWindowsDriveAbsolutePath(directory));
-	return windowsDirectory === void 0 ? void 0 : path$1.join(windowsDirectory, "System32", "taskkill.exe");
+	const windowsDirectory = [process$2.env.SystemRoot, process$2.env.windir].find((directory) => directory && isWindowsDriveAbsolutePath(directory));
+	return windowsDirectory === void 0 ? void 0 : path$2.join(windowsDirectory, "System32", "taskkill.exe");
 };
 const isWindowsDriveAbsolutePath = (directory) => {
-	const { root } = path$1.parse(directory);
+	const { root } = path$2.parse(directory);
 	return /^[a-z]:[/\\]/i.test(root);
 };
 // node_modules/.pnpm/signal-exit@4.1.0/node_modules/signal-exit/dist/mjs/signals.js
@@ -28148,7 +28148,7 @@ var SignalExitFallback = class extends SignalExitBase {
 };
 var SignalExit = class extends SignalExitBase {
 	/* c8 ignore start */
-	#hupSig = process$2.platform === "win32" ? "SIGINT" : "SIGHUP";
+	#hupSig = process$1.platform === "win32" ? "SIGINT" : "SIGHUP";
 	/* c8 ignore stop */
 	#emitter = new Emitter();
 	#process;
@@ -28243,8 +28243,8 @@ var SignalExit = class extends SignalExitBase {
 		} else return og.call(this.#process, ev, ...args);
 	}
 };
-const process$2 = globalThis.process;
-const { onExit, load, unload } = signalExitWrap(processOk(process$2) ? new SignalExit(process$2) : new SignalExitFallback());
+const process$1 = globalThis.process;
+const { onExit, load, unload } = signalExitWrap(processOk(process$1) ? new SignalExit(process$1) : new SignalExitFallback());
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/terminate/cleanup.js
 const cleanupOnExit = (kill, { cleanup, detached }, { signal }) => {
 	if (!cleanup || detached) return;
@@ -28749,7 +28749,7 @@ const DESTINATION_LISTENERS_PER_PIPE = 1;
 // node_modules/.pnpm/execa@10.2.1/node_modules/execa/lib/pipe/abort.js
 const unpipeOnAbort = (unpipeSignal, unpipeContext) => unpipeSignal === void 0 ? [] : [unpipeOnSignalAbort(unpipeSignal, unpipeContext)];
 const unpipeOnSignalAbort = async (unpipeSignal, { sourceStream, mergedStream, fileDescriptors, sourceOptions, startTime }) => {
-	await aborted(unpipeSignal, sourceStream);
+	await aborted$1(unpipeSignal, sourceStream);
 	await unpipeSubprocessStream(mergedStream, sourceStream);
 	throw createNonCommandError({
 		error: /* @__PURE__ */ new Error("Pipe canceled by `unpipeSignal` option."),
@@ -29474,7 +29474,7 @@ const spawnSubprocessAsync = ({ file, commandArguments, options, startTime, verb
 		verboseInfo
 	});
 	const controller = new AbortController();
-	setMaxListeners(Infinity, controller.signal);
+	setMaxListeners(1e400, controller.signal);
 	const originalStreams = [...subprocess.stdio];
 	pipeOutputAsync(subprocess, fileDescriptors, controller);
 	setIpcSubprocessOptions(subprocess, options);
