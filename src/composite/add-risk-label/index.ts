@@ -4,7 +4,7 @@ import { parseIntStrict } from "@alextheman/utility";
 import addRiskLabel from "src/composite/add-risk-label/addRiskLabel";
 import getOptionalInput from "src/utility/getOptionalInput";
 
-(async () => {
+void (async () => {
   await addRiskLabel({
     lowRiskLabelName: getOptionalInput("low-risk-label-name") ?? "low risk",
     mediumRiskLabelName: getOptionalInput("medium-risk-label-name") ?? "medium risk",

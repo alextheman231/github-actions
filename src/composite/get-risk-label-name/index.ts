@@ -5,7 +5,7 @@ import getRiskLabelName, { RiskLevel } from "src/composite/get-risk-label-name/g
 import getNullableInput from "src/utility/getNullableInput";
 import getOptionalInput from "src/utility/getOptionalInput";
 
-(async () => {
+void (async () => {
   await getRiskLabelName({
     riskLevel: az
       .with(z.enum(RiskLevel).nullable())

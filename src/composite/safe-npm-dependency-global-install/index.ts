@@ -6,7 +6,7 @@ import z from "zod";
 import safeNpmDependencyGlobalInstall from "src/composite/safe-npm-dependency-global-install/safeNpmDependencyGlobalInstall";
 import getOptionalInput from "src/utility/getOptionalInput";
 
-(async () => {
+void (async () => {
   await safeNpmDependencyGlobalInstall({
     packageName: getInput("package-name", { required: true }),
     versionRange: getOptionalInput("version-range"),
