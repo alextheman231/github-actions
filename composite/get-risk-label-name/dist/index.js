@@ -121,8 +121,8 @@ function stringifyPrimitive(value) {
 }
 const NUMBER_FORMAT_RANGES = /*@__PURE__*/ (() => ({
 	safeint: [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
-	int32: [-2147483648, 2147483647],
-	uint32: [0, 4294967295],
+	int32: [-0x80000000, 0x7fffffff],
+	uint32: [0, 0xffffffff],
 	float32: [-34028234663852886e22, 34028234663852886e22],
 	float64: [-Number.MAX_VALUE, Number.MAX_VALUE]
 }))();
@@ -1873,9 +1873,7 @@ function mergeValues(a, b) {
 		};
 		const newArray = [];
 		for (let index = 0; index < a.length; index++) {
-			const itemA = a[index];
-			const itemB = b[index];
-			const sharedValue = mergeValues(itemA, itemB);
+			const sharedValue = mergeValues(a[index], b[index]);
 			if (!sharedValue.valid) return {
 				valid: false,
 				mergeErrorPath: [index, ...sharedValue.mergeErrorPath]
@@ -3779,8 +3777,7 @@ const dateProcessor = (schema, ctx, json, params) => {
 	handleUnrepresentable(schema, ctx, json, params, "Date cannot be represented in JSON Schema");
 };
 const enumProcessor = (schema, _ctx, json, _params) => {
-	const def = schema._zod.def;
-	const values = getEnumValues(def.entries);
+	const values = getEnumValues(schema._zod.def.entries);
 	if (values.length === 0) {
 		json.not = {};
 		return;
@@ -4875,7 +4872,7 @@ function number(params) {
 function date(params) {
 	return /* @__PURE__ */ _coercedDate(ZodDate, params);
 }
-// node_modules/.pnpm/@alextheman+utility@5.32.1_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
+// node_modules/.pnpm/@alextheman+utility@5.32.2_zod@4.6.7/node_modules/@alextheman/utility/dist/index.js
 const FILE_PATH_REGEX_PATTERN = String.raw`(?<directory>.+)[\/\\](?<base>[^\/\\]+)`;
 RegExp(`^${FILE_PATH_REGEX_PATTERN}$`);
 new RegExp(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`);
@@ -4897,7 +4894,6 @@ var CodeError = class CodeError extends Error {
 	*/
 	constructor(code, message = "Something went wrong.", options) {
 		super(message, options);
-		if (Error.captureStackTrace) Error.captureStackTrace(this, new.target);
 		this.name = new.target.name;
 		this.code = code;
 		Object.defineProperty(this, "message", { enumerable: true });
@@ -5184,7 +5180,7 @@ function fillArray(callback, length = 1, options) {
 		for (const index of range(0, length)) resolvedArray.push(await callback(index));
 		return resolvedArray;
 	})();
-	const outputArray = new Array(length).fill(null).map((_, index) => {
+	const outputArray = Array.from({ length }).fill(null).map((_, index) => {
 		return callback(index);
 	});
 	if (outputArray.some((item) => {
@@ -5232,7 +5228,7 @@ function parseIntStrict(string, radix) {
 		string,
 		radix
 	} : { string }, "INTEGER_PARSING_ERROR", `Only numeric values${radix && radix > 10 && radix <= 36 ? ` or character${radix !== 11 ? "s" : ""} A${radix !== 11 ? `-${maxAllowedAlphabeticalCharacter?.toUpperCase()} ` : " "}` : " "}are allowed.`);
-	if (radix && radix < 10 && [...trimmedString.replace(/^[+-]/, "")].some((character) => {
+	if (radix && radix < 10 && trimmedString.replace(/^[+-]/, "").split("").some((character) => {
 		return parseInt(character) >= radix;
 	})) throw new DataError$1({
 		string,
@@ -7435,7 +7431,7 @@ var require_dispatcher_base = /* @__PURE__ */ __commonJSMin(((exports, module) =
 		get webSocketOptions() {
 			return {
 				maxFragments: this[kWebSocketOptions].maxFragments ?? 131072,
-				maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 134217728
+				maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 0x8000000
 			};
 		}
 		get eventSourceOptions() {

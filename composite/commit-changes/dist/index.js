@@ -6,22 +6,22 @@ import * as fs from "fs";
 import { constants, promises } from "fs";
 import "path";
 import * as events from "events";
-import { Duplex, PassThrough, Readable, Transform, Writable, getDefaultHighWaterMark } from "node:stream";
-import { Buffer as Buffer$1 } from "node:buffer";
-import { aborted, callbackify, debuglog, inspect, promisify, stripVTControlCharacters } from "node:util";
-import { EventEmitter, addAbortListener, on, once, setMaxListeners } from "node:events";
-import { fileURLToPath } from "node:url";
-import "child_process";
 import "timers";
+import { fileURLToPath } from "node:url";
 import { ChildProcess, execFile, spawn, spawnSync } from "node:child_process";
 import process$2, { execArgv, execPath, hrtime, platform as platform$1 } from "node:process";
+import { aborted, callbackify, debuglog, inspect, promisify, stripVTControlCharacters } from "node:util";
+import "child_process";
 import { StringDecoder } from "node:string_decoder";
 import tty from "node:tty";
 import path$1 from "node:path";
 import { scheduler, setImmediate as setImmediate$1, setTimeout as setTimeout$2 } from "node:timers/promises";
 import { constants as constants$1 } from "node:os";
+import { EventEmitter, addAbortListener, on, once, setMaxListeners } from "node:events";
 import { serialize } from "node:v8";
 import fs$1, { appendFileSync, closeSync, createReadStream, createWriteStream, openSync, readFileSync, readSync, statSync, writeFileSync } from "node:fs";
+import { Buffer as Buffer$1 } from "node:buffer";
+import { Duplex, PassThrough, Readable, Transform, Writable, getDefaultHighWaterMark } from "node:stream";
 import { finished } from "node:stream/promises";
 import path$2 from "node:path/win32";
 var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod, mod.exports), cb = null), mod.exports);
@@ -1833,7 +1833,7 @@ var require_dispatcher_base = /* @__PURE__ */ __commonJSMin(((exports, module) =
 		get webSocketOptions() {
 			return {
 				maxFragments: this[kWebSocketOptions].maxFragments ?? 131072,
-				maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 134217728
+				maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 0x8000000
 			};
 		}
 		get eventSourceOptions() {
