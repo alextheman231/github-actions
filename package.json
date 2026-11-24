@@ -28,6 +28,7 @@
     "lint-tsc": "tsc --noEmit",
     "pre-commit": "pnpm run build-configs && alex-c-line pre-commit",
     "prepare": "husky",
+    "test": "exit 0",
     "update-dependencies": "pnpm update --latest && pnpm update"
   },
   "devDependencies": {
